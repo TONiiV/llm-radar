@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import CategoryRadar from "@/components/charts/CategoryRadar"
-import PriceScatter from "@/components/charts/PriceScatter"
+import D3RadarChart from "@/components/charts/d3/D3RadarChart"
+import D3ScatterChart from "@/components/charts/d3/D3ScatterChart"
+import StatsTable from "@/components/charts/StatsTable"
 import ModelSelector from "@/components/ModelSelector"
 import { getModelWithScores, getCategories, getParetoFrontier } from "@/lib/data"
-import { LogoIcon, RadarIcon, PriceIcon, CATEGORY_ICONS } from "@/components/icons/CategoryIcons"
+import { LogoIcon, RadarIcon, PriceIcon } from "@/components/icons/CategoryIcons"
 import { useLocale } from "@/lib/i18n-context"
 import LocaleToggle from "@/components/LocaleToggle"
 
@@ -17,12 +18,9 @@ const DEFAULT_SELECTED = [
   "llama-4-maverick",
 ]
 
-type Tab = "radar" | "scatter"
-
 export default function ComparePage() {
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(DEFAULT_SELECTED)
-  const [activeTab, setActiveTab] = useState<Tab>("radar")
-  const { t, getCategoryLabel } = useLocale()
+  const { t } = useLocale()
 
   const allModels = useMemo(() => getModelWithScores(), [])
   const categories = useMemo(() => getCategories(), [])
@@ -69,33 +67,6 @@ export default function ComparePage() {
 
           {/* Main content */}
           <div className="flex-1 space-y-6">
-            {/* Tab bar */}
-            <div className="flex gap-0 border-b border-border w-fit">
-              <button
-                onClick={() => setActiveTab("radar")}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-heading italic transition-colors ${
-                  activeTab === "radar"
-                    ? "text-accent-blue border-b-2 border-accent-blue"
-                    : "text-txt-secondary hover:text-txt-primary"
-                }`}
-              >
-                <RadarIcon size={16} />
-                {t("compare.tabRadar")}
-              </button>
-              <button
-                onClick={() => setActiveTab("scatter")}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-heading italic transition-colors ${
-                  activeTab === "scatter"
-                    ? "text-accent-blue border-b-2 border-accent-blue"
-                    : "text-txt-secondary hover:text-txt-primary"
-                }`}
-              >
-                <PriceIcon size={16} />
-                {t("compare.tabScatter")}
-              </button>
-            </div>
-
-            {/* Charts */}
             {selectedModels.length === 0 ? (
               <div className="paper-card p-16 text-center">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mx-auto mb-4 text-txt-muted/30">
@@ -103,105 +74,53 @@ export default function ComparePage() {
                 </svg>
                 <p className="text-txt-muted text-lg">{t("compare.emptyState")}</p>
               </div>
-            ) : activeTab === "radar" ? (
-              <div className="paper-card p-5">
-                <h2 className="font-heading italic text-xl font-semibold mb-1 text-txt-primary">
-                  {t("compare.radarTitle")}
-                </h2>
-                <p className="text-sm text-txt-muted mb-4">
-                  {t("compare.radarDesc")}
-                </p>
-                <CategoryRadar
-                  models={selectedModels}
-                  categories={categories}
-                  onCategoryClick={(key) => {
-                    console.log("Drill down to:", key)
-                  }}
-                />
-              </div>
             ) : (
-              <div className="paper-card p-5">
-                <h2 className="font-heading italic text-xl font-semibold mb-1 text-txt-primary">
-                  {t("compare.scatterTitle")}
-                </h2>
-                <p className="text-sm text-txt-muted mb-4">
-                  {t("compare.scatterDesc")}
-                </p>
-                <PriceScatter
-                  models={allModels}
-                  selectedSlugs={selectedSlugs}
-                  paretoSlugs={paretoSlugs}
-                />
-              </div>
-            )}
+              <>
+                {/* Charts side by side on desktop, stacked on mobile */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Radar Chart */}
+                  <div className="paper-card p-5">
+                    <div className="flex items-center gap-2 mb-1">
+                      <RadarIcon size={16} className="text-accent-blue" />
+                      <h2 className="font-heading italic text-xl font-semibold text-txt-primary">
+                        {t("compare.radarTitle")}
+                      </h2>
+                    </div>
+                    <p className="text-sm text-txt-muted mb-4">
+                      {t("compare.radarDesc")}
+                    </p>
+                    <D3RadarChart
+                      models={selectedModels}
+                      categories={categories}
+                      onCategoryClick={(key) => {
+                        console.log("Drill down to:", key)
+                      }}
+                    />
+                  </div>
 
-            {/* Quick stats table */}
-            <div className="paper-card overflow-hidden">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left px-4 py-3 font-heading italic font-medium text-txt-secondary">
-                      {t("compare.model")}
-                    </th>
-                    {Object.entries(categories).map(([key, cat]) => {
-                      const Icon = CATEGORY_ICONS[key]
-                      return (
-                        <th
-                          key={key}
-                          className="text-center px-2 py-3 font-medium text-txt-secondary"
-                          title={getCategoryLabel(key)}
-                        >
-                          {Icon ? <Icon size={14} className="inline-block text-txt-muted" /> : key}
-                        </th>
-                      )
-                    })}
-                    <th className="text-center px-3 py-3 font-heading italic font-medium text-txt-secondary">
-                      {t("compare.composite")}
-                    </th>
-                    <th className="text-right px-4 py-3 font-heading italic font-medium text-txt-secondary">
-                      {t("compare.inputPrice")}
-                    </th>
-                    <th className="text-right px-4 py-3 font-heading italic font-medium text-txt-secondary">
-                      {t("compare.outputPrice")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {selectedModels
-                    .sort((a, b) => b.compositeScore - a.compositeScore)
-                    .map((m) => (
-                      <tr
-                        key={m.slug}
-                        className="border-b border-border hover:bg-card transition-colors"
-                      >
-                        <td className="px-4 py-2.5 font-medium text-txt-primary">{m.name}</td>
-                        {Object.keys(categories).map((key) => {
-                          const cs = m.categoryScores[key]
-                          return (
-                            <td
-                              key={key}
-                              className={`text-center px-2 py-2.5 font-mono ${
-                                !cs?.isReliable ? "text-txt-muted/40" : "text-txt-primary"
-                              }`}
-                            >
-                              {cs ? Math.round(cs.score) : "\u2014"}
-                            </td>
-                          )
-                        })}
-                        <td className="text-center px-3 py-2.5 font-mono font-semibold text-accent-blue">
-                          {Math.round(m.compositeScore)}
-                        </td>
-                        <td className="text-right px-4 py-2.5 font-mono text-txt-secondary">
-                          {m.pricing.confirmed ? "" : "~"}${m.pricing.input_per_1m}
-                        </td>
-                        <td className="text-right px-4 py-2.5 font-mono text-txt-secondary">
-                          {m.pricing.confirmed ? "" : "~"}${m.pricing.output_per_1m}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
+                  {/* Scatter Chart */}
+                  <div className="paper-card p-5">
+                    <div className="flex items-center gap-2 mb-1">
+                      <PriceIcon size={16} className="text-accent-blue" />
+                      <h2 className="font-heading italic text-xl font-semibold text-txt-primary">
+                        {t("compare.scatterTitle")}
+                      </h2>
+                    </div>
+                    <p className="text-sm text-txt-muted mb-4">
+                      {t("compare.scatterDesc")}
+                    </p>
+                    <D3ScatterChart
+                      models={allModels}
+                      selectedSlugs={selectedSlugs}
+                      paretoSlugs={paretoSlugs}
+                    />
+                  </div>
+                </div>
+
+                {/* Stats Table - full width below */}
+                <StatsTable models={selectedModels} categories={categories} />
+              </>
+            )}
           </div>
         </div>
       </main>
