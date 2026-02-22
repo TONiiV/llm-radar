@@ -1,0 +1,44 @@
+{
+  "reasoning": {
+    "label": "推理 Reasoning",
+    "benchmarks": [
+      { "key": "mmlu_pro", "label": "MMLU-Pro", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "gpqa_diamond", "label": "GPQA Diamond", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "humanitys_last_exam", "label": "Humanity's Last Exam", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "critpt", "label": "CritPt", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100 }
+    ]
+  },
+  "coding": {
+    "label": "代码 Coding",
+    "benchmarks": [
+      { "key": "swe_bench", "label": "SWE-Bench Verified", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "livecode_bench", "label": "LiveCodeBench", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "terminal_bench", "label": "Terminal-Bench Hard", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "scicode", "label": "SciCode", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100 }
+    ]
+  },
+  "math": {
+    "label": "数学 Math",
+    "benchmarks": [
+      { "key": "aime_2025", "label": "AIME 2025", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "math_bench", "label": "MATH", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "gsm8k", "label": "GSM8K", "weight": 0.6, "unit": "%", "higher_is_better": true, "max_score": 100 }
+    ]
+  },
+  "chat": {
+    "label": "对话 Chat",
+    "benchmarks": [
+      { "key": "lmarena_elo", "label": "LMArena ELO", "weight": 1.0, "unit": "ELO", "higher_is_better": true, "max_score": null },
+      { "key": "ifbench", "label": "IFBench", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "alpaca_eval", "label": "AlpacaEval", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100 }
+    ]
+  },
+  "agentic": {
+    "label": "Agent",
+    "benchmarks": [
+      { "key": "tau2_bench", "label": "τ²-Bench Telecom", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "gdpval_aa", "label": "GDPval-AA", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100 },
+      { "key": "aa_lcr", "label": "AA-LCR", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100 }
+    ]
+  }
+}

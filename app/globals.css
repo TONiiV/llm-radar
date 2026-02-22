@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   Theme Variables — Light / Dark
+   ======================================== */
+:root {
+  --bg-page: #F4F1E6;
+  --bg-card: #E8E4D8;
+  --bg-card-hover: #DDD9CC;
+  --bg-inverted: #0F0F0F;
+  --text-primary: #0F0F0F;
+  --text-secondary: #555555;
+  --text-muted: #888888;
+  --text-inverted: #F4F1E6;
+  --accent-blue: #2B6CB0;
+  --accent-orange: #C05621;
+  --border-color: #D1CEC7;
+}
+
+.dark {
+  --bg-page: #1A1814;
+  --bg-card: #242018;
+  --bg-card-hover: #2E2A1E;
+  --bg-inverted: #E8E4D8;
+  --text-primary: #E8E4D8;
+  --text-secondary: #A09C8F;
+  --text-muted: #706C5F;
+  --text-inverted: #1A1814;
+  --accent-blue: #4A90D9;
+  --accent-orange: #E07A3A;
+  --border-color: #3A3630;
+}
+
+@layer base {
+  body {
+    @apply bg-page text-txt-primary font-body;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer components {
+  /* Paper-textured card — replaces glass-card */
+  .paper-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .paper-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .paper-card-flat {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+  }
+
+  /* Retro input — replaces glass-input */
+  .retro-input {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .retro-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(43, 108, 176, 0.15);
+    outline: none;
+  }
+
+  .retro-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* Primary button — ink black / cream on hover */
+  .btn-primary {
+    background: var(--bg-inverted);
+    color: var(--text-inverted);
+    border: 2px solid var(--bg-inverted);
+    font-family: var(--font-eb-garamond), Georgia, serif;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--text-primary);
+  }
+
+  /* Section divider — editorial top border */
+  .section-divider {
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.5rem;
+  }
+
+  /* CRT Terminal screen effect */
+  .crt-screen {
+    background: #222529;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .crt-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%),
+      linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .crt-screen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.3) 100%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Provider color tags */
+  .provider-tag {
+    font-family: var(--font-vt323), monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+}
+
+/* Scrollbar styling */
+.paper-card ::-webkit-scrollbar,
+.paper-card-flat ::-webkit-scrollbar {
+  width: 4px;
+}
+
+.paper-card ::-webkit-scrollbar-track,
+.paper-card-flat ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.paper-card ::-webkit-scrollbar-thumb,
+.paper-card-flat ::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 2px;
+}
+
+.paper-card ::-webkit-scrollbar-thumb:hover,
+.paper-card-flat ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Typewriter cursor */
+.cursor-blink {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  background: currentColor;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
