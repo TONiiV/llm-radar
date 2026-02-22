@@ -126,6 +126,7 @@ export default function D3RadarChart({
             <path
               key={`grid-${level}`}
               d={getPentagonPath(cx, cy, r, axisCount)}
+              transform={`translate(${cx}, ${cy})`}
               fill="none"
               stroke={theme.borderColor}
               strokeWidth={level === 100 ? 1 : 0.5}

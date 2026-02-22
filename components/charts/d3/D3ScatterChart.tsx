@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import type { ModelWithScores } from "@/lib/types"
+import type { ModelWithScores, Sources } from "@/lib/types"
 import { getModelColor } from "@/lib/colors"
 import { avgPricePer1M, formatPrice } from "@/lib/pricing"
 import { useChartDimensions } from "./useChartDimensions"
@@ -18,11 +18,13 @@ import {
 } from "./ScatterHelpers"
 import { ChartTooltip, useTooltip } from "./ChartTooltip"
 import { useLocale } from "@/lib/i18n-context"
+import SourceIcon from "@/components/SourceIcon"
 
 interface D3ScatterChartProps {
   models: ModelWithScores[]
   selectedSlugs: string[]
   paretoSlugs: string[]
+  sources: Sources
 }
 
 const MARGIN = { top: 25, right: 30, bottom: 50, left: 55 }
@@ -31,6 +33,7 @@ export default function D3ScatterChart({
   models,
   selectedSlugs,
   paretoSlugs,
+  sources,
 }: D3ScatterChartProps) {
   const [containerRef, { width }] = useChartDimensions()
   const theme = useChartTheme()
@@ -54,6 +57,7 @@ export default function D3ScatterChart({
       color: getModelColor(i),
       inputPrice: m.pricing.input_per_1m,
       outputPrice: m.pricing.output_per_1m,
+      pricingSource: m.pricing.source,
     }))
   }, [models, selectedSlugs, paretoSlugs])
 
@@ -294,8 +298,11 @@ export default function D3ScatterChart({
                       {t("chart.output")}: {d.confirmed ? "" : "~"}
                       {formatPrice(d.outputPrice)}/1M
                     </p>
-                    <p className="font-mono text-xs text-txt-secondary">
+                    <p className="font-mono text-xs text-txt-secondary inline-flex items-center gap-0.5">
                       {t("chart.avgPrice")}: {formatPrice(d.x)}/1M
+                      {d.pricingSource && (
+                        <SourceIcon sourceKey={d.pricingSource} sources={sources} size={11} />
+                      )}
                     </p>
                     {d.isPareto && (
                       <p className="font-mono text-xs font-medium mt-1" style={{ color: "#22C55E" }}>

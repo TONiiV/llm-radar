@@ -7,7 +7,7 @@ import CategoryDetail from "@/components/charts/d3/CategoryDetail"
 import StatsTable from "@/components/charts/StatsTable"
 import BenchmarkRanking from "@/components/charts/BenchmarkRanking"
 import ModelSelector from "@/components/ModelSelector"
-import { getModelWithScores, getCategories, getParetoFrontier } from "@/lib/data"
+import { getModelWithScores, getCategories, getParetoFrontier, getProviders, getSources } from "@/lib/data"
 import { LogoIcon, RadarIcon, PriceIcon } from "@/components/icons/CategoryIcons"
 import { useLocale } from "@/lib/i18n-context"
 import LocaleToggle from "@/components/LocaleToggle"
@@ -31,7 +31,9 @@ export default function ComparePage() {
   const { t } = useLocale()
 
   const allModels = useMemo(() => getModelWithScores(), [])
+  const providers = useMemo(() => getProviders(), [])
   const categories = useMemo(() => getCategories(), [])
+  const sources = useMemo(() => getSources(), [])
   const paretoSlugs = useMemo(() => getParetoFrontier(allModels), [allModels])
 
   const selectedModels = useMemo(
@@ -67,6 +69,7 @@ export default function ComparePage() {
             <div className="paper-card p-4 sticky top-20">
               <ModelSelector
                 models={allModels}
+                providers={providers}
                 selectedSlugs={selectedSlugs}
                 onSelectionChange={setSelectedSlugs}
               />
@@ -151,6 +154,7 @@ export default function ComparePage() {
                           models={allModels}
                           selectedSlugs={selectedSlugs}
                           paretoSlugs={paretoSlugs}
+                          sources={sources}
                         />
                       </div>
                     </div>
@@ -161,12 +165,20 @@ export default function ComparePage() {
                         categoryKey={drilldownCategory}
                         category={categories[drilldownCategory]}
                         models={selectedModels}
+                        sources={sources}
                         onClose={() => setDrilldownCategory(null)}
                       />
                     )}
 
                     {/* Stats Table */}
-                    <StatsTable models={selectedModels} categories={categories} />
+                    <StatsTable
+                      models={selectedModels}
+                      categories={categories}
+                      sources={sources}
+                      onCategoryClick={(key) => {
+                        setDrilldownCategory(drilldownCategory === key ? null : key)
+                      }}
+                    />
                   </>
                 )}
 
@@ -186,6 +198,7 @@ export default function ComparePage() {
                       models={allModels}
                       selectedSlugs={selectedSlugs}
                       paretoSlugs={paretoSlugs}
+                      sources={sources}
                     />
                   </div>
                 )}
@@ -208,6 +221,7 @@ export default function ComparePage() {
                       models={allModels}
                       categories={categories}
                       selectedSlugs={selectedSlugs}
+                      sources={sources}
                     />
                   </div>
                 )}

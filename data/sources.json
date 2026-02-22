@@ -1,0 +1,22 @@
+{
+  "artificial_analysis": {
+    "name": "Artificial Analysis",
+    "url": "https://artificialanalysis.ai/leaderboards/models"
+  },
+  "lmarena": {
+    "name": "LMArena",
+    "url": "https://lmarena.ai/?leaderboard"
+  },
+  "openrouter": {
+    "name": "OpenRouter",
+    "url": "https://openrouter.ai/models"
+  },
+  "livecode_bench": {
+    "name": "LiveCodeBench",
+    "url": "https://livecodebench.github.io/leaderboard.html"
+  },
+  "swe_bench": {
+    "name": "SWE-Bench",
+    "url": "https://www.swebench.com"
+  }
+}

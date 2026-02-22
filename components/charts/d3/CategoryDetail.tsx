@@ -1,11 +1,12 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import type { CategoryDef, ModelWithScores, BenchmarkDef } from "@/lib/types"
+import type { CategoryDef, ModelWithScores, BenchmarkDef, Sources } from "@/lib/types"
 import { getModelColor, getCategoryColor } from "@/lib/colors"
 import { useChartDimensions } from "./useChartDimensions"
 import { useChartTheme } from "./useChartTheme"
 import { useLocale } from "@/lib/i18n-context"
+import SourceIcon from "@/components/SourceIcon"
 
 // ---------------------------------------------------------------------------
 // Props
@@ -15,6 +16,7 @@ interface CategoryDetailProps {
   categoryKey: string
   category: CategoryDef
   models: ModelWithScores[]
+  sources: Sources
   onClose: () => void
 }
 
@@ -106,6 +108,7 @@ export default function CategoryDetail({
   categoryKey,
   category,
   models,
+  sources,
   onClose,
 }: CategoryDetailProps) {
   const [containerRef, { width: containerWidth }] = useChartDimensions()
@@ -122,7 +125,7 @@ export default function CategoryDetail({
 
   // Available chart width after labels
   const chartWidth = Math.max(
-    containerWidth - LEFT_LABEL_WIDTH - RIGHT_VALUE_WIDTH - 32,
+    Math.min(containerWidth - LEFT_LABEL_WIDTH - RIGHT_VALUE_WIDTH - 32, 800),
     80
   )
 
@@ -183,15 +186,20 @@ export default function CategoryDetail({
                     marginTop: bIdx > 0 ? BENCHMARK_GAP : 0,
                   }}
                 >
-                  <span
-                    className="text-xs leading-tight truncate block"
-                    style={{
-                      fontFamily: "'EB Garamond', serif",
-                      color: theme.textPrimary,
-                    }}
-                    title={b.label}
-                  >
-                    {b.label}
+                  <span className="inline-flex items-center gap-0.5 max-w-full">
+                    <span
+                      className="text-xs leading-tight truncate"
+                      style={{
+                        fontFamily: "'EB Garamond', serif",
+                        color: theme.textPrimary,
+                      }}
+                      title={b.label}
+                    >
+                      {b.label}
+                    </span>
+                    {b.source && (
+                      <SourceIcon sourceKey={b.source} sources={sources} size={12} />
+                    )}
                   </span>
                   {!b.higher_is_better && (
                     <span
@@ -521,7 +529,7 @@ export default function CategoryDetail({
   return (
     <div
       ref={containerRef as React.RefObject<HTMLDivElement>}
-      className="paper-card-flat w-full mt-4 p-4 sm:p-6"
+      className="paper-card-flat w-full mt-4 p-4 sm:p-6 overflow-hidden"
       style={{
         animation: "categoryDetailSlideIn 0.3s ease-out",
       }}

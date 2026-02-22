@@ -1,16 +1,19 @@
 "use client"
 
-import type { ModelWithScores, Categories } from "@/lib/types"
+import type { ModelWithScores, Categories, Sources } from "@/lib/types"
 import { CATEGORY_COLORS } from "@/lib/colors"
 import { CATEGORY_ICONS } from "@/components/icons/CategoryIcons"
 import { useLocale } from "@/lib/i18n-context"
+import SourceIcon from "@/components/SourceIcon"
 
 interface StatsTableProps {
   models: ModelWithScores[]
   categories: Categories
+  sources: Sources
+  onCategoryClick?: (categoryKey: string) => void
 }
 
-export default function StatsTable({ models, categories }: StatsTableProps) {
+export default function StatsTable({ models, categories, sources, onCategoryClick }: StatsTableProps) {
   const { t, getCategoryLabel } = useLocale()
   const sorted = [...models].sort((a, b) => b.compositeScore - a.compositeScore)
   const categoryKeys = Object.keys(categories)
@@ -28,14 +31,14 @@ export default function StatsTable({ models, categories }: StatsTableProps) {
               return (
                 <th
                   key={key}
-                  className="text-center px-2 py-3 font-medium text-txt-secondary"
+                  className="text-center px-2 py-3 font-medium text-txt-secondary cursor-pointer hover:text-txt-primary transition-colors"
                   title={getCategoryLabel(key)}
+                  onClick={() => onCategoryClick?.(key)}
                 >
-                  {Icon ? (
-                    <Icon size={14} className="inline-block text-txt-muted" />
-                  ) : (
-                    key
-                  )}
+                  <div className="flex flex-col items-center gap-0.5">
+                    {Icon && <Icon size={14} className="inline-block text-txt-muted" />}
+                    <span className="text-[10px] leading-tight">{getCategoryLabel(key)}</span>
+                  </div>
                 </th>
               )
             })}
@@ -43,10 +46,15 @@ export default function StatsTable({ models, categories }: StatsTableProps) {
               {t("compare.composite")}
             </th>
             <th className="text-right px-4 py-3 font-heading italic font-medium text-txt-secondary">
-              {t("compare.inputPrice")}
+              <span className="inline-flex items-center">
+                {t("compare.inputPrice")}
+                <SourceIcon sourceKey="openrouter" sources={sources} size={12} />
+              </span>
             </th>
             <th className="text-right px-4 py-3 font-heading italic font-medium text-txt-secondary">
-              {t("compare.outputPrice")}
+              <span className="inline-flex items-center">
+                {t("compare.outputPrice")}
+              </span>
             </th>
           </tr>
         </thead>
@@ -66,7 +74,7 @@ export default function StatsTable({ models, categories }: StatsTableProps) {
                 const color = CATEGORY_COLORS[key] || "#94a3b8"
 
                 return (
-                  <td key={key} className="px-2 py-2.5">
+                  <td key={key} className="px-2 py-2.5 cursor-pointer" onClick={() => onCategoryClick?.(key)}>
                     <div className="flex items-center gap-1.5 min-w-[60px]">
                       {/* Visual score bar */}
                       <div className="flex-1 h-2.5 rounded-sm overflow-hidden" style={{ backgroundColor: `${color}15` }}>

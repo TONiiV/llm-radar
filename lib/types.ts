@@ -1,3 +1,10 @@
+export interface Source {
+  name: string
+  url: string
+}
+
+export type Sources = Record<string, Source>
+
 export interface Provider {
   name: string
   slug: string
@@ -8,6 +15,7 @@ export interface ModelPricing {
   input_per_1m: number
   output_per_1m: number
   confirmed: boolean
+  source?: string
 }
 
 export interface Model {
@@ -31,6 +39,7 @@ export interface BenchmarkDef {
   unit: string
   higher_is_better: boolean
   max_score: number | null
+  source?: string
 }
 
 export interface CategoryDef {

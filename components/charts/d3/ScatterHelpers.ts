@@ -12,6 +12,7 @@ export interface ScatterPoint {
   color: string
   inputPrice: number
   outputPrice: number
+  pricingSource?: string
 }
 
 export interface LabelPosition {

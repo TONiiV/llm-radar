@@ -1,16 +1,19 @@
 import seedData from "@/data/seed.json"
 import categoriesData from "@/data/categories.json"
-import { normalize, categoryScore, compositeScore } from "./normalize"
+import sourcesData from "@/data/sources.json"
+import { normalize, normalizeByMaxScore, categoryScore, compositeScore } from "./normalize"
 import type {
   SeedData,
   Categories,
   Model,
   ModelWithScores,
   Provider,
+  Sources,
 } from "./types"
 
 const seed = seedData as SeedData
 const categories = categoriesData as Categories
+const sources = sourcesData as Sources
 
 export function getProviders(): Provider[] {
   return seed.providers
@@ -22,6 +25,10 @@ export function getModels(): Model[] {
 
 export function getCategories(): Categories {
   return categories
+}
+
+export function getSources(): Sources {
+  return sources
 }
 
 export function getModelWithScores(models?: Model[]): ModelWithScores[] {
@@ -45,8 +52,9 @@ export function getModelWithScores(models?: Model[]): ModelWithScores[] {
       for (const bm of cats[catKey].benchmarks) {
         const raw = model.benchmarks[bm.key]
         if (raw != null) {
-          normalizedScores[bm.key] = normalize(
+          normalizedScores[bm.key] = normalizeByMaxScore(
             raw,
+            bm.max_score,
             allValuesPerBenchmark[bm.key],
             bm.higher_is_better
           )
@@ -74,6 +82,15 @@ export function getModelWithScores(models?: Model[]): ModelWithScores[] {
       providerColor: provider?.color ?? "#888888",
     }
   })
+}
+
+export function getModelBySlug(slug: string): ModelWithScores | undefined {
+  const all = getModelWithScores()
+  return all.find((m) => m.slug === slug)
+}
+
+export function getAllSlugs(): string[] {
+  return seed.models.map((m) => m.slug)
 }
 
 // Pareto frontier: models where no other model is both cheaper and better

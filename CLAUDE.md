@@ -70,3 +70,21 @@ npm run lint         # 代码检查
 - 价格数据源：OpenRouter API + LiteLLM JSON
 - Benchmark 数据源：Artificial Analysis + LMArena ELO
 - Admin 认证：Supabase Auth Magic Link（Phase 4）
+
+## Bug 复盘：ResizeObserver + React 状态更新循环
+
+**模式**：ResizeObserver 监听容器宽度 → `setDimensions` 更新状态 → React 重新渲染 → SVG/子元素尺寸变化 → 容器尺寸变化 → ResizeObserver 再次触发 → 无限循环。
+
+**防范规则**：
+1. `setDimensions` 必须使用函数式更新 `(prev) => ...`，对比新旧值相同时返回 `prev` 引用，阻止不必要的重新渲染
+2. 使用 `Math.round()` 消除浮点数微小差异导致的抖动
+3. 被 ResizeObserver 监听的容器应加 `overflow-hidden`，防止子元素撑宽容器形成反馈循环
+4. 动态计算的图表宽度应设置合理上限（如 `Math.min(..., 800)`）
+
+## 复盘学习规范
+
+Bug 修复后执行复盘流程：
+1. **根因分析**：找到触发 bug 的核心代码路径
+2. **修复方案**：记录核心修复 + 防御性修复
+3. **防范规则**：提炼为可复用的编码规则
+4. **记录到 CLAUDE.md**：在「Bug 复盘」章节添加条目，确保后续开发不重蹈覆辙

@@ -1,5 +1,28 @@
 import { CategoryResult } from "./types"
 
+// 基于理论最大值的归一化函数
+export function normalizeByMaxScore(
+  value: number,
+  maxScore: number | null,
+  allValues: number[],
+  higherIsBetter = true
+): number {
+  if (maxScore != null && maxScore > 0) {
+    // 有理论上限的 benchmark：直接算百分比
+    const score = (value / maxScore) * 100
+    return higherIsBetter ? Math.min(score, 100) : Math.max(100 - score, 0)
+  }
+  // 无理论上限（如 ELO）：用 min-max 归一化，范围映射到 20-100
+  // 避免最差的模型得 0 分（视觉上消失）
+  const sorted = [...allValues].sort((a, b) => a - b)
+  const min = sorted[0]
+  const max = sorted[sorted.length - 1]
+  if (max === min) return 60
+  const ratio = (value - min) / (max - min)
+  const score = 20 + ratio * 80 // 映射到 20-100 区间
+  return higherIsBetter ? score : 120 - score
+}
+
 export function normalize(
   value: number,
   allValues: number[],

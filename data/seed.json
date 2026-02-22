@@ -23,11 +23,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2026-01-15",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 5.00,
         "output_per_1m": 25.00,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 82.1,
@@ -53,35 +54,108 @@
       "name": "GPT-5.2",
       "slug": "gpt-52",
       "provider": "openai",
-      "context_window_input": 128000,
-      "context_window_output": 16384,
+      "context_window_input": 400000,
+      "context_window_output": 128000,
       "is_open_source": false,
       "is_reasoning_model": false,
-      "release_date": "2026-02-01",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "release_date": "2025-12-11",
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
-        "input_per_1m": 2.50,
-        "output_per_1m": 10.00,
-        "confirmed": false
+        "input_per_1m": 1.75,
+        "output_per_1m": 14.00,
+        "confirmed": true,
+        "source": "openrouter"
+      },
+      "benchmarks": {
+        "mmlu_pro": 82.0,
+        "gpqa_diamond": 92.4,
+        "humanitys_last_exam": 32.8,
+        "critpt": 84.5,
+        "swe_bench": 80.0,
+        "livecode_bench": 78.0,
+        "terminal_bench": 55.6,
+        "scicode": 51.8,
+        "aime_2025": 100.0,
+        "math_bench": 97.0,
+        "gsm8k": 99.2,
+        "lmarena_elo": 1398,
+        "ifbench": 93.5,
+        "alpaca_eval": 59.8,
+        "tau2_bench": 98.7,
+        "gdpval_aa": 81.5,
+        "aa_lcr": 77.4
+      }
+    },
+    {
+      "name": "GPT-5.2 Pro",
+      "slug": "gpt-52-pro",
+      "provider": "openai",
+      "context_window_input": 400000,
+      "context_window_output": 128000,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "2025-12-11",
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "pricing": {
+        "input_per_1m": 21.00,
+        "output_per_1m": 168.00,
+        "confirmed": true,
+        "source": "openrouter"
+      },
+      "benchmarks": {
+        "mmlu_pro": 82.0,
+        "gpqa_diamond": 93.2,
+        "humanitys_last_exam": 36.6,
+        "critpt": 87.2,
+        "swe_bench": 80.0,
+        "livecode_bench": 78.0,
+        "terminal_bench": 55.6,
+        "scicode": 53.4,
+        "aime_2025": 100.0,
+        "math_bench": 97.0,
+        "gsm8k": 99.2,
+        "lmarena_elo": 1412,
+        "ifbench": 93.5,
+        "alpaca_eval": 61.2,
+        "tau2_bench": 98.7,
+        "gdpval_aa": 83.2,
+        "aa_lcr": 79.1
+      }
+    },
+    {
+      "name": "GPT-5.2-Codex",
+      "slug": "gpt-52-codex",
+      "provider": "openai",
+      "context_window_input": 400000,
+      "context_window_output": 128000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2026-01-14",
+      "tags": ["multimodal", "function_calling", "vision", "agentic_coding"],
+      "pricing": {
+        "input_per_1m": 1.75,
+        "output_per_1m": 14.00,
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 80.5,
-        "gpqa_diamond": 71.8,
-        "humanitys_last_exam": 15.8,
-        "critpt": 68.9,
-        "swe_bench": 75.2,
-        "livecode_bench": 58.1,
-        "terminal_bench": 52.3,
-        "scicode": 38.7,
-        "aime_2025": 28.9,
-        "math_bench": 79.8,
-        "gsm8k": 96.5,
-        "lmarena_elo": 1372,
-        "ifbench": 85.2,
-        "alpaca_eval": 54.8,
-        "tau2_bench": 64.2,
-        "gdpval_aa": 67.8,
-        "aa_lcr": 58.4
+        "gpqa_diamond": 90.1,
+        "humanitys_last_exam": 30.2,
+        "critpt": 82.3,
+        "swe_bench": 82.5,
+        "livecode_bench": 81.3,
+        "terminal_bench": 64.0,
+        "scicode": 55.2,
+        "aime_2025": 98.5,
+        "math_bench": 95.8,
+        "gsm8k": 99.0,
+        "lmarena_elo": 1388,
+        "ifbench": 91.2,
+        "alpaca_eval": 57.4,
+        "tau2_bench": 96.5,
+        "gdpval_aa": 79.8,
+        "aa_lcr": 75.6
       }
     },
     {
@@ -97,7 +171,8 @@
       "pricing": {
         "input_per_1m": 1.25,
         "output_per_1m": 10.00,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 78.9,
@@ -128,11 +203,12 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-12-10",
-      "tags": ["function_calling"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.55,
         "output_per_1m": 2.19,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 75.8,
@@ -163,11 +239,12 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-11-15",
-      "tags": ["multimodal", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.27,
         "output_per_1m": 0.85,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 73.2,
@@ -198,11 +275,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-10-20",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 5.00,
         "output_per_1m": 25.00,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 79.4,
@@ -237,7 +315,8 @@
       "pricing": {
         "input_per_1m": 1.25,
         "output_per_1m": 10.00,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 76.3,
@@ -268,11 +347,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-12-01",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 3.00,
         "output_per_1m": 15.00,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 79.8,
@@ -303,11 +383,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-09-10",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 3.00,
         "output_per_1m": 15.00,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 76.9,
@@ -338,11 +419,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-09-10",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 1.00,
         "output_per_1m": 5.00,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 69.4,
@@ -373,11 +455,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-11-01",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 1.25,
         "output_per_1m": 5.00,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 78.2,
@@ -408,11 +491,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-11-01",
-      "tags": ["multimodal", "function_calling"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.30,
         "output_per_1m": 1.20,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 67.8,
@@ -443,11 +527,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2026-01-10",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 1.25,
         "output_per_1m": 5.00,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 79.1,
@@ -482,7 +567,8 @@
       "pricing": {
         "input_per_1m": 0.10,
         "output_per_1m": 0.40,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 68.5,
@@ -513,11 +599,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-10-05",
-      "tags": ["multimodal", "function_calling"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 2.00,
         "output_per_1m": 6.00,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 75.1,
@@ -548,11 +635,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-12-01",
-      "tags": ["function_calling"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.20,
         "output_per_1m": 1.00,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 66.2,
@@ -583,11 +671,12 @@
       "is_open_source": true,
       "is_reasoning_model": true,
       "release_date": "2025-06-15",
-      "tags": ["function_calling"],
+      "tags": ["function_calling", "long_context"],
       "pricing": {
         "input_per_1m": 0.55,
         "output_per_1m": 2.19,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 77.6,
@@ -618,11 +707,12 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-11-15",
-      "tags": ["multimodal", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.27,
         "output_per_1m": 0.85,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 70.5,
@@ -653,11 +743,12 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-12-20",
-      "tags": ["multimodal", "function_calling"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.50,
         "output_per_1m": 2.00,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 74.7,
@@ -688,11 +779,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-11-25",
-      "tags": ["multimodal", "function_calling"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.50,
         "output_per_1m": 2.00,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 72.4,
@@ -723,11 +815,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-10-15",
-      "tags": ["multimodal", "function_calling", "long_context"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.60,
         "output_per_1m": 2.40,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 71.8,
@@ -758,11 +851,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-09-20",
-      "tags": ["multimodal", "function_calling"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.50,
         "output_per_1m": 2.00,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 70.9,
@@ -793,11 +887,12 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-08-30",
-      "tags": ["function_calling"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 0.40,
         "output_per_1m": 1.60,
-        "confirmed": false
+        "confirmed": false,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 71.2,
@@ -828,11 +923,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-06-01",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 2.50,
         "output_per_1m": 10.00,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 74.3,
@@ -863,11 +959,12 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2026-02-15",
-      "tags": ["multimodal", "function_calling", "vision"],
+      "tags": ["multimodal", "function_calling", "vision", "long_context"],
       "pricing": {
         "input_per_1m": 3.00,
         "output_per_1m": 15.00,
-        "confirmed": true
+        "confirmed": true,
+        "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 80.2,

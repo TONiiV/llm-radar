@@ -1,14 +1,16 @@
 "use client"
 
 import { useMemo, useState, useRef, useEffect } from "react"
-import type { ModelWithScores, Categories, BenchmarkDef } from "@/lib/types"
+import type { ModelWithScores, Categories, BenchmarkDef, Sources } from "@/lib/types"
 import { CATEGORY_COLORS } from "@/lib/colors"
 import { useLocale } from "@/lib/i18n-context"
+import SourceIcon from "@/components/SourceIcon"
 
 interface BenchmarkRankingProps {
   models: ModelWithScores[]
   categories: Categories
   selectedSlugs: string[]
+  sources: Sources
 }
 
 interface RankedModel {
@@ -49,6 +51,7 @@ export default function BenchmarkRanking({
   models,
   categories,
   selectedSlugs,
+  sources,
 }: BenchmarkRankingProps) {
   const { locale } = useLocale()
   const l = LABELS[locale] || LABELS.en
@@ -97,11 +100,12 @@ export default function BenchmarkRanking({
 
     // Filter models that have this benchmark score
     const withScores = models
+      .filter((m) => selectedSlugs.includes(m.slug))
       .filter((m) => m.benchmarks[selectedBenchmark] != null)
       .map((m) => ({
         model: m,
         score: m.benchmarks[selectedBenchmark],
-        isSelected: selectedSlugs.includes(m.slug),
+        isSelected: true,
       }))
 
     // Sort
@@ -188,7 +192,7 @@ export default function BenchmarkRanking({
           value={selectedBenchmark}
           onChange={(e) => setSelectedBenchmark(e.target.value)}
           className="
-            flex-1 max-w-xs px-3 py-1.5 text-sm rounded-lg
+            px-3 py-1.5 text-sm rounded-lg
             border border-white/10 bg-card text-txt-primary
             font-mono cursor-pointer
             focus:outline-none focus:ring-2 focus:ring-accent-blue/50
@@ -205,6 +209,9 @@ export default function BenchmarkRanking({
             </optgroup>
           ))}
         </select>
+        {benchmarkDef?.source && (
+          <SourceIcon sourceKey={benchmarkDef.source} sources={sources} size={14} />
+        )}
       </div>
 
       {/* SVG Bar Chart */}

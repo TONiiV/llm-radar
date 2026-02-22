@@ -19,8 +19,12 @@ export function useChartDimensions(
   const updateDimensions = useCallback(() => {
     if (!containerRef.current) return
     const { width } = containerRef.current.getBoundingClientRect()
-    const height = aspectRatio ? width * aspectRatio : containerRef.current.getBoundingClientRect().height
-    setDimensions({ width, height })
+    const roundedWidth = Math.round(width)
+    const height = aspectRatio ? roundedWidth * aspectRatio : Math.round(containerRef.current.getBoundingClientRect().height)
+    setDimensions((prev) => {
+      if (prev.width === roundedWidth && prev.height === height) return prev
+      return { width: roundedWidth, height }
+    })
   }, [aspectRatio])
 
   useEffect(() => {
