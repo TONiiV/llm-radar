@@ -15,6 +15,14 @@ jobs:
           node-version: '20'
       - run: npm ci
 
+      # Step 0: Discover new models from data sources
+      - name: Discover New Models
+        continue-on-error: true
+        run: npx tsx scripts/cron/discover-models.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       # Step 1: Fetch price data → staging
       - name: Fetch OpenRouter
         run: npx tsx scripts/cron/fetch-openrouter.ts
@@ -71,7 +79,22 @@ jobs:
           VERCEL_URL: ${{ secrets.VERCEL_URL }}
           REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
 
-      # Step 5: Weekly cleanup (Sundays only)
+      # Step 5: Regenerate seed.json from DB
+      - name: Regenerate seed.json
+        continue-on-error: true
+        run: npx tsx scripts/cron/regenerate-seed.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Commit seed.json if changed
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet data/seed.json || (git add data/seed.json && git commit -m "chore: auto-update seed.json" && git push)
+
+      # Step 6: Weekly cleanup (Sundays only)
       - name: Cleanup Old Staging Data
         if: github.event.schedule == '0 0 * * 0' || github.event_name == 'workflow_dispatch'
         run: npx tsx scripts/cron/cleanup-staging.ts

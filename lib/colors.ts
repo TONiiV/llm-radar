@@ -29,3 +29,31 @@ export const CATEGORY_COLORS: Record<string, string> = {
 export function getCategoryColor(key: string): string {
   return CATEGORY_COLORS[key] || "#94a3b8"
 }
+
+// Provider colors — used as fallback when provider has no color in DB
+export const PROVIDER_COLORS: Record<string, string> = {
+  anthropic: "#D97706",
+  openai: "#10A37F",
+  google: "#4285F4",
+  xai: "#1DA1F2",
+  deepseek: "#5B6CF0",
+  meta: "#1877F2",
+  mistral: "#FF7000",
+  alibaba: "#FF6A00",
+  zhipu: "#00D4AA",
+  moonshot: "#8B5CF6",
+  minimax: "#EC4899",
+  nvidia: "#76B900",
+}
+
+// Generate a deterministic color from a string (for unknown providers)
+export function getProviderColor(slug: string): string {
+  if (PROVIDER_COLORS[slug]) return PROVIDER_COLORS[slug]
+  // Hash-based fallback: generate a hue from the slug
+  let hash = 0
+  for (let i = 0; i < slug.length; i++) {
+    hash = slug.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  const hue = Math.abs(hash) % 360
+  return `hsl(${hue}, 65%, 55%)`
+}
