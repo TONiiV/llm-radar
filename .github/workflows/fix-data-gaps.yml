@@ -2,6 +2,9 @@ name: Fix Data Gaps (One-time)
 on:
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   fix:
     runs-on: ubuntu-latest

@@ -211,7 +211,7 @@ async function fixPrices() {
     // Insert in batches
     for (let i = 0; i < toInsert.length; i += 50) {
       const batch = toInsert.slice(i, i + 50)
-      const { error } = await supabase.from('prices').upsert(batch, { onConflict: 'model_id' })
+      const { error } = await supabase.from('prices').upsert(batch, { onConflict: 'model_id', ignoreDuplicates: true })
       if (error) {
         console.error(`  Batch insert error: ${error.message}`)
       }
