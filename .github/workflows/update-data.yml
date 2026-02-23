@@ -1,0 +1,68 @@
+name: Daily Data Update
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Every day at UTC 00:00
+  workflow_dispatch: {}    # Manual trigger support
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+
+      # Step 1: Fetch price data → staging
+      - name: Fetch OpenRouter
+        run: npx tsx scripts/cron/fetch-openrouter.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Fetch LiteLLM
+        run: npx tsx scripts/cron/fetch-litellm.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      # Step 1b: Fetch benchmark data → staging
+      - name: Fetch LMArena Benchmarks
+        run: npx tsx scripts/cron/fetch-benchmarks.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      # Step 2: Cross-validate and merge
+      - name: Validate and Merge
+        run: npx tsx scripts/cron/validate-and-merge.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      # Step 3: Recalculate normalized scores
+      - name: Recalculate Scores
+        run: npx tsx scripts/cron/recalculate-scores.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      # Step 4: Trigger Vercel page revalidation
+      - name: Revalidate Vercel Pages
+        run: |
+          curl -s -X POST "$VERCEL_URL/api/revalidate" \
+            -H "Content-Type: application/json" \
+            -d "{\"secret\": \"$REVALIDATION_SECRET\"}"
+        env:
+          VERCEL_URL: ${{ secrets.VERCEL_URL }}
+          REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
+
+      # Step 5: Weekly cleanup (Sundays only)
+      - name: Cleanup Old Staging Data
+        if: github.event.schedule == '0 0 * * 0' || github.event_name == 'workflow_dispatch'
+        run: npx tsx scripts/cron/cleanup-staging.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}

@@ -39,6 +39,7 @@ export default function D3ScatterChart({
   const theme = useChartTheme()
   const { tooltip, showTooltip, moveTooltip, hideTooltip } = useTooltip()
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null)
+  const [pricingMode, setPricingMode] = useState<"average" | "input" | "output">("average")
   const { t, locale } = useLocale()
 
   const height = Math.max(320, Math.min(width * 0.65, 420))
@@ -46,20 +47,26 @@ export default function D3ScatterChart({
   // Prepare scatter data
   const data: ScatterPoint[] = useMemo(() => {
     const selected = models.filter((m) => selectedSlugs.includes(m.slug))
-    return selected.map((m, i) => ({
-      x: avgPricePer1M(m.pricing.input_per_1m, m.pricing.output_per_1m),
-      y: Math.round(m.compositeScore),
-      slug: m.slug,
-      name: m.name,
-      isPareto: paretoSlugs.includes(m.slug),
-      isReasoning: m.is_reasoning_model,
-      confirmed: m.pricing.confirmed,
-      color: getModelColor(i),
-      inputPrice: m.pricing.input_per_1m,
-      outputPrice: m.pricing.output_per_1m,
-      pricingSource: m.pricing.source,
-    }))
-  }, [models, selectedSlugs, paretoSlugs])
+    return selected.map((m, i) => {
+      let xValue = avgPricePer1M(m.pricing.input_per_1m, m.pricing.output_per_1m)
+      if (pricingMode === "input") xValue = m.pricing.input_per_1m
+      if (pricingMode === "output") xValue = m.pricing.output_per_1m
+      
+      return {
+        x: xValue,
+        y: Math.round(m.compositeScore),
+        slug: m.slug,
+        name: m.name,
+        isPareto: paretoSlugs.includes(m.slug),
+        isReasoning: m.is_reasoning_model,
+        confirmed: m.pricing.confirmed,
+        color: getModelColor(i),
+        inputPrice: m.pricing.input_per_1m,
+        outputPrice: m.pricing.output_per_1m,
+        pricingSource: m.pricing.source,
+      }
+    })
+  }, [models, selectedSlugs, paretoSlugs, pricingMode])
 
   const { xScale, yScale } = useMemo(
     () => createScales(width, height, MARGIN, data),
@@ -110,14 +117,53 @@ export default function D3ScatterChart({
     return <div ref={containerRef as React.RefObject<HTMLDivElement>} className="w-full" style={{ minHeight: 380 }} />
   }
 
-  const xTicks = getXTicks().filter((v) => {
-    const px = xScale(v)
-    return px >= MARGIN.left && px <= width - MARGIN.right
-  })
+  const xTicks = (() => {
+    const rawTicks = getXTicks().filter((v) => {
+      const px = xScale(v)
+      return px >= MARGIN.left && px <= width - MARGIN.right
+    })
+    
+    // Filter ticks that are too close to each other
+    let lastPx = -100
+    return rawTicks.filter((v) => {
+      const px = Math.round(xScale(v))
+      if (px - lastPx < 30) return false
+      lastPx = px
+      return true
+    })
+  })();
   const yTicks = getYTicks()
 
   return (
-    <div ref={containerRef as React.RefObject<HTMLDivElement>} className="w-full">
+    <div ref={containerRef as React.RefObject<HTMLDivElement>} className="w-full flex flex-col">
+      <div className="flex justify-end mb-4 mr-4">
+        <div className="inline-flex bg-bg-secondary rounded-md p-1 font-mono text-xs">
+          <button
+            onClick={() => setPricingMode("average")}
+            className={`px-3 py-1.5 rounded-sm transition-colors ${
+              pricingMode === "average" ? "bg-bg-primary text-txt-primary shadow-sm" : "text-txt-muted hover:text-txt-primary"
+            }`}
+          >
+            {locale === "zh" ? "平均 (Average)" : "Average"}
+          </button>
+          <button
+            onClick={() => setPricingMode("input")}
+            className={`px-3 py-1.5 rounded-sm transition-colors ${
+              pricingMode === "input" ? "bg-bg-primary text-txt-primary shadow-sm" : "text-txt-muted hover:text-txt-primary"
+            }`}
+          >
+            {locale === "zh" ? "输入 (Input)" : "Input"}
+          </button>
+          <button
+            onClick={() => setPricingMode("output")}
+            className={`px-3 py-1.5 rounded-sm transition-colors ${
+              pricingMode === "output" ? "bg-bg-primary text-txt-primary shadow-sm" : "text-txt-muted hover:text-txt-primary"
+            }`}
+          >
+            {locale === "zh" ? "输出 (Output)" : "Output"}
+          </button>
+        </div>
+      </div>
       <svg width={width} height={height} className="block">
         {/* Grid lines */}
         {xTicks.map((v) => (
@@ -215,7 +261,11 @@ export default function D3ScatterChart({
           fontStyle="italic"
           fill={theme.textSecondary}
         >
-          {t("chart.avgPriceAxis")}
+          {pricingMode === "average" 
+            ? t("chart.avgPriceAxis") 
+            : pricingMode === "input" 
+              ? (locale === "zh" ? "输入价格 / 1M token (Log scale)" : "Input price per 1M tokens (log scale)")
+              : (locale === "zh" ? "输出价格 / 1M token (Log scale)" : "Output price per 1M tokens (log scale)")}
         </text>
 
         {/* Y axis */}
@@ -299,7 +349,11 @@ export default function D3ScatterChart({
                       {formatPrice(d.outputPrice)}/1M
                     </p>
                     <p className="font-mono text-xs text-txt-secondary inline-flex items-center gap-0.5">
-                      {t("chart.avgPrice")}: {formatPrice(d.x)}/1M
+                      {pricingMode === "average" 
+                        ? t("chart.avgPrice") 
+                        : pricingMode === "input" 
+                          ? (locale === "zh" ? "输入价格" : "Input Price")
+                          : (locale === "zh" ? "输出价格" : "Output Price")}: {formatPrice(d.x)}/1M
                       {d.pricingSource && (
                         <SourceIcon sourceKey={d.pricingSource} sources={sources} size={11} />
                       )}

@@ -1,4 +1,4 @@
-import { lineRadial, curveLinearClosed } from "d3-shape"
+// d3-shape imports removed as they are no longer needed
 
 export interface Point {
   x: number
@@ -27,9 +27,6 @@ export function getVertexPositions(
   })
 }
 
-/**
- * Generate SVG path for a regular polygon grid line.
- */
 export function getPentagonPath(
   cx: number,
   cy: number,
@@ -39,12 +36,15 @@ export function getPentagonPath(
   const angleStep = (2 * Math.PI) / count
   const startAngle = -Math.PI / 2
 
-  const radialLine = lineRadial<number>()
-    .angle((_, i) => startAngle + i * angleStep)
-    .radius(() => radius)
-    .curve(curveLinearClosed)
+  const points = Array.from({ length: count }, (_, i) => {
+    const angle = startAngle + i * angleStep
+    return {
+      x: radius * Math.cos(angle),
+      y: radius * Math.sin(angle),
+    }
+  })
 
-  return radialLine(Array.from({ length: count }, (_, i) => i)) ?? ""
+  return points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join("") + "Z"
 }
 
 /**

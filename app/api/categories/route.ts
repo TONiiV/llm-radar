@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
-import { getCategories } from '@/lib/data'
+import { fetchCategories } from '@/lib/data'
 
 export async function GET() {
-  return NextResponse.json(getCategories())
+  const categories = await fetchCategories()
+  return NextResponse.json(categories)
 }

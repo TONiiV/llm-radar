@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { getModelWithScores } from '@/lib/data'
+import { fetchModelWithScores } from '@/lib/data'
 
 export async function GET() {
-  const models = getModelWithScores()
+  const models = await fetchModelWithScores()
   return NextResponse.json(models)
 }
