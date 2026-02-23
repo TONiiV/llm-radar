@@ -15,15 +15,7 @@ jobs:
           node-version: '20'
       - run: npm ci
 
-      # Step 0a: Purge stale seed-originated scores (one-time, safe to re-run)
-      - name: Purge Official Scores
-        continue-on-error: true
-        run: npx tsx scripts/cron/purge-official-scores.ts
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-
-      # Step 0b: Discover new models from data sources
+      # Step 0: Discover new models from data sources
       - name: Discover New Models
         continue-on-error: true
         run: npx tsx scripts/cron/discover-models.ts
@@ -79,14 +71,6 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      # Step 2b: Clean up official scores superseded by external sources
-      - name: Cleanup Redundant Official Scores
-        continue-on-error: true
-        run: npx tsx scripts/cron/cleanup-official-scores.ts
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-
       # Step 3: Recalculate normalized scores
       - name: Recalculate Scores
         run: npx tsx scripts/cron/recalculate-scores.ts
@@ -108,15 +92,7 @@ jobs:
           VERCEL_URL: ${{ secrets.VERCEL_URL }}
           REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
 
-      # Step 5: Validate seed scores against external sources
-      - name: Validate Benchmark Sources
-        continue-on-error: true
-        run: npx tsx scripts/cron/validate-seed-against-sources.ts
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-
-      # Step 6: Regenerate seed.json from DB
+      # Step 5: Regenerate seed.json from DB
       - name: Regenerate seed.json
         continue-on-error: true
         run: npx tsx scripts/cron/regenerate-seed.ts
