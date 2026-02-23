@@ -127,6 +127,34 @@ npm run lint         # 代码检查
 3. **Supabase 查询必须分页**：任何可能超过 1000 行的查询都用 `.range()` 分页
 4. **CI 日志要记录 unmapped 数量**：方便发现映射覆盖问题
 
+## Bug 复盘：价格表 upsert 静默失败 + validate-and-merge slug 跳过 (2026-02-23)
+
+**根因**（两个 Bug 导致 173 模型中只有 26 个有价格）：
+
+1. **prices 表缺少 `model_id` 唯一约束**
+   - `fix-data-gaps.ts` 和 `validate-and-merge.ts` 都用 `upsert({ onConflict: 'model_id' })`
+   - 但 prices 表只有 `id` 主键和 `model_id` 外键，没有唯一约束
+   - Supabase 返回错误 "there is no unique or exclusion constraint matching the ON CONFLICT specification"
+   - 脚本只 `console.error` 了错误，没有 throw → 静默失败
+
+2. **validate-and-merge.ts 只查 model_name_mappings 表**
+   - `resolveModelSlug()` 已把 OpenRouter ID 转为我们的 slug（如 `claude-opus-4`）
+   - 但 merge 脚本只在 `model_name_mappings` 表查 `source_key:model_name` 键
+   - slug 不在 mappings 表 → modelId = undefined → skip
+   - 所有 OpenRouter 来的价格全部被跳过
+
+**修复方案**：
+1. 通过 Supabase migration 添加 `prices_model_id_unique` 唯一约束
+2. validate-and-merge.ts 添加 `slugToId.get(sp.model_name)` fallback
+3. 手动用 SQL 批量插入 173 个模型的价格
+4. Workflow 添加 `permissions: contents: write` 允许 push seed.json
+
+**防范规则**：
+1. **使用 upsert 前，必须先确认目标表有对应的唯一约束**
+2. **upsert 失败不应该只 log error** — 应该 throw 或至少返回失败计数
+3. **staging 数据的 merge 逻辑必须同时支持**：mapping 表精确匹配 + slug 直接匹配
+4. **GitHub Actions workflow 需要写权限时，必须显式声明** `permissions: contents: write`
+
 ## 复盘学习规范
 
 Bug 修复后执行复盘流程：
