@@ -2,7 +2,7 @@ import { supabase } from "./supabase"
 import seedData from "@/data/seed.json"
 import categoriesData from "@/data/categories.json"
 import sourcesData from "@/data/sources.json"
-import { normalizeByMaxScore, categoryScore, compositeScore } from "./normalize"
+import { normalizeByMaxScore, percentileRank, categoryScore, compositeScore } from "./normalize"
 import type {
   SeedData,
   Categories,
@@ -171,6 +171,7 @@ function getCategoryLabel(key: string): string {
     math: "数学 Math",
     chat: "对话 Chat",
     agentic: "Agent",
+    speed: "速度 Speed",
   }
   return labels[key] ?? key
 }
@@ -200,12 +201,21 @@ export async function fetchModelWithScores(models?: Model[]): Promise<ModelWithS
       for (const bm of cats[catKey].benchmarks) {
         const raw = model.benchmarks[bm.key]
         if (raw != null) {
-          normalizedScores[bm.key] = normalizeByMaxScore(
-            raw,
-            bm.max_score,
-            allValuesPerBenchmark[bm.key],
-            bm.higher_is_better
-          )
+          // Use percentile_rank for speed metrics (no fixed upper bound)
+          if ((bm as any).normMethod === 'percentile_rank') {
+            normalizedScores[bm.key] = percentileRank(
+              raw,
+              allValuesPerBenchmark[bm.key],
+              bm.higher_is_better
+            )
+          } else {
+            normalizedScores[bm.key] = normalizeByMaxScore(
+              raw,
+              bm.max_score,
+              allValuesPerBenchmark[bm.key],
+              bm.higher_is_better
+            )
+          }
         } else {
           normalizedScores[bm.key] = null
         }
@@ -231,6 +241,95 @@ export async function fetchModelWithScores(models?: Model[]): Promise<ModelWithS
       providerColor: provider?.color ?? "#888888",
     }
   })
+}
+
+/**
+ * Compute comparative scores using only common benchmarks.
+ * When comparing N models, only benchmarks available for ALL N models are used.
+ * Returns the models with recalculated scores and coverage info.
+ */
+export function computeComparativeScores(
+  selectedModels: ModelWithScores[],
+  allModels: ModelWithScores[],
+  cats: Categories,
+): { models: ModelWithScores[]; commonCount: number; totalCount: number } {
+  if (selectedModels.length <= 1) {
+    const total = Object.values(cats).reduce((sum, c) => sum + c.benchmarks.length, 0)
+    return { models: selectedModels, commonCount: total, totalCount: total }
+  }
+
+  // For each category, find benchmarks all selected models have
+  let totalBenchmarks = 0
+  let commonBenchmarks = 0
+
+  // Collect all values from ALL models for normalization (not just selected)
+  const allValuesPerBenchmark: Record<string, number[]> = {}
+  for (const catKey of Object.keys(cats)) {
+    for (const bm of cats[catKey].benchmarks) {
+      allValuesPerBenchmark[bm.key] = allModels
+        .map((m) => m.benchmarks[bm.key])
+        .filter((v): v is number => v != null)
+    }
+  }
+
+  const commonBenchmarkKeys = new Set<string>()
+  for (const catKey of Object.keys(cats)) {
+    for (const bm of cats[catKey].benchmarks) {
+      totalBenchmarks++
+      const allHave = selectedModels.every(
+        (m) => m.benchmarks[bm.key] != null
+      )
+      if (allHave) {
+        commonBenchmarks++
+        commonBenchmarkKeys.add(bm.key)
+      }
+    }
+  }
+
+  // Recalculate scores using only common benchmarks
+  const result = selectedModels.map((model) => {
+    const normalizedScores: Record<string, number | null> = {}
+    for (const catKey of Object.keys(cats)) {
+      for (const bm of cats[catKey].benchmarks) {
+        if (!commonBenchmarkKeys.has(bm.key)) {
+          normalizedScores[bm.key] = null
+          continue
+        }
+        const raw = model.benchmarks[bm.key]
+        if (raw != null) {
+          if ((bm as any).normMethod === 'percentile_rank') {
+            normalizedScores[bm.key] = percentileRank(
+              raw, allValuesPerBenchmark[bm.key], bm.higher_is_better
+            )
+          } else {
+            normalizedScores[bm.key] = normalizeByMaxScore(
+              raw, bm.max_score, allValuesPerBenchmark[bm.key], bm.higher_is_better
+            )
+          }
+        } else {
+          normalizedScores[bm.key] = null
+        }
+      }
+    }
+
+    const catScores: Record<string, ReturnType<typeof categoryScore>> = {}
+    for (const catKey of Object.keys(cats)) {
+      catScores[catKey] = categoryScore(
+        cats[catKey].benchmarks.filter((bm) => commonBenchmarkKeys.has(bm.key)),
+        normalizedScores
+      )
+    }
+
+    const score = compositeScore(catScores)
+    return {
+      ...model,
+      categoryScores: catScores,
+      compositeScore: score,
+      radarIdx: score,
+    }
+  })
+
+  return { models: result, commonCount: commonBenchmarks, totalCount: totalBenchmarks }
 }
 
 export async function fetchModelBySlug(slug: string): Promise<ModelWithScores | undefined> {
@@ -288,12 +387,20 @@ export function getModelWithScores(models?: Model[]): ModelWithScores[] {
       for (const bm of cats[catKey].benchmarks) {
         const raw = model.benchmarks[bm.key]
         if (raw != null) {
-          normalizedScores[bm.key] = normalizeByMaxScore(
-            raw,
-            bm.max_score,
-            allValuesPerBenchmark[bm.key],
-            bm.higher_is_better
-          )
+          if ((bm as any).normMethod === 'percentile_rank') {
+            normalizedScores[bm.key] = percentileRank(
+              raw,
+              allValuesPerBenchmark[bm.key],
+              bm.higher_is_better
+            )
+          } else {
+            normalizedScores[bm.key] = normalizeByMaxScore(
+              raw,
+              bm.max_score,
+              allValuesPerBenchmark[bm.key],
+              bm.higher_is_better
+            )
+          }
         } else {
           normalizedScores[bm.key] = null
         }

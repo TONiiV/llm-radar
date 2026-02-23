@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { buildPricingMatchContext, resolveModelSlug } from '../../lib/model-matching'
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -22,6 +23,13 @@ async function main() {
 
   const data = await res.json() as Record<string, LiteLLMModel>
 
+  // Build match context for fuzzy model name resolution
+  const ctx = await buildPricingMatchContext(supabase)
+  console.log(`  Match context: ${ctx.dbMappings.size} DB mappings, ${ctx.dbSlugs.size} model slugs`)
+
+  let matched = 0
+  let unmatched = 0
+
   const rows = Object.entries(data)
     .filter(([key, v]) => key !== 'sample_spec' && v.input_cost_per_token != null && v.output_cost_per_token != null)
     .filter(([, v]) => typeof v.input_cost_per_token === 'number' && typeof v.output_cost_per_token === 'number')
@@ -31,15 +39,23 @@ async function main() {
       const ctxWindow = typeof maxInput === 'number' ? maxInput
         : typeof maxTokens === 'number' ? maxTokens
         : null
+
+      // Try to match LiteLLM model name to our slug
+      const slug = resolveModelSlug(name, ctx)
+      if (slug) matched++
+      else unmatched++
+
       return {
         source_key: 'litellm',
-        model_name: name,
+        model_name: slug ?? name,
         input_price_per_1m: (v.input_cost_per_token ?? 0) * 1_000_000,
         output_price_per_1m: (v.output_cost_per_token ?? 0) * 1_000_000,
         context_window: ctxWindow,
         status: 'pending',
       }
     })
+
+  console.log(`  Matched: ${matched}, Unmatched: ${unmatched}`)
 
   // Insert in batches of 100
   for (let i = 0; i < rows.length; i += 100) {

@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { buildPricingMatchContext, resolveModelSlug } from '../../lib/model-matching'
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -18,16 +19,39 @@ async function main() {
 
   const { data } = await res.json() as { data: OpenRouterModel[] }
 
+  // Build match context for fuzzy model name resolution
+  const ctx = await buildPricingMatchContext(supabase)
+  console.log(`  Match context: ${ctx.dbMappings.size} DB mappings, ${ctx.dbSlugs.size} model slugs`)
+
+  let matched = 0
+  let unmatched = 0
+
   const rows = data
     .filter(m => m.pricing?.prompt && m.pricing?.completion)
-    .map(m => ({
-      source_key: 'openrouter',
-      model_name: m.id,
-      input_price_per_1m: parseFloat(m.pricing.prompt) * 1_000_000,
-      output_price_per_1m: parseFloat(m.pricing.completion) * 1_000_000,
-      context_window: m.context_length,
-      status: 'pending',
-    }))
+    .map(m => {
+      // OpenRouter IDs are like "anthropic/claude-opus-4-5"
+      // Try matching: 1) full ID  2) stripped provider prefix  3) with :suffix removed
+      let slug = resolveModelSlug(m.id, ctx)
+      if (!slug) {
+        const parts = m.id.split('/')
+        const rawName = parts.length > 1 ? parts[1] : parts[0]
+        const cleanName = rawName.replace(/:.*$/, '') // remove :exacto etc.
+        slug = resolveModelSlug(cleanName, ctx)
+      }
+      if (slug) matched++
+      else unmatched++
+
+      return {
+        source_key: 'openrouter',
+        model_name: slug ?? m.id, // use matched slug if available, otherwise raw ID
+        input_price_per_1m: parseFloat(m.pricing.prompt) * 1_000_000,
+        output_price_per_1m: parseFloat(m.pricing.completion) * 1_000_000,
+        context_window: m.context_length,
+        status: 'pending',
+      }
+    })
+
+  console.log(`  Matched: ${matched}, Unmatched: ${unmatched}`)
 
   // Insert in batches of 100
   for (let i = 0; i < rows.length; i += 100) {

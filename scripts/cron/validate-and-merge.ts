@@ -26,6 +26,17 @@ async function main() {
     mappingLookup.set(`${m.source_key}:${m.external_name}`, m.model_id)
   }
 
+  // Build slug → model_id lookup for direct slug matching
+  const { data: allModels } = await supabase
+    .from('models')
+    .select('id, slug')
+    .eq('status', 'active')
+
+  const slugToId = new Map<string, string>()
+  for (const m of allModels ?? []) {
+    slugToId.set(m.slug, m.id)
+  }
+
   // Get pending staging prices
   const { data: stagingPrices } = await supabase
     .from('staging_prices')
@@ -42,7 +53,9 @@ async function main() {
   let flagged = 0
 
   for (const sp of stagingPrices) {
+    // Try mapping table first, then direct slug match (from resolveModelSlug)
     const modelId = mappingLookup.get(`${sp.source_key}:${sp.model_name}`)
+      ?? slugToId.get(sp.model_name)
     if (!modelId) {
       // No mapping — skip but don't reject (might be a new model)
       skipped++

@@ -41,6 +41,7 @@ export interface BenchmarkDef {
   max_score: number | null
   source?: string
   sourceUrl?: string
+  normMethod?: 'percentile_rank' | null
 }
 
 export interface CategoryDef {
