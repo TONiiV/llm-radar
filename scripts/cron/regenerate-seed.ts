@@ -31,10 +31,10 @@ async function main() {
   if (modelsErr) throw new Error(`Models fetch failed: ${modelsErr.message}`)
   console.log(`  ${models.length} active models`)
 
-  // 3. Fetch all benchmark scores
+  // 3. Fetch all benchmark scores with source for priority handling
   const { data: scores, error: scoresErr } = await supabase
     .from('benchmark_scores')
-    .select('model_id, benchmark_key, raw_score')
+    .select('model_id, benchmark_key, raw_score, source')
   if (scoresErr) throw new Error(`Scores fetch failed: ${scoresErr.message}`)
 
   // 4. Fetch latest prices per model
@@ -47,13 +47,20 @@ async function main() {
   // Build model_id → slug mapping
   const idToSlug = new Map(models.map(m => [m.id, m.slug]))
 
-  // Group scores by model slug
+  // Group scores by model slug — prefer external sources over 'official' (seed-originated)
+  const SOURCE_PRIORITY: Record<string, number> = { artificial_analysis: 4, epoch_ai: 3, official: 2, lmarena: 1 }
   const scoresBySlug = new Map<string, Record<string, number>>()
+  const sourcePriBySlug = new Map<string, Record<string, number>>()
   for (const s of scores) {
     const slug = idToSlug.get(s.model_id)
     if (!slug) continue
-    if (!scoresBySlug.has(slug)) scoresBySlug.set(slug, {})
-    scoresBySlug.get(slug)![s.benchmark_key] = Number(s.raw_score)
+    if (!scoresBySlug.has(slug)) { scoresBySlug.set(slug, {}); sourcePriBySlug.set(slug, {}) }
+    const priority = SOURCE_PRIORITY[s.source ?? ''] ?? 0
+    const existing = sourcePriBySlug.get(slug)![s.benchmark_key] ?? -1
+    if (priority >= existing) {
+      scoresBySlug.get(slug)![s.benchmark_key] = Number(s.raw_score)
+      sourcePriBySlug.get(slug)![s.benchmark_key] = priority
+    }
   }
 
   // Get latest price per model (first occurrence = latest due to order)

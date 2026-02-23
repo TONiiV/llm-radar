@@ -65,8 +65,8 @@ export async function fetchModels(): Promise<Model[]> {
     const idToSlug = new Map((modelIds ?? []).map((m) => [m.id, m.slug]))
     const slugToId = new Map((modelIds ?? []).map((m) => [m.slug, m.id]))
 
-    // Group scores by model_id — prefer official > artificial_analysis > epoch_ai > others
-    const SOURCE_PRIORITY: Record<string, number> = { official: 4, artificial_analysis: 3, epoch_ai: 2, lmarena: 1 }
+    // Group scores by model_id — prefer artificial_analysis > epoch_ai > official > others
+    const SOURCE_PRIORITY: Record<string, number> = { artificial_analysis: 4, epoch_ai: 3, official: 2, lmarena: 1 }
     const scoresByModel = new Map<string, Record<string, number>>()
     const sourceByModel = new Map<string, Record<string, number>>()
     for (const s of scores) {
