@@ -60,12 +60,12 @@ export default function D3RadarChart({
   const categoryKeys = useMemo(() => Object.keys(categories), [categories])
   const axisCount = categoryKeys.length
 
-  // Responsive sizing
+  // Responsive sizing — keep square aspect ratio for symmetric pentagon
   const size = Math.min(width, 520)
-  const height = size > 0 ? size * 0.95 : 420
+  const height = size > 0 ? size : 420
   const cx = size / 2
-  const cy = height / 2 - 5
-  const maxRadius = Math.min(cx, cy) - 50
+  const cy = height / 2
+  const maxRadius = Math.min(cx, cy) - 55
 
   // Grid layers at 20/40/60/80/100
   const gridLevels = [20, 40, 60, 80, 100]
