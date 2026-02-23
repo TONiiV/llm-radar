@@ -8,9 +8,10 @@ interface SourceIconProps {
   sourceKey?: string
   sources: Sources
   size?: number
+  url?: string
 }
 
-export default function SourceIcon({ sourceKey, sources, size = 14 }: SourceIconProps) {
+export default function SourceIcon({ sourceKey, sources, size = 14, url }: SourceIconProps) {
   const [open, setOpen] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const popupRef = useRef<HTMLSpanElement>(null)
@@ -91,7 +92,7 @@ export default function SourceIcon({ sourceKey, sources, size = 14 }: SourceIcon
           }}
         >
           <a
-            href={source.url}
+            href={url || source.url}
             target="_blank"
             rel="noopener noreferrer"
             className="text-accent-blue hover:underline font-mono"

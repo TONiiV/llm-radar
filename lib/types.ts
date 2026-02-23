@@ -40,6 +40,7 @@ export interface BenchmarkDef {
   higher_is_better: boolean
   max_score: number | null
   source?: string
+  sourceUrl?: string
 }
 
 export interface CategoryDef {

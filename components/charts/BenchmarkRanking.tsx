@@ -210,7 +210,7 @@ export default function BenchmarkRanking({
           ))}
         </select>
         {benchmarkDef?.source && (
-          <SourceIcon sourceKey={benchmarkDef.source} sources={sources} size={14} />
+          <SourceIcon sourceKey={benchmarkDef.source} sources={sources} size={14} url={benchmarkDef.sourceUrl} />
         )}
       </div>
 

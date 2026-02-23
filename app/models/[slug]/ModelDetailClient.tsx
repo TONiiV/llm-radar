@@ -130,7 +130,7 @@ export default function ModelDetailClient({ model, categories, providers, source
                           <div key={bm.key} className="flex items-center gap-3 text-sm">
                             <div className="w-40 text-txt-secondary font-body flex items-center gap-0.5">
                               <span className="truncate" title={bm.label}>{bm.label}</span>
-                              {bm.source && <SourceIcon sourceKey={bm.source} sources={sources} size={12} />}
+                              {bm.source && <SourceIcon sourceKey={bm.source} sources={sources} size={12} url={bm.sourceUrl} />}
                             </div>
                             <div className="flex-1">
                               {hasData ? (

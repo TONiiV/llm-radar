@@ -198,7 +198,7 @@ export default function CategoryDetail({
                       {b.label}
                     </span>
                     {b.source && (
-                      <SourceIcon sourceKey={b.source} sources={sources} size={12} />
+                      <SourceIcon sourceKey={b.source} sources={sources} size={12} url={b.sourceUrl} />
                     )}
                   </span>
                   {!b.higher_is_better && (
