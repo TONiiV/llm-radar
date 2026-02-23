@@ -6,64 +6,69 @@ const supabase = createClient(
 )
 
 /**
- * One-time purge: Remove ALL source='official' benchmark scores from DB.
- * These were imported from seed.json and are unreliable.
- * After this, only external sources (AA, Epoch, LMArena) will populate scores.
+ * Purge unreliable benchmark scores from DB:
+ * 1. ALL source='official' scores (from seed.json, potentially stale)
+ * 2. AA scores with raw_score < 1.0 (from bug where fractions weren't converted to %)
+ * After this, fetchers re-populate with correct data.
  */
 async function main() {
-  console.log('🗑️  Purging ALL official (seed-originated) benchmark scores...')
+  console.log('🗑️  Purging unreliable benchmark scores...')
 
-  // Count before
   const { count: totalBefore } = await supabase
     .from('benchmark_scores')
     .select('*', { count: 'exact', head: true })
+
+  // 1. Purge official scores
   const { count: officialCount } = await supabase
     .from('benchmark_scores')
     .select('*', { count: 'exact', head: true })
     .eq('source', 'official')
 
-  console.log(`  Total scores: ${totalBefore}, Official: ${officialCount}`)
-
-  if (!officialCount || officialCount === 0) {
-    console.log('  No official scores to purge.')
-    return
-  }
-
-  // Delete all official scores in batches
-  // Supabase doesn't have batch delete by condition easily, so we fetch IDs first
   let deleted = 0
-  while (true) {
-    const { data, error } = await supabase
-      .from('benchmark_scores')
-      .select('id')
-      .eq('source', 'official')
-      .limit(500)
-    if (error) throw new Error(`Fetch failed: ${error.message}`)
-    if (!data || data.length === 0) break
-
-    const ids = data.map(d => d.id)
-    const { error: delErr } = await supabase
-      .from('benchmark_scores')
-      .delete()
-      .in('id', ids)
-    if (delErr) throw new Error(`Delete failed: ${delErr.message}`)
-    deleted += ids.length
-    console.log(`  Deleted ${deleted}/${officialCount}...`)
+  if (officialCount && officialCount > 0) {
+    console.log(`  Purging ${officialCount} official (seed) scores...`)
+    while (true) {
+      const { data } = await supabase
+        .from('benchmark_scores')
+        .select('id')
+        .eq('source', 'official')
+        .limit(500)
+      if (!data || data.length === 0) break
+      await supabase.from('benchmark_scores').delete().in('id', data.map(d => d.id))
+      deleted += data.length
+    }
+    console.log(`  ✅ Purged ${deleted} official scores`)
+  } else {
+    console.log('  No official scores to purge.')
   }
 
-  // Also reset any staging entries that were sourced from seed
+  // 2. Purge AA scores with wrong scale (raw_score < 1.0 = fraction not percentage)
+  const { data: badAA } = await supabase
+    .from('benchmark_scores')
+    .select('id')
+    .eq('source', 'artificial_analysis')
+    .lt('raw_score', 1.0)
+  if (badAA && badAA.length > 0) {
+    console.log(`  Purging ${badAA.length} mis-scaled AA scores (raw_score < 1.0)...`)
+    for (let i = 0; i < badAA.length; i += 100) {
+      await supabase.from('benchmark_scores').delete().in('id', badAA.slice(i, i + 100).map(d => d.id))
+    }
+    deleted += badAA.length
+    console.log(`  ✅ Purged ${badAA.length} bad AA scores`)
+  }
+
+  // 3. Reset staging
   await supabase
     .from('staging_benchmarks')
-    .update({ status: 'skipped', validation_notes: 'Official source purged' })
+    .update({ status: 'skipped', validation_notes: 'Source purged' })
     .eq('source_key', 'official')
     .eq('status', 'pending')
 
-  // Count after
   const { count: totalAfter } = await supabase
     .from('benchmark_scores')
     .select('*', { count: 'exact', head: true })
 
-  console.log(`\n✅ Purged ${deleted} official scores. Remaining: ${totalAfter} (all from external sources)`)
+  console.log(`\n✅ Purged ${deleted} total. Before: ${totalBefore}, After: ${totalAfter}`)
 }
 
 main().catch((err) => {
