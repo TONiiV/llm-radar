@@ -131,7 +131,7 @@ async function main() {
       source: sb.source_key,
       recorded_at: new Date().toISOString(),
     }, {
-      onConflict: 'model_id,benchmark_key',
+      onConflict: 'model_id,benchmark_key,source',
     })
 
     if (error) {
