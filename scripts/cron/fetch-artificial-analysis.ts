@@ -22,29 +22,42 @@ const AA_BENCHMARK_MAP: Record<string, { key: string; scale: number }> = {
 }
 
 // AA slug → our model slug (built-in fallback mappings)
+// IMPORTANT: Verified against actual AA API slugs (2026-02-23)
+// AA uses inconsistent naming: opus = "claude-opus-4-5", but sonnet = "claude-4-5-sonnet"
 const AA_MODEL_MAP: Record<string, string> = {
+  // Claude — AA uses TWO naming conventions
   'claude-opus-4-6':              'claude-opus-46',
   'claude-opus-4-5':              'claude-opus-45',
-  'claude-opus-4-1':              'claude-opus-41',
-  'claude-opus-4':                'claude-opus-4',
-  'claude-sonnet-4-5':            'claude-sonnet-45',
-  'claude-sonnet-4':              'claude-sonnet-4',
-  'claude-haiku-4-5':             'claude-haiku-45',
+  'claude-opus-4-5-thinking':     'claude-opus-45',   // reasoning variant, same model
+  'claude-4-1-opus-thinking':     'claude-opus-41',
+  'claude-4-opus':                'claude-opus-4',
+  'claude-4-opus-thinking':       'claude-opus-4',
+  'claude-4-5-sonnet':            'claude-sonnet-45',  // AA uses "claude-4-5-sonnet" NOT "claude-sonnet-4-5"
+  'claude-4-5-sonnet-thinking':   'claude-sonnet-45',
+  'claude-4-sonnet':              'claude-sonnet-4',
+  'claude-4-sonnet-thinking':     'claude-sonnet-4',
+  'claude-4-5-haiku':             'claude-haiku-45',   // AA uses "claude-4-5-haiku" NOT "claude-haiku-4-5"
+  'claude-4-5-haiku-reasoning':   'claude-haiku-45',
   'claude-3-7-sonnet':            'claude-37-sonnet',
-  'claude-3-5-sonnet':            'claude-35-sonnet',
+  'claude-3-7-sonnet-thinking':   'claude-37-sonnet',
+  'claude-35-sonnet':             'claude-35-sonnet',
   'claude-3-5-haiku':             'claude-35-haiku',
+  // GPT
   'gpt-5-2':                      'gpt-52',
   'gpt-5':                        'gpt-5',
   'gpt-5-1':                      'gpt-51',
+  'gpt-5-codex':                  'gpt-52-codex',      // AA "gpt-5-codex" = our gpt-52-codex
+  'gpt-5-1-codex':                'gpt-51-codex-mini', // verify: AA slug → our model
+  'gpt-5-1-codex-mini':           'gpt-51-codex-mini',
   'gpt-4-1':                      'gpt-41',
   'gpt-4-1-mini':                 'gpt-41-mini',
   'gpt-4-1-nano':                 'gpt-41-nano',
   'gpt-4o':                       'gpt-4o',
   'gpt-4o-mini':                  'gpt-4o-mini',
   'gpt-4-5':                      'gpt-45',
-  'gpt-5-pro':                    'gpt-5-pro',
   'gpt-5-mini':                   'gpt-5-mini',
   'gpt-5-nano':                   'gpt-5-nano',
+  // OpenAI reasoning
   'o3':                           'o3',
   'o3-mini':                      'o3-mini',
   'o3-pro':                       'o3-pro',
@@ -52,54 +65,57 @@ const AA_MODEL_MAP: Record<string, string> = {
   'o1':                           'o1',
   'o1-mini':                      'o1-mini',
   'o1-preview':                   'o1-preview',
+  // DeepSeek
   'deepseek-r1':                  'deepseek-r1',
   'deepseek-r1-0528':             'deepseek-r1-0528',
   'deepseek-v3':                  'deepseek-v3',
   'deepseek-v3-1':                'deepseek-v31',
   'deepseek-v3-2':                'deepseek-v32',
+  'deepseek-v3-2-speciale':       'deepseek-v32-speciale',
   'deepseek-v3-2-exp':            'deepseek-v32-exp',
-  'deepseek-v3-0325':             'deepseek-v3-0325',
+  'deepseek-v3-0324':             'deepseek-v3-0325',
+  // Gemini
   'gemini-2-5-pro':               'gemini-25-pro',
   'gemini-2-5-flash':             'gemini-25-flash',
   'gemini-2-0-flash':             'gemini-20-flash',
   'gemini-3-pro':                 'gemini-3-pro',
   'gemini-3-flash':               'gemini-3-flash',
   'gemini-3-1-pro':               'gemini-31-pro',
+  // Grok — AA has "grok-4-1-fast" but NOT plain "grok-4-1"
   'grok-3':                       'grok-3',
   'grok-4':                       'grok-4',
-  'grok-3-mini':                  'grok-3-mini',
+  'grok-3-mini-reasoning':        'grok-3-mini',
+  'grok-4-1-fast':                'grok-41-fast',
+  'grok-4-1-fast-reasoning':      'grok-41-fast',
+  'grok-4-fast':                  'grok-41',           // grok-4-fast → our grok-41
+  'grok-4-fast-reasoning':        'grok-41',
+  // Meta
   'llama-4-maverick':             'llama-4-maverick',
   'llama-4-scout':                'llama-4-scout',
+  // Mistral
   'mistral-medium-3':             'mistral-medium-3',
-  'qwen3-235b':                   'qwen3-235b',
-  'qwen3-max':                    'qwen3-max',
-  'qwen-2-5-max':                 'qwen25-max',
-  'glm-4-7':                      'glm-47',
-  'glm-5':                        'glm-5',
-  'kimi-k2':                      'kimi-k2',
-  'kimi-k2-5':                    'kimi-k25',
-  'kimi-k2-thinking':             'kimi-k2-thinking',
-  // Additional models
-  'claude-sonnet-4-6':            'claude-sonnet-46',
-  'gpt-5-2-codex':                'gpt-52-codex',
-  'gpt-5-2-pro':                  'gpt-52-pro',
-  'gpt-5-1-codex-mini':           'gpt-51-codex-mini',
-  'grok-4-1':                     'grok-41',
-  'grok-4-1-fast':                'grok-41-fast',
-  'glm-4-7-flash':                'glm-47-flash',
-  'minimax-m2-1':                 'minimax-m21',
-  'minimax-m2-5':                 'minimax-m25',
-  'nvidia-nemotron-3':            'nvidia-nemotron-3',
-  'nemotron-3':                   'nvidia-nemotron-3',
-  'qwen-3-5-397b':                'qwen35-397b',
-  'qwen3-5-397b':                 'qwen35-397b',
-  'qwen-3-5-plus':                'qwen35-plus',
-  'qwen3-5-plus':                 'qwen35-plus',
-  'qwen3-max-thinking':           'qwen3-max-thinking',
-  'qwen3-coder-next':             'qwen3-coder-next',
   'mistral-large-3':              'mistral-large-3',
   'devstral-2':                   'devstral-2',
-  'deepseek-v3-2-speciale':       'deepseek-v32-speciale',
+  'devstral-small-2':             'devstral-2',
+  // Qwen
+  'qwen3-235b-a22b-instruct':     'qwen3-235b',
+  'qwen3-max':                    'qwen3-max',
+  'qwen3-max-thinking-preview':   'qwen3-max-thinking',
+  'qwen-2-5-max':                 'qwen25-max',
+  // GLM
+  'glm-4-7':                      'glm-47',
+  'glm-4-7-non-reasoning':        'glm-47',
+  'glm-4-6':                      'glm-5',             // AA's glm-4-6 maps to our glm-5 if same model
+  // Kimi
+  'kimi-k2':                      'kimi-k2',
+  'kimi-k2-0905':                 'kimi-k25',
+  'kimi-k2-thinking':             'kimi-k2-thinking',
+  // MiniMax
+  'minimax-m2-1':                 'minimax-m21',
+  'minimax-m2':                   'minimax-m25',        // AA "minimax-m2" → our minimax-m25
+  // Nvidia
+  'nvidia-nemotron-3-nano-30b-a3b':           'nvidia-nemotron-3',
+  'nvidia-nemotron-3-nano-30b-a3b-reasoning': 'nvidia-nemotron-3',
 }
 
 // The AA page we fetch RSC data from (any evaluations page works — they all include defaultData)
@@ -235,8 +251,8 @@ async function main() {
       const score = typeof rawValue === 'number' ? rawValue : parseFloat(String(rawValue))
       if (isNaN(score)) continue
 
-      // AA scores are already percentages (0-100)
-      const normalizedScore = Math.round(score * 100) / 100
+      // AA scores are fractions (0-1), convert to percentages (0-100)
+      const normalizedScore = Math.round(score * bmConfig.scale * 100) / 100
 
       mapped++
       stagingRows.push({

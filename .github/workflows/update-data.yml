@@ -15,7 +15,15 @@ jobs:
           node-version: '20'
       - run: npm ci
 
-      # Step 0: Discover new models from data sources
+      # Step 0a: Purge stale seed-originated scores (one-time, safe to re-run)
+      - name: Purge Official Scores
+        continue-on-error: true
+        run: npx tsx scripts/cron/purge-official-scores.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      # Step 0b: Discover new models from data sources
       - name: Discover New Models
         continue-on-error: true
         run: npx tsx scripts/cron/discover-models.ts
