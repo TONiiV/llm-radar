@@ -6,7 +6,7 @@
       { "key": "gpqa_diamond", "label": "GPQA Diamond", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/gpqa-diamond" },
       { "key": "humanitys_last_exam", "label": "Humanity's Last Exam", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/humanitys-last-exam" },
       { "key": "critpt", "label": "CritPt", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/critpt" },
-      { "key": "simplebench", "label": "SimpleBench", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "epoch_ai", "sourceUrl": "https://epoch.ai/data/llm-benchmark-data" }
+      { "key": "simplebench", "label": "SimpleBench", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "epoch_ai", "sourceUrl": "https://simple-bench.com/" }
     ]
   },
   "coding": {
@@ -24,7 +24,7 @@
     "benchmarks": [
       { "key": "aime_2025", "label": "AIME 2025", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/aime-2025" },
       { "key": "math_bench", "label": "MATH", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/math-500" },
-      { "key": "gsm8k", "label": "GSM8K", "weight": 0.6, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/leaderboards/models" },
+      { "key": "gsm8k", "label": "GSM8K", "weight": 0.6, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "epoch_ai", "sourceUrl": "https://epoch.ai/benchmarks/gsm8k" },
       { "key": "frontiermath", "label": "FrontierMath", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "epoch_ai", "sourceUrl": "https://epoch.ai/data/llm-benchmark-data" }
     ]
   },
@@ -33,7 +33,7 @@
     "benchmarks": [
       { "key": "lmarena_elo", "label": "LMArena ELO", "weight": 1.0, "unit": "ELO", "higher_is_better": true, "max_score": null, "source": "lmarena", "sourceUrl": "https://lmarena.ai/?leaderboard" },
       { "key": "ifbench", "label": "IFBench", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/ifbench" },
-      { "key": "alpaca_eval", "label": "AlpacaEval", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/leaderboards/models" }
+      { "key": "alpaca_eval", "label": "AlpacaEval", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "epoch_ai", "sourceUrl": "https://tatsu-lab.github.io/alpaca_eval/" }
     ]
   },
   "agentic": {
