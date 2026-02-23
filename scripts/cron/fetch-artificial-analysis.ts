@@ -5,6 +5,26 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY!
 )
 
+// AA evaluation pages to fetch — each page returns a DIFFERENT subset of models.
+// We must fetch ALL pages and merge by slug to get maximum coverage.
+const AA_EVAL_PAGES = [
+  'mmlu-pro',
+  'gpqa-diamond',
+  'humanitys-last-exam',
+  'critpt',
+  'livecodebench',
+  'scicode',
+  'ifbench',
+  'math-500',
+  'aime-2025',
+  'artificial-analysis-long-context-reasoning',
+  'tau2-bench',
+  'terminalbench-hard',
+  'gdpval-aa',
+]
+
+const AA_BASE_URL = 'https://artificialanalysis.ai/evaluations'
+
 // AA benchmark field name → our benchmark key + score scale
 // AA scores are fractions (0-1) for most fields, so scale=100 converts to percentage
 const AA_BENCHMARK_MAP: Record<string, { key: string; scale: number }> = {
@@ -24,11 +44,10 @@ const AA_BENCHMARK_MAP: Record<string, { key: string; scale: number }> = {
 }
 
 // AA slug → our model slug (built-in fallback mappings)
-// IMPORTANT: Verified against actual AA API slugs (2026-02-23)
-// AA uses inconsistent naming: opus = "claude-opus-4-5", but sonnet = "claude-4-5-sonnet"
 const AA_MODEL_MAP: Record<string, string> = {
-  // Claude — AA uses TWO naming conventions
+  // Claude
   'claude-opus-4-6':              'claude-opus-46',
+  'claude-opus-4-6-adaptive':     'claude-opus-46',
   'claude-opus-4-5':              'claude-opus-45',
   'claude-4-1-opus':              'claude-opus-41',
   'claude-4-opus':                'claude-opus-4',
@@ -139,27 +158,19 @@ const AA_MODEL_MAP: Record<string, string> = {
   'nvidia-nemotron-nano-12b-v2-vl': 'nemotron-nano-12b-2-vl',
 }
 
-// The AA page we fetch RSC data from (any evaluations page works — they all include defaultData)
-const AA_URL = 'https://artificialanalysis.ai/evaluations/mmlu-pro'
-
 interface AADataPoint {
   slug?: string
   name?: string
-  reasoning_model?: boolean
   [key: string]: unknown
 }
 
 function extractDefaultData(rscText: string): AADataPoint[] {
   const marker = '"defaultData":'
   const idx = rscText.indexOf(marker)
-  if (idx === -1) {
-    throw new Error('Could not find "defaultData" in RSC payload')
-  }
+  if (idx === -1) return []
 
   const arrayStart = rscText.indexOf('[', idx + marker.length)
-  if (arrayStart === -1) {
-    throw new Error('Could not find array start after "defaultData"')
-  }
+  if (arrayStart === -1) return []
 
   let depth = 0
   let arrayEnd = -1
@@ -174,16 +185,14 @@ function extractDefaultData(rscText: string): AADataPoint[] {
     }
   }
 
-  if (arrayEnd === -1) {
-    throw new Error('Could not find matching ] for defaultData array')
-  }
-
+  if (arrayEnd === -1) return []
   const jsonStr = rscText.slice(arrayStart, arrayEnd)
   return JSON.parse(jsonStr) as AADataPoint[]
 }
 
 // Variant suffixes to strip for fuzzy matching
 const VARIANT_SUFFIXES = [
+  '-adaptive',
   '-reasoning', '-non-reasoning', '-thinking',
   '-low', '-medium', '-high', '-xhigh',
 ]
@@ -193,7 +202,7 @@ function stripVariantSuffix(slug: string): string {
   for (const suffix of VARIANT_SUFFIXES) {
     if (result.endsWith(suffix)) {
       result = result.slice(0, -suffix.length)
-      break // only strip one suffix
+      break
     }
   }
   return result
@@ -204,18 +213,14 @@ function resolveModelSlug(
   dbMappings: Map<string, string>,
   dbSlugs: Set<string>
 ): string | null {
-  // 1. Try DB mappings first (user-configured overrides)
   const dbSlug = dbMappings.get(aaSlug)
   if (dbSlug) return dbSlug
 
-  // 2. Try built-in static mappings
   const builtinSlug = AA_MODEL_MAP[aaSlug]
   if (builtinSlug) return builtinSlug
 
-  // 3. Try direct slug match against DB
   if (dbSlugs.has(aaSlug)) return aaSlug
 
-  // 4. Fuzzy match: strip variant suffixes and retry
   const normalized = stripVariantSuffix(aaSlug)
   if (normalized !== aaSlug) {
     const normDbSlug = dbMappings.get(normalized)
@@ -253,25 +258,56 @@ async function loadDbModelSlugs(): Promise<Set<string>> {
   }
 }
 
+async function fetchEvalPage(page: string): Promise<AADataPoint[]> {
+  const url = `${AA_BASE_URL}/${page}`
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'RSC': '1',
+        'Next-Router-State-Tree': encodeURIComponent(JSON.stringify([''])),
+        'User-Agent': 'Mozilla/5.0 (compatible; LLMRadar/1.0)',
+      },
+      signal: AbortSignal.timeout(30000),
+    })
+    if (!res.ok) {
+      console.warn(`  ${page}: HTTP ${res.status}`)
+      return []
+    }
+    const rscText = await res.text()
+    const data = extractDefaultData(rscText)
+    console.log(`  ${page}: ${data.length} models`)
+    return data
+  } catch (err) {
+    console.warn(`  ${page}: fetch failed - ${err instanceof Error ? err.message : err}`)
+    return []
+  }
+}
+
 async function main() {
-  console.log('Fetching Artificial Analysis benchmark data...')
+  console.log('Fetching Artificial Analysis benchmark data from all evaluation pages...')
 
-  // Fetch RSC payload
-  const res = await fetch(AA_URL, {
-    headers: {
-      'RSC': '1',
-      'Next-Router-State-Tree': encodeURIComponent(JSON.stringify([''])),
-      'User-Agent': 'Mozilla/5.0 (compatible; LLMRadar/1.0)',
-    },
-    signal: AbortSignal.timeout(60000),
-  })
+  // Fetch all evaluation pages and merge models by slug
+  const mergedModels = new Map<string, AADataPoint>()
 
-  if (!res.ok) throw new Error(`AA fetch failed: ${res.status}`)
-  const rscText = await res.text()
-  console.log(`  Fetched ${(rscText.length / 1024 / 1024).toFixed(1)}MB RSC payload`)
+  for (const page of AA_EVAL_PAGES) {
+    const entries = await fetchEvalPage(page)
+    for (const entry of entries) {
+      if (!entry.slug) continue
+      const existing = mergedModels.get(entry.slug)
+      if (existing) {
+        // Merge: fill in non-null values from this page
+        for (const [key, value] of Object.entries(entry)) {
+          if (value != null && existing[key] == null) {
+            existing[key] = value
+          }
+        }
+      } else {
+        mergedModels.set(entry.slug, { ...entry })
+      }
+    }
+  }
 
-  const data = extractDefaultData(rscText)
-  console.log(`  Extracted ${data.length} model entries from defaultData`)
+  console.log(`  Merged: ${mergedModels.size} unique models across all pages`)
 
   const dbMappings = await loadDbMappings()
   const dbSlugs = await loadDbModelSlugs()
@@ -288,12 +324,9 @@ async function main() {
   let mapped = 0
   let unmapped = 0
   const unmappedSlugs = new Set<string>()
-  const resolvedSlugs = new Map<string, string>() // track AA slug → our slug
+  const resolvedSlugs = new Map<string, string>()
 
-  for (const entry of data) {
-    const aaSlug = entry.slug
-    if (!aaSlug) continue
-
+  for (const [aaSlug, entry] of mergedModels) {
     const slug = resolveModelSlug(aaSlug, dbMappings, dbSlugs)
     if (!slug) {
       unmapped++
@@ -303,7 +336,6 @@ async function main() {
 
     resolvedSlugs.set(aaSlug, slug)
 
-    // Extract all benchmark scores from this entry
     for (const [aaKey, bmConfig] of Object.entries(AA_BENCHMARK_MAP)) {
       const rawValue = entry[aaKey]
       if (rawValue == null) continue
@@ -311,7 +343,6 @@ async function main() {
       const score = typeof rawValue === 'number' ? rawValue : parseFloat(String(rawValue))
       if (isNaN(score)) continue
 
-      // AA scores are fractions (0-1), convert to percentages (0-100)
       const normalizedScore = Math.round(score * bmConfig.scale * 100) / 100
 
       mapped++
@@ -336,14 +367,13 @@ async function main() {
   }
 
   // Deduplicate: if multiple AA entries (base + variant) map to the same model slug,
-  // keep only one score per (model, benchmark) — prefer the one from the base (non-variant) entry
+  // keep only one score per (model, benchmark) — prefer the first one seen
   const deduped = new Map<string, typeof stagingRows[0]>()
   for (const row of stagingRows) {
     const key = `${row.model_name}:${row.benchmark_key}`
     if (!deduped.has(key)) {
       deduped.set(key, row)
     }
-    // First entry wins (base model entries come before variants in most cases)
   }
   const finalRows = Array.from(deduped.values())
   console.log(`  After dedup: ${finalRows.length} unique (model, benchmark) scores`)
@@ -359,7 +389,7 @@ async function main() {
   await supabase.from('data_sources').upsert({
     key: 'artificial_analysis',
     name: 'Artificial Analysis',
-    url: AA_URL,
+    url: AA_BASE_URL,
     status: 'active',
     last_status: 'success',
     last_fetched_at: new Date().toISOString(),
@@ -377,7 +407,7 @@ main().catch((err) => {
   supabase.from('data_sources').upsert({
     key: 'artificial_analysis',
     name: 'Artificial Analysis',
-    url: AA_URL,
+    url: AA_BASE_URL,
     last_status: 'failed',
     last_error: message,
   }, { onConflict: 'key' }).then(() => {
