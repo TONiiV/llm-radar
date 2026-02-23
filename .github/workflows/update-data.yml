@@ -71,6 +71,14 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
+      # Step 2b: Clean up official scores superseded by external sources
+      - name: Cleanup Redundant Official Scores
+        continue-on-error: true
+        run: npx tsx scripts/cron/cleanup-official-scores.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       # Step 3: Recalculate normalized scores
       - name: Recalculate Scores
         run: npx tsx scripts/cron/recalculate-scores.ts

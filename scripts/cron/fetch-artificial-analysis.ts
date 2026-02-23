@@ -78,6 +78,28 @@ const AA_MODEL_MAP: Record<string, string> = {
   'glm-5':                        'glm-5',
   'kimi-k2':                      'kimi-k2',
   'kimi-k2-5':                    'kimi-k25',
+  'kimi-k2-thinking':             'kimi-k2-thinking',
+  // Additional models
+  'claude-sonnet-4-6':            'claude-sonnet-46',
+  'gpt-5-2-codex':                'gpt-52-codex',
+  'gpt-5-2-pro':                  'gpt-52-pro',
+  'gpt-5-1-codex-mini':           'gpt-51-codex-mini',
+  'grok-4-1':                     'grok-41',
+  'grok-4-1-fast':                'grok-41-fast',
+  'glm-4-7-flash':                'glm-47-flash',
+  'minimax-m2-1':                 'minimax-m21',
+  'minimax-m2-5':                 'minimax-m25',
+  'nvidia-nemotron-3':            'nvidia-nemotron-3',
+  'nemotron-3':                   'nvidia-nemotron-3',
+  'qwen-3-5-397b':                'qwen35-397b',
+  'qwen3-5-397b':                 'qwen35-397b',
+  'qwen-3-5-plus':                'qwen35-plus',
+  'qwen3-5-plus':                 'qwen35-plus',
+  'qwen3-max-thinking':           'qwen3-max-thinking',
+  'qwen3-coder-next':             'qwen3-coder-next',
+  'mistral-large-3':              'mistral-large-3',
+  'devstral-2':                   'devstral-2',
+  'deepseek-v3-2-speciale':       'deepseek-v32-speciale',
 }
 
 // The AA page we fetch RSC data from (any evaluations page works — they all include defaultData)
