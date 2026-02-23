@@ -46,6 +46,9 @@ next-env.d.ts
 # worktrees
 .worktrees/
 
+# playwright
+.playwright-cli/
+
 .claude/
 CLAUDE.md
 progress.md
