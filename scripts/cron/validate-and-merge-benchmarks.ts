@@ -27,13 +27,24 @@ async function main() {
     .select('key')
   const validBenchmarks = new Set((benchDefs ?? []).map(b => b.key))
 
-  // Get pending staging benchmarks
-  const { data: stagingBenchmarks } = await supabase
-    .from('staging_benchmarks')
-    .select('*')
-    .eq('status', 'pending')
+  // Get ALL pending staging benchmarks (paginate past Supabase 1000-row default limit)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const stagingBenchmarks: any[] = []
+  let offset = 0
+  const PAGE_SIZE = 1000
+  while (true) {
+    const { data: page } = await supabase
+      .from('staging_benchmarks')
+      .select('*')
+      .eq('status', 'pending')
+      .range(offset, offset + PAGE_SIZE - 1)
+    if (!page || page.length === 0) break
+    stagingBenchmarks.push(...page)
+    offset += page.length
+    if (page.length < PAGE_SIZE) break
+  }
 
-  if (!stagingBenchmarks || stagingBenchmarks.length === 0) {
+  if (stagingBenchmarks.length === 0) {
     console.log('No pending staging benchmarks to process.')
     return
   }

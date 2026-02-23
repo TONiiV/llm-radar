@@ -32,10 +32,20 @@ async function main() {
   console.log(`  ${models.length} active models`)
 
   // 3. Fetch all benchmark scores with source for priority handling
-  const { data: scores, error: scoresErr } = await supabase
-    .from('benchmark_scores')
-    .select('model_id, benchmark_key, raw_score, source')
-  if (scoresErr) throw new Error(`Scores fetch failed: ${scoresErr.message}`)
+  // Paginate to avoid Supabase 1000-row default limit
+  const scores: { model_id: string; benchmark_key: string; raw_score: number; source: string }[] = []
+  let scoreOffset = 0
+  while (true) {
+    const { data: page, error: scoresErr } = await supabase
+      .from('benchmark_scores')
+      .select('model_id, benchmark_key, raw_score, source')
+      .range(scoreOffset, scoreOffset + 999)
+    if (scoresErr) throw new Error(`Scores fetch failed: ${scoresErr.message}`)
+    if (!page || page.length === 0) break
+    scores.push(...page)
+    scoreOffset += page.length
+    if (page.length < 1000) break
+  }
 
   // 4. Fetch latest prices per model
   const { data: prices, error: pricesErr } = await supabase

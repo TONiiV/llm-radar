@@ -45,12 +45,20 @@ export async function fetchModels(): Promise<Model[]> {
       .order("name")
     if (modelsErr || !models) throw modelsErr
 
-    // Order so official source comes last and overwrites others in the grouping loop
-    const { data: scores, error: scoresErr } = await supabase
-      .from("benchmark_scores")
-      .select("model_id, benchmark_key, raw_score, source")
-      .order("source", { ascending: true })
-    if (scoresErr || !scores) throw scoresErr
+    // Fetch all benchmark scores (paginate past Supabase 1000-row default limit)
+    const scores: { model_id: string; benchmark_key: string; raw_score: number; source: string }[] = []
+    let scoreOffset = 0
+    while (true) {
+      const { data: page, error: scoresErr } = await supabase
+        .from("benchmark_scores")
+        .select("model_id, benchmark_key, raw_score, source")
+        .range(scoreOffset, scoreOffset + 999)
+      if (scoresErr) throw scoresErr
+      if (!page || page.length === 0) break
+      scores.push(...page)
+      scoreOffset += page.length
+      if (page.length < 1000) break
+    }
 
     const { data: prices, error: pricesErr } = await supabase
       .from("prices")
