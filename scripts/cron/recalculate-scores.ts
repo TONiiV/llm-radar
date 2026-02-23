@@ -15,12 +15,23 @@ async function main() {
 
   if (!benchmarks) throw new Error('Failed to fetch benchmark definitions')
 
-  // Get all scores
-  const { data: allScores } = await supabase
-    .from('benchmark_scores')
-    .select('id, benchmark_key, raw_score')
+  // Get all scores (paginate past Supabase 1000-row default limit)
+  const allScores: { id: string; benchmark_key: string; raw_score: number }[] = []
+  let offset = 0
+  const PAGE_SIZE = 1000
+  while (true) {
+    const { data: page } = await supabase
+      .from('benchmark_scores')
+      .select('id, benchmark_key, raw_score')
+      .range(offset, offset + PAGE_SIZE - 1)
+    if (!page || page.length === 0) break
+    allScores.push(...page)
+    offset += page.length
+    if (page.length < PAGE_SIZE) break
+  }
 
-  if (!allScores) throw new Error('Failed to fetch scores')
+  if (allScores.length === 0) throw new Error('Failed to fetch scores')
+  console.log(`  Fetched ${allScores.length} total benchmark scores`)
 
   // Group scores by benchmark
   const scoresByBenchmark = new Map<string, typeof allScores>()
