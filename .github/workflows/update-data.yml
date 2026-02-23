@@ -51,10 +51,14 @@ jobs:
 
       # Step 4: Trigger Vercel page revalidation
       - name: Revalidate Vercel Pages
+        continue-on-error: true
         run: |
-          curl -s -X POST "$VERCEL_URL/api/revalidate" \
+          CLEAN_URL=$(echo "$VERCEL_URL" | xargs)
+          echo "Revalidating: ${CLEAN_URL}/api/revalidate"
+          curl -sf -X POST "${CLEAN_URL}/api/revalidate" \
             -H "Content-Type: application/json" \
-            -d "{\"secret\": \"$REVALIDATION_SECRET\"}"
+            -d "{\"secret\": \"$REVALIDATION_SECRET\"}" \
+            --max-time 10
         env:
           VERCEL_URL: ${{ secrets.VERCEL_URL }}
           REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
