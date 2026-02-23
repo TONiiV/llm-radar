@@ -81,6 +81,86 @@
         "input_per_1m": 1,
         "output_per_1m": 5,
         "confirmed": true
+      },
+      "benchmarks": {
+        "livecode_bench": 51.1,
+        "terminal_bench": 27.3,
+        "scicode": 34.4,
+        "math_bench": 96.36,
+        "gpqa_diamond": 64.6,
+        "aime_2025": 39,
+        "frontiermath": 5.9,
+        "ifbench": 42,
+        "aa_lcr": 43.7,
+        "tau2_bench": 32.5,
+        "gdpval_aa": 33.34,
+        "mmlu_pro": 80,
+        "humanitys_last_exam": 4.3,
+        "critpt": 0
+      }
+    },
+    {
+      "name": "Claude Opus 4",
+      "slug": "claude-opus-4",
+      "provider": "anthropic",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 15,
+        "output_per_1m": 75,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "ifbench": 53.7,
+        "aa_lcr": 33.7,
+        "tau2_bench": 70.5,
+        "terminal_bench": 31.1,
+        "gpqa_diamond": 79.6,
+        "math_bench": 98.2,
+        "aime_2025": 73.3,
+        "frontiermath": 4.48,
+        "aider_polyglot": 72,
+        "simplebench": 50.56,
+        "swe_bench": 67.6,
+        "mmlu_pro": 87.3,
+        "humanitys_last_exam": 11.7,
+        "livecode_bench": 63.6,
+        "scicode": 39.8
+      }
+    },
+    {
+      "name": "Claude Opus 4.1",
+      "slug": "claude-opus-41",
+      "provider": "anthropic",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 15,
+        "output_per_1m": 75,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 80.9,
+        "tau2_bench": 71.4,
+        "aime_2025": 80.3,
+        "mmlu_pro": 88,
+        "humanitys_last_exam": 11.9,
+        "terminal_bench": 34.3,
+        "frontiermath": 7.24,
+        "livecode_bench": 65.4,
+        "scicode": 40.9,
+        "ifbench": 55.4,
+        "critpt": 0,
+        "simplebench": 52,
+        "aa_lcr": 66.3
       }
     },
     {
@@ -102,6 +182,23 @@
         "input_per_1m": 5,
         "output_per_1m": 25,
         "confirmed": true
+      },
+      "benchmarks": {
+        "terminal_bench": 40.9,
+        "livecode_bench": 73.8,
+        "swe_bench": 74.4,
+        "aime_2025": 62.7,
+        "scicode": 47,
+        "ifbench": 43,
+        "aa_lcr": 65.3,
+        "tau2_bench": 86.3,
+        "gpqa_diamond": 81,
+        "gdpval_aa": 45.8,
+        "frontiermath": 20.69,
+        "simplebench": 54.4,
+        "mmlu_pro": 88.9,
+        "humanitys_last_exam": 12.9,
+        "critpt": 0.3
       }
     },
     {
@@ -123,6 +220,55 @@
         "input_per_1m": 5,
         "output_per_1m": 25,
         "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 89.6,
+        "aime_2025": 94.44,
+        "terminal_bench": 46.2,
+        "gdpval_aa": 55.32,
+        "humanitys_last_exam": 36.7,
+        "critpt": 12.6,
+        "scicode": 51.9,
+        "simplebench": 61.12,
+        "frontiermath": 40,
+        "ifbench": 53.1,
+        "aa_lcr": 70.7,
+        "tau2_bench": 92.1
+      }
+    },
+    {
+      "name": "Claude Sonnet 4",
+      "slug": "claude-sonnet-4",
+      "provider": "anthropic",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 3,
+        "output_per_1m": 15,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "aa_lcr": 44.3,
+        "tau2_bench": 52.3,
+        "terminal_bench": 27.3,
+        "gdpval_aa": 33.08,
+        "mmlu_pro": 83.7,
+        "gpqa_diamond": 68.3,
+        "math_bench": 93.4,
+        "aime_2025": 71.08,
+        "aider_polyglot": 61.3,
+        "simplebench": 34.6,
+        "swe_bench": 64.93,
+        "critpt": 1.1,
+        "livecode_bench": 44.9,
+        "scicode": 37.3,
+        "humanitys_last_exam": 4,
+        "frontiermath": 4.14,
+        "ifbench": 45.4
       }
     },
     {
@@ -144,6 +290,24 @@
         "input_per_1m": 3,
         "output_per_1m": 15,
         "confirmed": true
+      },
+      "benchmarks": {
+        "aa_lcr": 65.7,
+        "math_bench": 97.73,
+        "swe_bench": 70.6,
+        "tau2_bench": 78.1,
+        "terminal_bench": 35.6,
+        "gdpval_aa": 38.78,
+        "mmlu_pro": 87.5,
+        "aime_2025": 88,
+        "gpqa_diamond": 83.4,
+        "simplebench": 45.16,
+        "frontiermath": 15.22,
+        "critpt": 1.1,
+        "livecode_bench": 71.4,
+        "scicode": 44.7,
+        "humanitys_last_exam": 17.3,
+        "ifbench": 57.3
       }
     },
     {
@@ -165,7 +329,32 @@
         "input_per_1m": 3,
         "output_per_1m": 15,
         "confirmed": true
+      },
+      "benchmarks": {
+        "terminal_bench": 53,
+        "gdpval_aa": 56.63,
+        "humanitys_last_exam": 30,
+        "tau2_bench": 75.7,
+        "gpqa_diamond": 87.5,
+        "ifbench": 56.6
       }
+    },
+    {
+      "name": "Codestral 2508",
+      "slug": "codestral-2508",
+      "provider": "mistral",
+      "context_window_input": 256000,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-08-01",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.3,
+        "output_per_1m": 0.9,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
       "name": "DeepSeek R1",
@@ -184,7 +373,99 @@
         "input_per_1m": 0.55,
         "output_per_1m": 2.19,
         "confirmed": true
+      },
+      "benchmarks": {
+        "humanitys_last_exam": 14.9,
+        "gdpval_aa": 11.07,
+        "critpt": 1.4,
+        "livecode_bench": 77,
+        "scicode": 40.3,
+        "ifbench": 39.6,
+        "math_bench": 98.3,
+        "gpqa_diamond": 81.3,
+        "aime_2025": 76,
+        "aider_polyglot": 56.9,
+        "simplebench": 17.08,
+        "aa_lcr": 54.7,
+        "tau2_bench": 36.5,
+        "mmlu_pro": 84.9,
+        "terminal_bench": 15.9
       }
+    },
+    {
+      "name": "DeepSeek V3 0324",
+      "slug": "deepseek-v3-0324",
+      "provider": "deepseek",
+      "context_window_input": 163840,
+      "context_window_output": 65536,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-03-24",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 1.1,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gdpval_aa": 0,
+        "critpt": 0,
+        "livecode_bench": 40.5,
+        "scicode": 35.8,
+        "ifbench": 41,
+        "math_bench": 94.2,
+        "mmlu_pro": 81.9,
+        "aime_2025": 41,
+        "gpqa_diamond": 65.5,
+        "aa_lcr": 41,
+        "tau2_bench": 47.1,
+        "humanitys_last_exam": 5.2,
+        "terminal_bench": 15.2
+      }
+    },
+    {
+      "name": "DeepSeek V3.1 Terminus",
+      "slug": "deepseek-v31-terminus",
+      "provider": "deepseek",
+      "context_window_input": 163840,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-22",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 1.1,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gpqa_diamond": 75.1,
+        "livecode_bench": 52.9,
+        "ifbench": 41.2,
+        "tau2_bench": 37.1,
+        "mmlu_pro": 83.6,
+        "humanitys_last_exam": 8.4,
+        "gdpval_aa": 24.52,
+        "terminal_bench": 31.8,
+        "aime_2025": 53.7
+      }
+    },
+    {
+      "name": "DeepSeek V3.1 Terminus (exacto)",
+      "slug": "deepseek-v31-terminus-exacto",
+      "provider": "deepseek",
+      "context_window_input": 163840,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-22",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 1.1,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
       "name": "DeepSeek V3.2",
@@ -205,6 +486,455 @@
         "input_per_1m": 0.55,
         "output_per_1m": 2.19,
         "confirmed": true
+      },
+      "benchmarks": {
+        "tau2_bench": 90.6,
+        "aime_2025": 92,
+        "terminal_bench": 35.6,
+        "mmlu_pro": 86.2,
+        "gpqa_diamond": 84,
+        "gdpval_aa": 34.68,
+        "humanitys_last_exam": 22.2,
+        "critpt": 2.9,
+        "livecode_bench": 86.2,
+        "scicode": 38.9,
+        "aider_polyglot": 15.6,
+        "ifbench": 60.7,
+        "simplebench": 17.2,
+        "frontiermath": 22.1,
+        "aa_lcr": 65
+      }
+    },
+    {
+      "name": "DeepSeek V3.2 Speciale",
+      "slug": "deepseek-v32-speciale",
+      "provider": "deepseek",
+      "context_window_input": 163840,
+      "context_window_output": 65536,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-12-01",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.55,
+        "output_per_1m": 2.19,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "terminal_bench": 34.8,
+        "mmlu_pro": 86.3,
+        "gpqa_diamond": 87.1,
+        "gdpval_aa": 0,
+        "humanitys_last_exam": 26.1,
+        "critpt": 7.4,
+        "livecode_bench": 89.6,
+        "scicode": 44,
+        "ifbench": 63.9,
+        "aime_2025": 96.7,
+        "aa_lcr": 59.3,
+        "tau2_bench": 0
+      }
+    },
+    {
+      "name": "DeepSeek-R1 (May 2025)",
+      "slug": "deepseek-r1-may-2025",
+      "provider": "deepseek",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.55,
+        "output_per_1m": 2.19,
+        "confirmed": true
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "DeepSeek-V3",
+      "slug": "deepseek-v3",
+      "provider": "deepseek",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 1.1,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "math_bench": 88.7,
+        "aime_2025": 26,
+        "gpqa_diamond": 55.7,
+        "aider_polyglot": 48.4,
+        "simplebench": 2.68,
+        "frontiermath": 1.72,
+        "scicode": 35.4,
+        "ifbench": 34.8,
+        "aa_lcr": 29,
+        "tau2_bench": 22.8,
+        "terminal_bench": 6.8,
+        "gdpval_aa": 0,
+        "mmlu_pro": 75.2,
+        "humanitys_last_exam": 3.6,
+        "critpt": 0,
+        "livecode_bench": 35.9
+      }
+    },
+    {
+      "name": "DeepSeek-V3 (Mar 2025)",
+      "slug": "deepseek-v3-mar-2025",
+      "provider": "deepseek",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 1.1,
+        "confirmed": true
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "DeepSeek-V3.1",
+      "slug": "deepseek-v31",
+      "provider": "deepseek",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 1.1,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "simplebench": 28,
+        "tau2_bench": 37.4,
+        "terminal_bench": 25,
+        "mmlu_pro": 85.1,
+        "gdpval_aa": 6.87,
+        "gpqa_diamond": 77.9,
+        "humanitys_last_exam": 13,
+        "critpt": 2,
+        "livecode_bench": 78.4,
+        "scicode": 39.1,
+        "ifbench": 41.5,
+        "aime_2025": 89.7,
+        "aa_lcr": 53.3
+      }
+    },
+    {
+      "name": "DeepSeek-V3.2-Exp",
+      "slug": "deepseek-v32-exp",
+      "provider": "deepseek",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.55,
+        "output_per_1m": 2.19,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "frontiermath": 22.1,
+        "gpqa_diamond": 84,
+        "aime_2025": 92,
+        "ifbench": 60.7,
+        "humanitys_last_exam": 22.2,
+        "terminal_bench": 35.6,
+        "tau2_bench": 90.6,
+        "mmlu_pro": 86.2,
+        "livecode_bench": 86.2,
+        "gdpval_aa": 34.68,
+        "aider_polyglot": 74.2
+      }
+    },
+    {
+      "name": "Gemini 2.0 Flash",
+      "slug": "gemini-20-flash",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gdpval_aa": 6.42,
+        "math_bench": 91.1,
+        "aime_2025": 21.7,
+        "gpqa_diamond": 63.6,
+        "aider_polyglot": 38.2,
+        "swe_bench": 13.52,
+        "simplebench": 17.32,
+        "frontiermath": 1.72,
+        "mmlu_pro": 78.2,
+        "humanitys_last_exam": 4.7,
+        "critpt": 0,
+        "livecode_bench": 21,
+        "scicode": 33.3,
+        "ifbench": 40.2,
+        "aa_lcr": 28.3,
+        "tau2_bench": 29.5,
+        "terminal_bench": 3.8
+      }
+    },
+    {
+      "name": "Gemini 2.0 Flash Lite",
+      "slug": "gemini-20-flash-lite",
+      "provider": "google",
+      "context_window_input": 1048576,
+      "context_window_output": 8192,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-02-25",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.075,
+        "output_per_1m": 0.3,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "livecode_bench": 18.5,
+        "gpqa_diamond": 53.5,
+        "mmlu_pro": 72.4,
+        "math_bench": 87.3,
+        "humanitys_last_exam": 3.6
+      }
+    },
+    {
+      "name": "Gemini 2.0 Flash Thinking (Jan 2025)",
+      "slug": "gemini-20-flash-thinking-jan-2025",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Gemini 2.0 Pro",
+      "slug": "gemini-20-pro",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 10,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "math_bench": 83.46,
+        "aider_polyglot": 35.6,
+        "gpqa_diamond": 54.21
+      }
+    },
+    {
+      "name": "Gemini 2.5 Flash",
+      "slug": "gemini-25-flash",
+      "provider": "google",
+      "context_window_input": 1048576,
+      "context_window_output": 65535,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-06-17",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "swe_bench": 28.73,
+        "aa_lcr": 61.7,
+        "aider_polyglot": 47.1,
+        "tau2_bench": 31.6,
+        "mmlu_pro": 83.2,
+        "gpqa_diamond": 79,
+        "humanitys_last_exam": 11.1,
+        "critpt": 1.1,
+        "livecode_bench": 69.5,
+        "terminal_bench": 13.6,
+        "frontiermath": 4.84,
+        "simplebench": 29.44,
+        "gdpval_aa": 10.63,
+        "scicode": 39.4,
+        "ifbench": 50.3,
+        "math_bench": 98.1,
+        "aime_2025": 73.3
+      }
+    },
+    {
+      "name": "Gemini 2.5 Flash (Apr 2025)",
+      "slug": "gemini-25-flash-apr-2025",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Gemini 2.5 Flash (Jun 2025)",
+      "slug": "gemini-25-flash-jun-2025",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Gemini 2.5 Flash (May 2025)",
+      "slug": "gemini-25-flash-may-2025",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Gemini 2.5 Flash (Sep 2025)",
+      "slug": "gemini-25-flash-sep-2025",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Gemini 2.5 Flash Image (Nano Banana)",
+      "slug": "gemini-25-flash-image-nano-banana",
+      "provider": "google",
+      "context_window_input": 32768,
+      "context_window_output": 32768,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-10-07",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Gemini 2.5 Flash Lite",
+      "slug": "gemini-25-flash-lite",
+      "provider": "google",
+      "context_window_input": 1048576,
+      "context_window_output": 65535,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-07-22",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.075,
+        "output_per_1m": 0.3,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "ifbench": 49.9,
+        "humanitys_last_exam": 6.4,
+        "aime_2025": 53.3,
+        "mmlu_pro": 75.9,
+        "math_bench": 96.9,
+        "livecode_bench": 59.3,
+        "gpqa_diamond": 62.5,
+        "gdpval_aa": 0,
+        "tau2_bench": 18.4,
+        "terminal_bench": 4.5
+      }
+    },
+    {
+      "name": "Gemini 2.5 Flash Lite Preview 09-2025",
+      "slug": "gemini-25-flash-lite-preview-09-2025",
+      "provider": "google",
+      "context_window_input": 1048576,
+      "context_window_output": 65535,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-25",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.075,
+        "output_per_1m": 0.3,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "livecode_bench": 68.8,
+        "scicode": 28.7,
+        "ifbench": 52.6,
+        "aime_2025": 68.7,
+        "aa_lcr": 59,
+        "tau2_bench": 30.7,
+        "mmlu_pro": 80.8,
+        "terminal_bench": 12.9,
+        "gdpval_aa": 0,
+        "gpqa_diamond": 70.9,
+        "humanitys_last_exam": 6.6,
+        "critpt": 0
       }
     },
     {
@@ -226,7 +956,117 @@
         "input_per_1m": 1.25,
         "output_per_1m": 10,
         "confirmed": true
+      },
+      "benchmarks": {
+        "scicode": 42.8,
+        "ifbench": 48.7,
+        "aime_2025": 87.7,
+        "swe_bench": 53.6,
+        "gpqa_diamond": 84.4,
+        "frontiermath": 14.14,
+        "aider_polyglot": 83.1,
+        "simplebench": 54.88,
+        "terminal_bench": 26.5,
+        "math_bench": 96.7,
+        "aa_lcr": 66,
+        "tau2_bench": 54.1,
+        "gdpval_aa": 21.54,
+        "mmlu_pro": 86.2,
+        "humanitys_last_exam": 21.1,
+        "critpt": 2.6,
+        "livecode_bench": 80.1
       }
+    },
+    {
+      "name": "Gemini 2.5 Pro (Jun 2025)",
+      "slug": "gemini-25-pro-jun-2025",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 10,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Gemini 2.5 Pro (Mar 2025)",
+      "slug": "gemini-25-pro-mar-2025",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 10,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Gemini 2.5 Pro (May 2025)",
+      "slug": "gemini-25-pro-may-2025",
+      "provider": "google",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 10,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Gemini 2.5 Pro Preview 05-06",
+      "slug": "gemini-25-pro-preview-05-06",
+      "provider": "google",
+      "context_window_input": 1048576,
+      "context_window_output": 65535,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-05-07",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 10,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gpqa_diamond": 82.2,
+        "livecode_bench": 77,
+        "mmlu_pro": 83.7,
+        "humanitys_last_exam": 15.4,
+        "math_bench": 98.6
+      }
+    },
+    {
+      "name": "Gemini 2.5 Pro Preview 06-05",
+      "slug": "gemini-25-pro-preview-06-05",
+      "provider": "google",
+      "context_window_input": 1048576,
+      "context_window_output": 65536,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-06-05",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 10,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
       "name": "Gemini 3 Flash",
@@ -244,9 +1084,25 @@
         "long_context"
       ],
       "pricing": {
-        "input_per_1m": 0.1,
-        "output_per_1m": 0.4,
-        "confirmed": false
+        "input_per_1m": 0.5,
+        "output_per_1m": 3,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "critpt": 8.6,
+        "livecode_bench": 90.8,
+        "aime_2025": 97,
+        "gpqa_diamond": 89.8,
+        "simplebench": 53.32,
+        "frontiermath": 35.64,
+        "terminal_bench": 38.6,
+        "scicode": 50.6,
+        "ifbench": 78,
+        "aa_lcr": 66.3,
+        "tau2_bench": 80.4,
+        "gdpval_aa": 34.56,
+        "mmlu_pro": 89,
+        "humanitys_last_exam": 34.7
       }
     },
     {
@@ -265,9 +1121,275 @@
         "long_context"
       ],
       "pricing": {
-        "input_per_1m": 1.25,
-        "output_per_1m": 10,
+        "input_per_1m": 2,
+        "output_per_1m": 12,
         "confirmed": false
+      },
+      "benchmarks": {
+        "livecode_bench": 85.7,
+        "scicode": 49.9,
+        "swe_bench": 74.2,
+        "gpqa_diamond": 88.7,
+        "aime_2025": 86.7,
+        "frontiermath": 37.6,
+        "simplebench": 71.68,
+        "terminal_bench": 34.1,
+        "ifbench": 49.7,
+        "aa_lcr": 67.3,
+        "tau2_bench": 68.1,
+        "gdpval_aa": 33.78,
+        "mmlu_pro": 89.5,
+        "humanitys_last_exam": 27.6,
+        "critpt": 0
+      }
+    },
+    {
+      "name": "Gemini 3.1 Pro",
+      "slug": "gemini-31-pro",
+      "provider": "google",
+      "context_window_input": 1048576,
+      "context_window_output": 65536,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2026-02-19",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2,
+        "output_per_1m": 12,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gdpval_aa": 40.5,
+        "terminal_bench": 53.8,
+        "ifbench": 77.1,
+        "gpqa_diamond": 94.1,
+        "humanitys_last_exam": 44.7,
+        "tau2_bench": 95.6
+      }
+    },
+    {
+      "name": "GLM 4 32B ",
+      "slug": "glm-4-32b",
+      "provider": "zhipu",
+      "context_window_input": 128000,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-07-24",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.2,
+        "output_per_1m": 0.8,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GLM 4.5",
+      "slug": "glm-45",
+      "provider": "zhipu",
+      "context_window_input": 131000,
+      "context_window_output": 131000,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-07-25",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "math_bench": 97.9,
+        "gdpval_aa": 0.62,
+        "gpqa_diamond": 78.2,
+        "ifbench": 44.1,
+        "tau2_bench": 43,
+        "humanitys_last_exam": 12.2,
+        "livecode_bench": 73.8,
+        "aime_2025": 73.7,
+        "terminal_bench": 22,
+        "mmlu_pro": 83.5
+      }
+    },
+    {
+      "name": "GLM 4.5 Air",
+      "slug": "glm-45-air",
+      "provider": "zhipu",
+      "context_window_input": 131072,
+      "context_window_output": 98304,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-07-25",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.25,
+        "output_per_1m": 1,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gpqa_diamond": 73.3,
+        "math_bench": 96.5,
+        "gdpval_aa": 6.04,
+        "livecode_bench": 68.4,
+        "mmlu_pro": 81.5,
+        "humanitys_last_exam": 6.8,
+        "tau2_bench": 46.5,
+        "ifbench": 37.6,
+        "terminal_bench": 20.5,
+        "aime_2025": 80.7
+      }
+    },
+    {
+      "name": "GLM 4.5V",
+      "slug": "glm-45v",
+      "provider": "zhipu",
+      "context_window_input": 65536,
+      "context_window_output": 16384,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-08-11",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "ifbench": 28.6,
+        "humanitys_last_exam": 3.6,
+        "gpqa_diamond": 57.3,
+        "tau2_bench": 19.6,
+        "mmlu_pro": 75.1,
+        "livecode_bench": 35.2,
+        "gdpval_aa": 1.04,
+        "terminal_bench": 6.8,
+        "aime_2025": 15.3
+      }
+    },
+    {
+      "name": "GLM 4.6",
+      "slug": "glm-46",
+      "provider": "zhipu",
+      "context_window_input": 202752,
+      "context_window_output": 131072,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-30",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.35,
+        "output_per_1m": 1.4,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "tau2_bench": 76.9,
+        "terminal_bench": 28.8,
+        "mmlu_pro": 78.4,
+        "gdpval_aa": 25.57,
+        "gpqa_diamond": 63.2,
+        "humanitys_last_exam": 5.2,
+        "critpt": 0,
+        "livecode_bench": 56.1,
+        "scicode": 33.1,
+        "ifbench": 36.7,
+        "aime_2025": 44.3,
+        "aa_lcr": 26.3
+      }
+    },
+    {
+      "name": "GLM 4.6 (exacto)",
+      "slug": "glm-46-exacto",
+      "provider": "zhipu",
+      "context_window_input": 204800,
+      "context_window_output": 131072,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-30",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.35,
+        "output_per_1m": 1.4,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GLM 4.6V",
+      "slug": "glm-46v",
+      "provider": "zhipu",
+      "context_window_input": 131072,
+      "context_window_output": 131072,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-12-08",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.35,
+        "output_per_1m": 1.4,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "livecode_bench": 41.1,
+        "gpqa_diamond": 56.6,
+        "humanitys_last_exam": 3.7,
+        "tau2_bench": 30.7,
+        "mmlu_pro": 75.2,
+        "ifbench": 27.9,
+        "gdpval_aa": 11.81,
+        "aime_2025": 26.3,
+        "terminal_bench": 3
+      }
+    },
+    {
+      "name": "GLM 4.7 Flash",
+      "slug": "glm-47-flash",
+      "provider": "zhipu",
+      "context_window_input": 202752,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2026-01-19",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.25,
+        "output_per_1m": 1,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gdpval_aa": 18.79,
+        "ifbench": 60.8,
+        "terminal_bench": 22,
+        "gpqa_diamond": 58.1,
+        "humanitys_last_exam": 7.1,
+        "tau2_bench": 98.8
+      }
+    },
+    {
+      "name": "GLM 5",
+      "slug": "glm-5",
+      "provider": "zhipu",
+      "context_window_input": 204800,
+      "context_window_output": 131072,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2026-02-11",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.95,
+        "output_per_1m": 2.55,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 82,
+        "humanitys_last_exam": 27.2,
+        "critpt": 2,
+        "scicode": 46.2,
+        "aa_lcr": 63.3,
+        "tau2_bench": 98.2,
+        "terminal_bench": 43.2,
+        "ifbench": 72.3,
+        "gdpval_aa": 45.55
       }
     },
     {
@@ -289,6 +1411,202 @@
         "input_per_1m": 0.5,
         "output_per_1m": 2,
         "confirmed": false
+      },
+      "benchmarks": {
+        "gpqa_diamond": 85.9,
+        "aime_2025": 95,
+        "simplebench": 37.24,
+        "frontiermath": 2.44,
+        "tau2_bench": 95.9,
+        "terminal_bench": 31.8,
+        "gdpval_aa": 35.04,
+        "mmlu_pro": 85.6,
+        "humanitys_last_exam": 25.1,
+        "critpt": 1.7,
+        "livecode_bench": 89.4,
+        "scicode": 45.1,
+        "ifbench": 67.9,
+        "aa_lcr": 64
+      }
+    },
+    {
+      "name": "GPT Audio",
+      "slug": "gpt-audio",
+      "provider": "openai",
+      "context_window_input": 128000,
+      "context_window_output": 16384,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2026-01-19",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2.5,
+        "output_per_1m": 10,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GPT Audio Mini",
+      "slug": "gpt-audio-mini",
+      "provider": "openai",
+      "context_window_input": 128000,
+      "context_window_output": 16384,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2026-01-19",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GPT-4",
+      "slug": "gpt-4",
+      "provider": "openai",
+      "context_window_input": 8191,
+      "context_window_output": 4096,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2023-05-28",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 30,
+        "output_per_1m": 60,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 7.53,
+        "aime_2025": 1.01,
+        "math_bench": 22.97
+      }
+    },
+    {
+      "name": "GPT-4.1",
+      "slug": "gpt-41",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2,
+        "output_per_1m": 8,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "aime_2025": 34.7,
+        "gpqa_diamond": 66.6,
+        "swe_bench": 39.58,
+        "simplebench": 12.4,
+        "math_bench": 91.3,
+        "frontiermath": 5.52,
+        "aider_polyglot": 52.4,
+        "mmlu_pro": 80.6,
+        "humanitys_last_exam": 4.6,
+        "critpt": 0,
+        "livecode_bench": 45.7,
+        "scicode": 38.1,
+        "ifbench": 43,
+        "aa_lcr": 61,
+        "tau2_bench": 47.1,
+        "terminal_bench": 13.6,
+        "gdpval_aa": 15.68
+      }
+    },
+    {
+      "name": "GPT-4.1 mini",
+      "slug": "gpt-41-mini",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.4,
+        "output_per_1m": 1.6,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 66.4,
+        "math_bench": 92.5,
+        "aime_2025": 46.3,
+        "swe_bench": 23.94,
+        "frontiermath": 4.48,
+        "aider_polyglot": 32.4,
+        "tau2_bench": 52.9,
+        "terminal_bench": 7.6,
+        "gdpval_aa": 8.44,
+        "mmlu_pro": 78.1,
+        "humanitys_last_exam": 4.6,
+        "critpt": 0,
+        "livecode_bench": 48.3,
+        "scicode": 40.4,
+        "ifbench": 38.3,
+        "aa_lcr": 42.3
+      }
+    },
+    {
+      "name": "GPT-4.1 nano",
+      "slug": "gpt-41-nano",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 51.2,
+        "math_bench": 84.8,
+        "aime_2025": 24,
+        "frontiermath": 1.03,
+        "aider_polyglot": 8.9,
+        "mmlu_pro": 65.7,
+        "humanitys_last_exam": 3.9,
+        "critpt": 0,
+        "livecode_bench": 32.6,
+        "scicode": 25.9,
+        "ifbench": 32,
+        "aa_lcr": 17,
+        "tau2_bench": 17.3,
+        "terminal_bench": 3.8,
+        "gdpval_aa": 0
+      }
+    },
+    {
+      "name": "GPT-4.5",
+      "slug": "gpt-45",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 75,
+        "output_per_1m": 150,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 58.25,
+        "simplebench": 21.4,
+        "math_bench": 78.63,
+        "aider_polyglot": 44.9,
+        "aime_2025": 37.72
       }
     },
     {
@@ -310,7 +1628,88 @@
         "input_per_1m": 2.5,
         "output_per_1m": 10,
         "confirmed": true
+      },
+      "benchmarks": {
+        "simplebench": 1.36,
+        "aime_2025": 6,
+        "math_bench": 75.9,
+        "swe_bench": 21.62,
+        "gpqa_diamond": 54.3,
+        "aider_polyglot": 23.1,
+        "frontiermath": 0.34,
+        "critpt": 0,
+        "livecode_bench": 30.9,
+        "scicode": 33.3,
+        "ifbench": 34.3,
+        "aa_lcr": 0,
+        "tau2_bench": 25.1,
+        "terminal_bench": 8.3,
+        "gdpval_aa": 0,
+        "mmlu_pro": 74.8,
+        "humanitys_last_exam": 3.3
       }
+    },
+    {
+      "name": "GPT-4o mini",
+      "slug": "gpt-4o-mini",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gsm8k": 91.3,
+        "aider_polyglot": 3.6,
+        "gpqa_diamond": 42.6,
+        "math_bench": 78.9,
+        "livecode_bench": 23.4,
+        "aime_2025": 14.7,
+        "scicode": 22.9,
+        "ifbench": 31,
+        "mmlu_pro": 64.8,
+        "humanitys_last_exam": 4
+      }
+    },
+    {
+      "name": "GPT-4o-mini (2024-07-18)",
+      "slug": "gpt-4o-mini-2024-07-18",
+      "provider": "openai",
+      "context_window_input": 128000,
+      "context_window_output": 16384,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2024-07-18",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": true
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GPT-4o-mini Search",
+      "slug": "gpt-4o-mini-search",
+      "provider": "openai",
+      "context_window_input": 128000,
+      "context_window_output": 16384,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-03-12",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.6,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
       "name": "GPT-5",
@@ -331,7 +1730,107 @@
         "input_per_1m": 1.25,
         "output_per_1m": 5,
         "confirmed": true
+      },
+      "benchmarks": {
+        "terminal_bench": 32.6,
+        "swe_bench": 65,
+        "math_bench": 99.4,
+        "gpqa_diamond": 85.4,
+        "aime_2025": 94.3,
+        "frontiermath": 32.41,
+        "simplebench": 48.04,
+        "aider_polyglot": 88,
+        "humanitys_last_exam": 26.5,
+        "critpt": 5.7,
+        "livecode_bench": 84.6,
+        "scicode": 42.9,
+        "ifbench": 73.1,
+        "aa_lcr": 75.6,
+        "tau2_bench": 84.8,
+        "gdpval_aa": 40.09,
+        "mmlu_pro": 87.1
       }
+    },
+    {
+      "name": "GPT-5 Chat",
+      "slug": "gpt-5-chat",
+      "provider": "openai",
+      "context_window_input": 128000,
+      "context_window_output": 16384,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-08-07",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 5,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GPT-5 Codex",
+      "slug": "gpt-5-codex",
+      "provider": "openai",
+      "context_window_input": 400000,
+      "context_window_output": 128000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-23",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 5,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "humanitys_last_exam": 25.6,
+        "critpt": 5.1,
+        "livecode_bench": 84,
+        "scicode": 40.9,
+        "ifbench": 74.1,
+        "aime_2025": 98.7,
+        "aa_lcr": 69,
+        "tau2_bench": 86.8,
+        "terminal_bench": 37.9,
+        "mmlu_pro": 86.5,
+        "gdpval_aa": 35.81,
+        "gpqa_diamond": 83.7
+      }
+    },
+    {
+      "name": "GPT-5 Image",
+      "slug": "gpt-5-image",
+      "provider": "openai",
+      "context_window_input": 400000,
+      "context_window_output": 128000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-10-14",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 5,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GPT-5 Image Mini",
+      "slug": "gpt-5-image-mini",
+      "provider": "openai",
+      "context_window_input": 400000,
+      "context_window_output": 128000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-10-16",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.3,
+        "output_per_1m": 1.2,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
       "name": "GPT-5 mini",
@@ -352,6 +1851,75 @@
         "input_per_1m": 0.3,
         "output_per_1m": 1.2,
         "confirmed": false
+      },
+      "benchmarks": {
+        "aa_lcr": 68,
+        "tau2_bench": 68.4,
+        "math_bench": 97.85,
+        "gpqa_diamond": 82.8,
+        "terminal_bench": 33.3,
+        "swe_bench": 59.8,
+        "frontiermath": 27.24,
+        "aime_2025": 90.7,
+        "gdpval_aa": 34.69,
+        "mmlu_pro": 83.7,
+        "humanitys_last_exam": 19.7,
+        "critpt": 0,
+        "livecode_bench": 83.8,
+        "scicode": 39.2,
+        "ifbench": 75.4
+      }
+    },
+    {
+      "name": "GPT-5 nano",
+      "slug": "gpt-5-nano",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "ifbench": 67.6,
+        "aa_lcr": 41.7,
+        "math_bench": 95.24,
+        "swe_bench": 34.8,
+        "terminal_bench": 12.1,
+        "frontiermath": 8.28,
+        "gpqa_diamond": 67.6,
+        "aime_2025": 83.7,
+        "tau2_bench": 36.5,
+        "gdpval_aa": 15.15,
+        "mmlu_pro": 78,
+        "humanitys_last_exam": 8.2,
+        "critpt": 0,
+        "livecode_bench": 78.9,
+        "scicode": 36.6
+      }
+    },
+    {
+      "name": "GPT-5 Pro",
+      "slug": "gpt-5-pro",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 10,
+        "output_per_1m": 40,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "simplebench": 53.92
       }
     },
     {
@@ -373,6 +1941,117 @@
         "input_per_1m": 1.25,
         "output_per_1m": 5,
         "confirmed": false
+      },
+      "benchmarks": {
+        "aime_2025": 94,
+        "swe_bench": 66,
+        "gpqa_diamond": 87.3,
+        "frontiermath": 31.03,
+        "simplebench": 43.84,
+        "terminal_bench": 45.5,
+        "mmlu_pro": 87,
+        "humanitys_last_exam": 26.5,
+        "critpt": 4.9,
+        "livecode_bench": 86.8,
+        "scicode": 43.3,
+        "ifbench": 72.9,
+        "aa_lcr": 75,
+        "tau2_bench": 81.9,
+        "gdpval_aa": 36.53
+      }
+    },
+    {
+      "name": "GPT-5.1 Chat",
+      "slug": "gpt-51-chat",
+      "provider": "openai",
+      "context_window_input": 128000,
+      "context_window_output": 16384,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-11-13",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 5,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GPT-5.1-Codex",
+      "slug": "gpt-51-codex",
+      "provider": "openai",
+      "context_window_input": 400000,
+      "context_window_output": 128000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-11-13",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 5,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "terminal_bench": 34.8,
+        "mmlu_pro": 86,
+        "gpqa_diamond": 86,
+        "gdpval_aa": 34.42,
+        "humanitys_last_exam": 23.4,
+        "critpt": 5.7,
+        "livecode_bench": 84.9,
+        "scicode": 40.2,
+        "ifbench": 70,
+        "aime_2025": 95.7,
+        "aa_lcr": 67.3,
+        "tau2_bench": 83
+      }
+    },
+    {
+      "name": "GPT-5.1-Codex-Max",
+      "slug": "gpt-51-codex-max",
+      "provider": "openai",
+      "context_window_input": 400000,
+      "context_window_output": 128000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-12-04",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.25,
+        "output_per_1m": 5,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GPT-5.1-Codex-Mini",
+      "slug": "gpt-51-codex-mini",
+      "provider": "openai",
+      "context_window_input": 400000,
+      "context_window_output": 100000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-11-13",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.4,
+        "output_per_1m": 1.6,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "aime_2025": 91.7,
+        "aa_lcr": 62.7,
+        "tau2_bench": 62.9,
+        "mmlu_pro": 82,
+        "terminal_bench": 33.3,
+        "gpqa_diamond": 81.3,
+        "gdpval_aa": 26.69,
+        "humanitys_last_exam": 16.9,
+        "critpt": 0,
+        "livecode_bench": 83.6,
+        "scicode": 42.6,
+        "ifbench": 67.9
       }
     },
     {
@@ -394,7 +2073,58 @@
         "input_per_1m": 1.75,
         "output_per_1m": 14,
         "confirmed": true
+      },
+      "benchmarks": {
+        "scicode": 52.1,
+        "aime_2025": 99,
+        "swe_bench": 71.8,
+        "ifbench": 75.4,
+        "gpqa_diamond": 90.3,
+        "simplebench": 34.96,
+        "frontiermath": 40.7,
+        "terminal_bench": 47,
+        "aa_lcr": 72.7,
+        "tau2_bench": 84.8,
+        "gdpval_aa": 48.11,
+        "mmlu_pro": 87.4,
+        "humanitys_last_exam": 35.4,
+        "critpt": 11.6,
+        "livecode_bench": 88.9
       }
+    },
+    {
+      "name": "GPT-5.2 Chat",
+      "slug": "gpt-52-chat",
+      "provider": "openai",
+      "context_window_input": 128000,
+      "context_window_output": 16384,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-12-10",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.75,
+        "output_per_1m": 14,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "GPT-5.2 Pro",
+      "slug": "gpt-52-pro",
+      "provider": "openai",
+      "context_window_input": 400000,
+      "context_window_output": 128000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-12-10",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 10,
+        "output_per_1m": 40,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
       "name": "GPT-5.2-Codex",
@@ -415,6 +2145,212 @@
         "input_per_1m": 1.75,
         "output_per_1m": 14,
         "confirmed": true
+      },
+      "benchmarks": {
+        "terminal_bench": 37.1,
+        "gdpval_aa": 39.29,
+        "gpqa_diamond": 89.9,
+        "humanitys_last_exam": 33.5,
+        "critpt": 8.7,
+        "scicode": 54.6,
+        "ifbench": 77.6,
+        "aa_lcr": 75.7,
+        "tau2_bench": 92.1
+      }
+    },
+    {
+      "name": "gpt-oss-120b",
+      "slug": "gpt-oss-120b",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.3,
+        "output_per_1m": 1.2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "simplebench": 6.52,
+        "swe_bench": 26,
+        "aider_polyglot": 41.8,
+        "critpt": 1.1,
+        "livecode_bench": 87.8,
+        "scicode": 38.9,
+        "ifbench": 69,
+        "aime_2025": 93.4,
+        "aa_lcr": 50.7,
+        "tau2_bench": 65.8,
+        "terminal_bench": 23.5,
+        "mmlu_pro": 80.8,
+        "gpqa_diamond": 78.2,
+        "gdpval_aa": 23.65,
+        "humanitys_last_exam": 18.5
+      }
+    },
+    {
+      "name": "gpt-oss-120b (exacto)",
+      "slug": "gpt-oss-120b-exacto",
+      "provider": "openai",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-08-05",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.3,
+        "output_per_1m": 1.2,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "gpt-oss-20b",
+      "slug": "gpt-oss-20b",
+      "provider": "openai",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-08-05",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gpqa_diamond": 68.8,
+        "humanitys_last_exam": 9.8,
+        "critpt": 1.4,
+        "livecode_bench": 77.7,
+        "scicode": 34.4,
+        "ifbench": 65.1,
+        "aime_2025": 89.3,
+        "mmlu_pro": 74.8,
+        "aa_lcr": 30.7,
+        "tau2_bench": 60.2,
+        "terminal_bench": 10.6,
+        "gdpval_aa": 9.99
+      }
+    },
+    {
+      "name": "gpt-oss-safeguard-20b",
+      "slug": "gpt-oss-safeguard-20b",
+      "provider": "openai",
+      "context_window_input": 131072,
+      "context_window_output": 65536,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-10-29",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Grok 3",
+      "slug": "grok-3",
+      "provider": "xai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 3,
+        "output_per_1m": 15,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "frontiermath": 3.79,
+        "math_bench": 87,
+        "aime_2025": 58,
+        "aider_polyglot": 53.3,
+        "gpqa_diamond": 69.3,
+        "simplebench": 23.32,
+        "tau2_bench": 48.8,
+        "terminal_bench": 11.4,
+        "gdpval_aa": 10.42,
+        "mmlu_pro": 79.9,
+        "humanitys_last_exam": 5.1,
+        "critpt": 0,
+        "livecode_bench": 42.5,
+        "scicode": 36.8,
+        "ifbench": 46.9,
+        "aa_lcr": 54.7
+      }
+    },
+    {
+      "name": "Grok 4",
+      "slug": "grok-4",
+      "provider": "xai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 3,
+        "output_per_1m": 15,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "scicode": 45.7,
+        "ifbench": 53.7,
+        "math_bench": 99,
+        "aa_lcr": 68,
+        "gdpval_aa": 24.38,
+        "frontiermath": 19.66,
+        "aider_polyglot": 79.6,
+        "mmlu_pro": 86.6,
+        "simplebench": 52.6,
+        "humanitys_last_exam": 23.9,
+        "critpt": 2,
+        "livecode_bench": 81.9,
+        "tau2_bench": 74.9,
+        "terminal_bench": 37.9,
+        "gpqa_diamond": 87.7,
+        "aime_2025": 92.7
+      }
+    },
+    {
+      "name": "Grok 4 Fast",
+      "slug": "grok-4-fast",
+      "provider": "xai",
+      "context_window_input": 2000000,
+      "context_window_output": 30000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-19",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.2,
+        "output_per_1m": 0.5,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "tau2_bench": 63.7,
+        "terminal_bench": 12.1,
+        "gpqa_diamond": 60.6,
+        "critpt": 0,
+        "livecode_bench": 40.1,
+        "mmlu_pro": 73,
+        "humanitys_last_exam": 5,
+        "gdpval_aa": 15.17,
+        "scicode": 32.9,
+        "ifbench": 37.7,
+        "aime_2025": 41.3,
+        "aa_lcr": 20
       }
     },
     {
@@ -436,6 +2372,13 @@
         "input_per_1m": 3,
         "output_per_1m": 15,
         "confirmed": false
+      },
+      "benchmarks": {
+        "gpqa_diamond": 82.67,
+        "frontiermath": 19.66,
+        "aider_polyglot": 79.6,
+        "simplebench": 52.6,
+        "aime_2025": 83.98
       }
     },
     {
@@ -457,6 +2400,210 @@
         "input_per_1m": 0.2,
         "output_per_1m": 1,
         "confirmed": true
+      },
+      "benchmarks": {
+        "humanitys_last_exam": 17.6,
+        "aa_lcr": 68,
+        "tau2_bench": 93.3,
+        "terminal_bench": 24.2,
+        "mmlu_pro": 85.4,
+        "gpqa_diamond": 85.3,
+        "gdpval_aa": 27.18,
+        "critpt": 2.9,
+        "livecode_bench": 82.2,
+        "scicode": 44.2,
+        "ifbench": 52.7,
+        "aime_2025": 89.3
+      }
+    },
+    {
+      "name": "Grok Code Fast 1",
+      "slug": "grok-code-fast-1",
+      "provider": "xai",
+      "context_window_input": 256000,
+      "context_window_output": 10000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-08-26",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.2,
+        "output_per_1m": 0.5,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "ifbench": 41.4,
+        "aime_2025": 43.3,
+        "aa_lcr": 48.3,
+        "tau2_bench": 75.7,
+        "mmlu_pro": 79.3,
+        "gpqa_diamond": 72.7,
+        "gdpval_aa": 14.07,
+        "humanitys_last_exam": 7.5,
+        "critpt": 0,
+        "livecode_bench": 65.7,
+        "scicode": 36.2,
+        "terminal_bench": 17.4
+      }
+    },
+    {
+      "name": "Grok-3 mini",
+      "slug": "grok-3-mini",
+      "provider": "xai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.3,
+        "output_per_1m": 0.5,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "terminal_bench": 17.4,
+        "gdpval_aa": 0,
+        "mmlu_pro": 82.8,
+        "humanitys_last_exam": 11.1,
+        "critpt": 0.6,
+        "math_bench": 99.2,
+        "livecode_bench": 69.6,
+        "aider_polyglot": 49.3,
+        "scicode": 40.6,
+        "aime_2025": 84.7,
+        "ifbench": 45.9,
+        "frontiermath": 5.86,
+        "gpqa_diamond": 79.1,
+        "aa_lcr": 50.3,
+        "tau2_bench": 90.4
+      }
+    },
+    {
+      "name": "Kimi K2",
+      "slug": "kimi-k2",
+      "provider": "moonshot",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2.4,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "mmlu_pro": 82.4,
+        "tau2_bench": 61.1,
+        "gpqa_diamond": 76.6,
+        "humanitys_last_exam": 7,
+        "critpt": 0,
+        "swe_bench": 43.8,
+        "simplebench": 11.56,
+        "terminal_bench": 15.9,
+        "aider_polyglot": 59.1,
+        "aime_2025": 57,
+        "aa_lcr": 51,
+        "livecode_bench": 55.6,
+        "scicode": 34.5,
+        "math_bench": 97.1,
+        "ifbench": 41.5,
+        "gdpval_aa": 3.71
+      }
+    },
+    {
+      "name": "Kimi K2 0711",
+      "slug": "kimi-k2-0711",
+      "provider": "moonshot",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-07-11",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2.4,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Kimi K2 0905",
+      "slug": "kimi-k2-0905",
+      "provider": "moonshot",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-04",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2.4,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "livecode_bench": 61,
+        "gdpval_aa": 19.35,
+        "gpqa_diamond": 76.7,
+        "humanitys_last_exam": 6.3,
+        "tau2_bench": 73.4,
+        "terminal_bench": 23.5,
+        "ifbench": 41.7,
+        "aime_2025": 57.3,
+        "mmlu_pro": 81.9
+      }
+    },
+    {
+      "name": "Kimi K2 0905 (exacto)",
+      "slug": "kimi-k2-0905-exacto",
+      "provider": "moonshot",
+      "context_window_input": 262144,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-04",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2.4,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Kimi K2 Thinking",
+      "slug": "kimi-k2-thinking",
+      "provider": "moonshot",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.47,
+        "output_per_1m": 2,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "mmlu_pro": 84.8,
+        "tau2_bench": 93,
+        "terminal_bench": 31.1,
+        "aime_2025": 94.7,
+        "frontiermath": 21.4,
+        "swe_bench": 63.4,
+        "gdpval_aa": 25.63,
+        "gpqa_diamond": 83.8,
+        "humanitys_last_exam": 22.3,
+        "critpt": 2.6,
+        "livecode_bench": 85.3,
+        "scicode": 42.4,
+        "ifbench": 68.1,
+        "aa_lcr": 66.3
       }
     },
     {
@@ -478,6 +2625,24 @@
         "input_per_1m": 0.6,
         "output_per_1m": 2.4,
         "confirmed": false
+      },
+      "benchmarks": {
+        "mmlu_pro": 81.9,
+        "humanitys_last_exam": 29.4,
+        "critpt": 0,
+        "swe_bench": 43.8,
+        "gpqa_diamond": 87.9,
+        "livecode_bench": 61,
+        "aime_2025": 92.19,
+        "simplebench": 11.56,
+        "frontiermath": 27.9,
+        "aider_polyglot": 59.1,
+        "aa_lcr": 52.3,
+        "terminal_bench": 34.8,
+        "gdpval_aa": 38.99,
+        "scicode": 30.7,
+        "ifbench": 70.2,
+        "tau2_bench": 95.9
       }
     },
     {
@@ -499,6 +2664,25 @@
         "input_per_1m": 0.27,
         "output_per_1m": 0.85,
         "confirmed": true
+      },
+      "benchmarks": {
+        "livecode_bench": 39.7,
+        "aime_2025": 19.3,
+        "swe_bench": 21.04,
+        "gpqa_diamond": 67.1,
+        "scicode": 33.1,
+        "math_bench": 88.9,
+        "frontiermath": 0.69,
+        "aider_polyglot": 15.6,
+        "simplebench": 13.24,
+        "ifbench": 43,
+        "aa_lcr": 46,
+        "tau2_bench": 17.8,
+        "terminal_bench": 6.8,
+        "mmlu_pro": 80.9,
+        "gdpval_aa": 0,
+        "humanitys_last_exam": 4.8,
+        "critpt": 0
       }
     },
     {
@@ -520,7 +2704,186 @@
         "input_per_1m": 0.27,
         "output_per_1m": 0.85,
         "confirmed": true
+      },
+      "benchmarks": {
+        "ifbench": 39.5,
+        "gpqa_diamond": 58.7,
+        "aa_lcr": 25.8,
+        "math_bench": 84.4,
+        "aime_2025": 14,
+        "swe_bench": 9.06,
+        "frontiermath": 0,
+        "tau2_bench": 15.5,
+        "terminal_bench": 1.5,
+        "gdpval_aa": 0,
+        "mmlu_pro": 75.2,
+        "humanitys_last_exam": 4.3,
+        "critpt": 0,
+        "livecode_bench": 29.9,
+        "scicode": 17
       }
+    },
+    {
+      "name": "Llama Guard 3 8B",
+      "slug": "llama-guard-3-8b",
+      "provider": "meta",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-02-12",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.05,
+        "output_per_1m": 0.05,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Llama Guard 4 12B",
+      "slug": "llama-guard-4-12b",
+      "provider": "meta",
+      "context_window_input": 163840,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-04-30",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.05,
+        "output_per_1m": 0.05,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "LlamaGuard 2 8B",
+      "slug": "llamaguard-2-8b",
+      "provider": "meta",
+      "context_window_input": 8192,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2024-05-13",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.05,
+        "output_per_1m": 0.05,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "MiniMax M1",
+      "slug": "minimax-m1",
+      "provider": "minimax",
+      "context_window_input": 1000000,
+      "context_window_output": 40000,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-06-17",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 0.95,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "MiniMax M2",
+      "slug": "minimax-m2",
+      "provider": "minimax",
+      "context_window_input": 196608,
+      "context_window_output": 65536,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-10-23",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 0.95,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "scicode": 36.1,
+        "mmlu_pro": 82,
+        "ifbench": 72.3,
+        "gpqa_diamond": 77.7,
+        "aime_2025": 78.3,
+        "aa_lcr": 61,
+        "humanitys_last_exam": 12.5,
+        "tau2_bench": 86.8,
+        "critpt": 0.9,
+        "terminal_bench": 25.8,
+        "livecode_bench": 82.6,
+        "gdpval_aa": 27.72
+      }
+    },
+    {
+      "name": "MiniMax M2-her",
+      "slug": "minimax-m2-her",
+      "provider": "minimax",
+      "context_window_input": 65536,
+      "context_window_output": 2048,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2026-01-23",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 0.95,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "MiniMax M2.1",
+      "slug": "minimax-m21",
+      "provider": "minimax",
+      "context_window_input": 196608,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-12-23",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 0.95,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 83,
+        "humanitys_last_exam": 22.2,
+        "gdpval_aa": 29.26,
+        "critpt": 0.3,
+        "livecode_bench": 81,
+        "scicode": 40.7,
+        "ifbench": 69.9,
+        "aime_2025": 82.7,
+        "aa_lcr": 59,
+        "tau2_bench": 85.4,
+        "mmlu_pro": 87.5,
+        "terminal_bench": 28.8
+      }
+    },
+    {
+      "name": "MiniMax-01",
+      "slug": "minimax-01",
+      "provider": "minimax",
+      "context_window_input": 1000192,
+      "context_window_output": 1000192,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-01-15",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.4,
+        "output_per_1m": 1.1,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
       "name": "MiniMax-M2.5",
@@ -541,7 +2904,121 @@
         "input_per_1m": 0.5,
         "output_per_1m": 2,
         "confirmed": false
+      },
+      "benchmarks": {
+        "gdpval_aa": 35.48,
+        "gpqa_diamond": 84.8,
+        "humanitys_last_exam": 19.1,
+        "critpt": 1.1,
+        "ifbench": 71.6,
+        "aa_lcr": 66,
+        "tau2_bench": 95.3,
+        "scicode": 42.6,
+        "terminal_bench": 34.8
       }
+    },
+    {
+      "name": "Mistral Large",
+      "slug": "mistral-large",
+      "provider": "mistral",
+      "context_window_input": 128000,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2024-02-26",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2,
+        "output_per_1m": 6,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "scicode": 20.8,
+        "gpqa_diamond": 35.1,
+        "mmlu_pro": 51.5,
+        "humanitys_last_exam": 3.4,
+        "livecode_bench": 17.8,
+        "math_bench": 52.7,
+        "aime_2025": 1.85
+      }
+    },
+    {
+      "name": "Mistral Large 2",
+      "slug": "mistral-large-2",
+      "provider": "mistral",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2,
+        "output_per_1m": 6,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "math_bench": 73.6,
+        "frontiermath": 0.34,
+        "aa_lcr": 5.3,
+        "tau2_bench": 30.7,
+        "aime_2025": 14,
+        "simplebench": 7,
+        "mmlu_pro": 69.7,
+        "gpqa_diamond": 48.6,
+        "terminal_bench": 6.1,
+        "humanitys_last_exam": 4,
+        "gdpval_aa": 0,
+        "critpt": 0,
+        "livecode_bench": 29.3,
+        "ifbench": 31.2,
+        "scicode": 29.2
+      }
+    },
+    {
+      "name": "Mistral Large 2407",
+      "slug": "mistral-large-2407",
+      "provider": "mistral",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2024-11-19",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2,
+        "output_per_1m": 6,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "math_bench": 71.4,
+        "tau2_bench": 33,
+        "aime_2025": 0,
+        "aa_lcr": 1.7,
+        "mmlu_pro": 68.3,
+        "gpqa_diamond": 47.2,
+        "humanitys_last_exam": 3.2,
+        "livecode_bench": 26.7,
+        "scicode": 27.1,
+        "ifbench": 31.6
+      }
+    },
+    {
+      "name": "Mistral Large 2411",
+      "slug": "mistral-large-2411",
+      "provider": "mistral",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2024-11-19",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2,
+        "output_per_1m": 6,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
       "name": "Mistral Large 3",
@@ -562,6 +3039,262 @@
         "input_per_1m": 2,
         "output_per_1m": 6,
         "confirmed": false
+      },
+      "benchmarks": {
+        "livecode_bench": 46.5,
+        "scicode": 36.2,
+        "ifbench": 36.2,
+        "aime_2025": 38,
+        "aa_lcr": 34.7,
+        "tau2_bench": 24.6,
+        "mmlu_pro": 80.7,
+        "terminal_bench": 15.9,
+        "gdpval_aa": 19.71,
+        "gpqa_diamond": 68,
+        "humanitys_last_exam": 4.1,
+        "critpt": 0
+      }
+    },
+    {
+      "name": "Mistral Large 3 2512",
+      "slug": "mistral-large-3-2512",
+      "provider": "mistral",
+      "context_window_input": 262144,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-12-01",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2,
+        "output_per_1m": 6,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Mistral Medium 3",
+      "slug": "mistral-medium-3",
+      "provider": "mistral",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.4,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "mmlu_pro": 76,
+        "humanitys_last_exam": 4.3,
+        "gpqa_diamond": 57.8,
+        "critpt": 0,
+        "math_bench": 90.7,
+        "livecode_bench": 40,
+        "aime_2025": 30.3,
+        "frontiermath": 0.35,
+        "scicode": 33.1,
+        "ifbench": 39.3,
+        "aa_lcr": 28,
+        "tau2_bench": 24.3,
+        "terminal_bench": 3.8,
+        "gdpval_aa": 7.36
+      }
+    },
+    {
+      "name": "Mistral Medium 3.1",
+      "slug": "mistral-medium-31",
+      "provider": "mistral",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-08-13",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.4,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "livecode_bench": 40.6,
+        "humanitys_last_exam": 4.4,
+        "scicode": 33.8,
+        "critpt": 0,
+        "ifbench": 39.8,
+        "aime_2025": 38.3,
+        "aa_lcr": 19.7,
+        "tau2_bench": 40.6,
+        "terminal_bench": 10.6,
+        "gdpval_aa": 16.37,
+        "mmlu_pro": 68.3,
+        "gpqa_diamond": 58.8
+      }
+    },
+    {
+      "name": "Mistral Small 3",
+      "slug": "mistral-small-3",
+      "provider": "mistral",
+      "context_window_input": 32768,
+      "context_window_output": 16384,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-01-30",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.3,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "tau2_bench": 19.6,
+        "mmlu_pro": 65.2,
+        "gpqa_diamond": 46.2,
+        "humanitys_last_exam": 4.1,
+        "livecode_bench": 25.2,
+        "ifbench": 26.4,
+        "math_bench": 71.5,
+        "aime_2025": 4.3,
+        "scicode": 23.6,
+        "aa_lcr": 0
+      }
+    },
+    {
+      "name": "Mistral Small 3.1 24B",
+      "slug": "mistral-small-31-24b",
+      "provider": "mistral",
+      "context_window_input": 128000,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-03-17",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.3,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Mistral Small 3.2 24B",
+      "slug": "mistral-small-32-24b",
+      "provider": "mistral",
+      "context_window_input": 131072,
+      "context_window_output": 131072,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-06-20",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.3,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Mistral Small Creative",
+      "slug": "mistral-small-creative",
+      "provider": "mistral",
+      "context_window_input": 32768,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-12-16",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.3,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Nemotron 3 Nano 30B A3B",
+      "slug": "nemotron-3-nano-30b-a3b",
+      "provider": "nvidia",
+      "context_window_input": 262144,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-12-14",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.2,
+        "output_per_1m": 0.8,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gdpval_aa": 0,
+        "ifbench": 37.5,
+        "humanitys_last_exam": 4.6,
+        "tau2_bench": 25.4,
+        "gpqa_diamond": 39.9,
+        "livecode_bench": 36,
+        "mmlu_pro": 57.9,
+        "aime_2025": 13.3,
+        "terminal_bench": 12.1
+      }
+    },
+    {
+      "name": "Nemotron Nano 12B 2 VL",
+      "slug": "nemotron-nano-12b-2-vl",
+      "provider": "nvidia",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-10-28",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "livecode_bench": 69.4,
+        "scicode": 26.2,
+        "ifbench": 31.9,
+        "aime_2025": 75,
+        "tau2_bench": 21.3,
+        "mmlu_pro": 75.9,
+        "terminal_bench": 4.5,
+        "gdpval_aa": 0,
+        "gpqa_diamond": 57.2,
+        "humanitys_last_exam": 5.3,
+        "critpt": 0,
+        "aa_lcr": 40
+      }
+    },
+    {
+      "name": "Nemotron Nano 9B V2",
+      "slug": "nemotron-nano-9b-v2",
+      "provider": "nvidia",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-05",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "mmlu_pro": 73.9,
+        "humanitys_last_exam": 4,
+        "tau2_bench": 23.4,
+        "gdpval_aa": 0,
+        "ifbench": 27.1,
+        "terminal_bench": 0.8,
+        "aime_2025": 62.3,
+        "gpqa_diamond": 55.7,
+        "livecode_bench": 70.1
       }
     },
     {
@@ -583,59 +3316,332 @@
         "input_per_1m": 0.4,
         "output_per_1m": 1.6,
         "confirmed": false
+      },
+      "benchmarks": {
+        "humanitys_last_exam": 4.6,
+        "critpt": 0,
+        "livecode_bench": 36,
+        "scicode": 23,
+        "aime_2025": 13.3,
+        "aa_lcr": 6.7,
+        "tau2_bench": 25.4,
+        "terminal_bench": 12.1,
+        "mmlu_pro": 57.9,
+        "gpqa_diamond": 39.9,
+        "gdpval_aa": 0,
+        "ifbench": 37.5
       }
     },
     {
-      "name": "Qwen3.5 397B",
-      "slug": "qwen35-397b",
-      "provider": "alibaba",
-      "context_window_input": 262144,
-      "context_window_output": 65536,
-      "is_open_source": true,
-      "is_reasoning_model": false,
-      "release_date": "2026-02-16",
-      "tags": [
-        "multimodal",
-        "function_calling",
-        "vision",
-        "long_context"
-      ],
-      "pricing": {
-        "input_per_1m": 0.15,
-        "output_per_1m": 1,
-        "confirmed": true
-      }
-    },
-    {
-      "name": "Gemini 3.1 Pro",
-      "slug": "gemini-31-pro",
-      "provider": "google",
-      "context_window_input": 1048576,
-      "context_window_output": 65536,
+      "name": "o1",
+      "slug": "o1",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
       "is_open_source": false,
-      "is_reasoning_model": false,
-      "release_date": "2026-02-19",
-      "tags": [
-        "multimodal",
-        "function_calling",
-        "vision",
-        "long_context"
-      ],
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 15,
+        "output_per_1m": 60,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 74.7,
+        "aime_2025": 73.31,
+        "aider_polyglot": 61.7,
+        "math_bench": 97,
+        "frontiermath": 9.31,
+        "simplebench": 28.12,
+        "aa_lcr": 59.3,
+        "tau2_bench": 62.6,
+        "terminal_bench": 12.9,
+        "gdpval_aa": 13.79,
+        "mmlu_pro": 84.1,
+        "humanitys_last_exam": 7.7,
+        "critpt": 0.3,
+        "livecode_bench": 67.9,
+        "scicode": 35.8,
+        "ifbench": 70.3
+      }
+    },
+    {
+      "name": "o1-mini",
+      "slug": "o1-mini",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.1,
+        "output_per_1m": 4.4,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "aime_2025": 46.89,
+        "gpqa_diamond": 60.3,
+        "math_bench": 94.4,
+        "frontiermath": 1.72,
+        "simplebench": 1.72,
+        "mmlu_pro": 74.2,
+        "humanitys_last_exam": 4.9,
+        "livecode_bench": 57.6,
+        "scicode": 32.3
+      }
+    },
+    {
+      "name": "o1-preview",
+      "slug": "o1-preview",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 15,
+        "output_per_1m": 60,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 33.75,
+        "simplebench": 30.04,
+        "aime_2025": 31.04,
+        "math_bench": 92.4
+      }
+    },
+    {
+      "name": "o1-pro",
+      "slug": "o1-pro",
+      "provider": "openai",
+      "context_window_input": 200000,
+      "context_window_output": 100000,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "2025-03-19",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 150,
+        "output_per_1m": 600,
+        "confirmed": true
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "o3",
+      "slug": "o3",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
       "pricing": {
         "input_per_1m": 2,
-        "output_per_1m": 12,
+        "output_per_1m": 8,
         "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 82.7,
+        "aider_polyglot": 81.3,
+        "frontiermath": 18.69,
+        "ifbench": 71.4,
+        "swe_bench": 58.4,
+        "simplebench": 43.72,
+        "math_bench": 99.2,
+        "aa_lcr": 69.3,
+        "aime_2025": 88.3,
+        "tau2_bench": 80.7,
+        "terminal_bench": 37.1,
+        "gdpval_aa": 12.5,
+        "mmlu_pro": 85.3,
+        "humanitys_last_exam": 20,
+        "critpt": 1.1,
+        "livecode_bench": 80.8,
+        "scicode": 41
       }
     },
     {
-      "name": "GLM-5",
-      "slug": "glm-5",
-      "provider": "zhipu",
-      "context_window_input": 204800,
-      "context_window_output": 131072,
+      "name": "o3 Deep Research",
+      "slug": "o3-deep-research",
+      "provider": "openai",
+      "context_window_input": 200000,
+      "context_window_output": 100000,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "2025-10-10",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2,
+        "output_per_1m": 8,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "o3 Mini High",
+      "slug": "o3-mini-high",
+      "provider": "openai",
+      "context_window_input": 200000,
+      "context_window_output": 100000,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "2025-02-12",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.1,
+        "output_per_1m": 4.4,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "math_bench": 98.5,
+        "aa_lcr": 39.3,
+        "tau2_bench": 31.3,
+        "terminal_bench": 6.1,
+        "mmlu_pro": 80.2,
+        "gdpval_aa": 14.28,
+        "gpqa_diamond": 77.3,
+        "humanitys_last_exam": 12.3,
+        "critpt": 0.3,
+        "livecode_bench": 73.4,
+        "scicode": 39.8,
+        "ifbench": 67.1
+      }
+    },
+    {
+      "name": "o3-mini",
+      "slug": "o3-mini",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.1,
+        "output_per_1m": 4.4,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "simplebench": 7.36,
+        "aime_2025": 76.92,
+        "aider_polyglot": 60.4,
+        "frontiermath": 12.41,
+        "gpqa_diamond": 74.8,
+        "math_bench": 97.3,
+        "terminal_bench": 6.8,
+        "mmlu_pro": 79.1,
+        "humanitys_last_exam": 8.7,
+        "livecode_bench": 71.7,
+        "scicode": 39.9,
+        "tau2_bench": 28.7
+      }
+    },
+    {
+      "name": "o3-pro",
+      "slug": "o3-pro",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 20,
+        "output_per_1m": 80,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "aider_polyglot": 84.9,
+        "gpqa_diamond": 84.5
+      }
+    },
+    {
+      "name": "o4 Mini Deep Research",
+      "slug": "o4-mini-deep-research",
+      "provider": "openai",
+      "context_window_input": 200000,
+      "context_window_output": 100000,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "2025-10-10",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.1,
+        "output_per_1m": 4.4,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "o4 Mini High",
+      "slug": "o4-mini-high",
+      "provider": "openai",
+      "context_window_input": 200000,
+      "context_window_output": 100000,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "2025-04-16",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.1,
+        "output_per_1m": 4.4,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "o4-mini",
+      "slug": "o4-mini",
+      "provider": "openai",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": false,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.1,
+        "output_per_1m": 4.4,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 78.4,
+        "math_bench": 98.9,
+        "aider_polyglot": 72,
+        "aime_2025": 90.7,
+        "simplebench": 26.44,
+        "swe_bench": 45,
+        "frontiermath": 24.83,
+        "critpt": 0.6,
+        "livecode_bench": 85.9,
+        "scicode": 46.5,
+        "ifbench": 68.7,
+        "aa_lcr": 55,
+        "tau2_bench": 55.6,
+        "terminal_bench": 15.2,
+        "gdpval_aa": 25.86,
+        "mmlu_pro": 83.2,
+        "humanitys_last_exam": 17.5
+      }
+    },
+    {
+      "name": "Qwen 3.5 397B",
+      "slug": "qwen-35-397b",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 8192,
       "is_open_source": true,
       "is_reasoning_model": false,
-      "release_date": "2026-02-11",
+      "release_date": "2025-12-20",
       "tags": [
         "multimodal",
         "function_calling",
@@ -643,49 +3649,435 @@
         "long_context"
       ],
       "pricing": {
-        "input_per_1m": 0.95,
-        "output_per_1m": 2.55,
-        "confirmed": true
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "math_bench": 68.86,
+        "gpqa_diamond": 60.94,
+        "aider_polyglot": 59.6,
+        "simplebench": 17.2
       }
     },
     {
-      "name": "Qwen3.5 Plus",
-      "slug": "qwen35-plus",
+      "name": "Qwen Plus",
+      "slug": "qwen-plus",
+      "provider": "alibaba",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.8,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "math_bench": 65.28,
+        "gpqa_diamond": 30.81,
+        "frontiermath": 1.72,
+        "aime_2025": 17.7
+      }
+    },
+    {
+      "name": "Qwen Plus 0728",
+      "slug": "qwen-plus-0728",
+      "provider": "alibaba",
+      "context_window_input": 1000000,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-08",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.8,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen Plus 0728 (thinking)",
+      "slug": "qwen-plus-0728-thinking",
+      "provider": "alibaba",
+      "context_window_input": 1000000,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": true,
+      "release_date": "2025-09-08",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.8,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen VL Max",
+      "slug": "qwen-vl-max",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-02-01",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 2,
+        "output_per_1m": 6,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen VL Plus",
+      "slug": "qwen-vl-plus",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 8192,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-02-05",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.8,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen2.5 72B Instruct",
+      "slug": "qwen25-72b-instruct",
+      "provider": "alibaba",
+      "context_window_input": 32768,
+      "context_window_output": 16384,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2024-09-19",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.27,
+        "output_per_1m": 1.1,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen2.5 7B Instruct",
+      "slug": "qwen25-7b-instruct",
+      "provider": "alibaba",
+      "context_window_input": 32768,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2024-10-16",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen2.5 VL 32B Instruct",
+      "slug": "qwen25-vl-32b-instruct",
+      "provider": "alibaba",
+      "context_window_input": 128000,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-03-24",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.4,
+        "output_per_1m": 1.6,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen2.5 VL 72B Instruct",
+      "slug": "qwen25-vl-72b-instruct",
+      "provider": "alibaba",
+      "context_window_input": 32000,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-02-01",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.8,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen2.5-Max",
+      "slug": "qwen25-max",
+      "provider": "alibaba",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.6,
+        "output_per_1m": 6.4,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gpqa_diamond": 58.7,
+        "frontiermath": 1.03,
+        "math_bench": 83.5,
+        "aider_polyglot": 21.8,
+        "aime_2025": 16.03,
+        "mmlu_pro": 76.2,
+        "humanitys_last_exam": 4.5,
+        "livecode_bench": 35.9,
+        "scicode": 33.7
+      }
+    },
+    {
+      "name": "Qwen3 14B",
+      "slug": "qwen3-14b",
+      "provider": "alibaba",
+      "context_window_input": 40960,
+      "context_window_output": 40960,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-04-28",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.06,
+        "output_per_1m": 0.25,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "mmlu_pro": 67.5,
+        "math_bench": 87.1,
+        "humanitys_last_exam": 4.2,
+        "livecode_bench": 28,
+        "terminal_bench": 5.3,
+        "gdpval_aa": 1.72,
+        "ifbench": 23.9,
+        "gpqa_diamond": 47,
+        "tau2_bench": 32.2,
+        "aime_2025": 58
+      }
+    },
+    {
+      "name": "Qwen3 235B A22B Instruct 2507",
+      "slug": "qwen3-235b-a22b-instruct-2507",
+      "provider": "alibaba",
+      "context_window_input": 262144,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-07-21",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "ifbench": 46.1,
+        "math_bench": 98,
+        "aime_2025": 71.7,
+        "aa_lcr": 31.2,
+        "gdpval_aa": 15.87,
+        "humanitys_last_exam": 10.6,
+        "critpt": 0,
+        "livecode_bench": 52.4,
+        "scicode": 36,
+        "mmlu_pro": 82.8,
+        "tau2_bench": 33.3,
+        "gpqa_diamond": 75.3,
+        "terminal_bench": 15.2
+      }
+    },
+    {
+      "name": "Qwen3 235B A22B Thinking 2507",
+      "slug": "qwen3-235b-a22b-thinking-2507",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": true,
+      "release_date": "2025-07-25",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "frontiermath": 8.48,
+        "gpqa_diamond": 73.4,
+        "aime_2025": 86.65
+      }
+    },
+    {
+      "name": "Qwen3 30B A3B",
+      "slug": "qwen3-30b-a3b",
+      "provider": "alibaba",
+      "context_window_input": 40960,
+      "context_window_output": 40960,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-04-28",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.14,
+        "output_per_1m": 0.56,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "livecode_bench": 32.2,
+        "humanitys_last_exam": 4.6,
+        "gpqa_diamond": 51.5,
+        "math_bench": 86.3,
+        "terminal_bench": 6.8,
+        "gdpval_aa": 0,
+        "tau2_bench": 22.2,
+        "aime_2025": 21.7,
+        "ifbench": 31.9,
+        "mmlu_pro": 71
+      }
+    },
+    {
+      "name": "Qwen3 30B A3B Instruct 2507",
+      "slug": "qwen3-30b-a3b-instruct-2507",
+      "provider": "alibaba",
+      "context_window_input": 262144,
+      "context_window_output": 262144,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-07-29",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.14,
+        "output_per_1m": 0.56,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "mmlu_pro": 77.7,
+        "tau2_bench": 26,
+        "gdpval_aa": 2.78,
+        "humanitys_last_exam": 6.6,
+        "ifbench": 41.5,
+        "gpqa_diamond": 61.6,
+        "math_bench": 95.9,
+        "livecode_bench": 50.6,
+        "terminal_bench": 2.3,
+        "aime_2025": 72.3
+      }
+    },
+    {
+      "name": "Qwen3 30B A3B Thinking 2507",
+      "slug": "qwen3-30b-a3b-thinking-2507",
+      "provider": "alibaba",
+      "context_window_input": 32768,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": true,
+      "release_date": "2025-08-28",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.14,
+        "output_per_1m": 0.56,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "humanitys_last_exam": 9.8,
+        "mmlu_pro": 80.5,
+        "aime_2025": 56.3,
+        "ifbench": 50.7,
+        "terminal_bench": 5.3,
+        "gdpval_aa": 11.03,
+        "math_bench": 97.6,
+        "gpqa_diamond": 70.7,
+        "tau2_bench": 28.1,
+        "livecode_bench": 70.7
+      }
+    },
+    {
+      "name": "Qwen3 32B",
+      "slug": "qwen3-32b",
+      "provider": "alibaba",
+      "context_window_input": 40960,
+      "context_window_output": 40960,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-04-28",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.14,
+        "output_per_1m": 0.56,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gpqa_diamond": 53.5,
+        "livecode_bench": 28.8,
+        "aime_2025": 19.7,
+        "mmlu_pro": 72.7,
+        "ifbench": 31.5,
+        "humanitys_last_exam": 4.3,
+        "math_bench": 86.9
+      }
+    },
+    {
+      "name": "Qwen3 8B",
+      "slug": "qwen3-8b",
+      "provider": "alibaba",
+      "context_window_input": 32000,
+      "context_window_output": 8192,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-04-28",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.06,
+        "output_per_1m": 0.25,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "tau2_bench": 24.9,
+        "terminal_bench": 2.3,
+        "humanitys_last_exam": 2.8,
+        "ifbench": 28.6,
+        "aime_2025": 24.3,
+        "math_bench": 82.8,
+        "livecode_bench": 20.2,
+        "gdpval_aa": 2.09,
+        "mmlu_pro": 64.3,
+        "gpqa_diamond": 45.2
+      }
+    },
+    {
+      "name": "Qwen3 Coder Flash",
+      "slug": "qwen3-coder-flash",
       "provider": "alibaba",
       "context_window_input": 1000000,
       "context_window_output": 65536,
       "is_open_source": true,
       "is_reasoning_model": false,
-      "release_date": "2026-02-16",
-      "tags": [
-        "multimodal",
-        "function_calling",
-        "long_context"
-      ],
+      "release_date": "2025-09-17",
+      "tags": [],
       "pricing": {
-        "input_per_1m": 0.4,
-        "output_per_1m": 2.4,
-        "confirmed": true
-      }
-    },
-    {
-      "name": "Qwen3 Max Thinking",
-      "slug": "qwen3-max-thinking",
-      "provider": "alibaba",
-      "context_window_input": 262144,
-      "context_window_output": 32768,
-      "is_open_source": true,
-      "is_reasoning_model": true,
-      "release_date": "2026-02-09",
-      "tags": [
-        "function_calling",
-        "long_context"
-      ],
-      "pricing": {
-        "input_per_1m": 1.2,
-        "output_per_1m": 6,
-        "confirmed": true
-      }
+        "input_per_1m": 0.12,
+        "output_per_1m": 0.75,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
       "name": "Qwen3 Coder Next",
@@ -696,155 +4088,433 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2026-02-04",
-      "tags": [
-        "function_calling",
-        "long_context"
-      ],
+      "tags": [],
       "pricing": {
         "input_per_1m": 0.12,
         "output_per_1m": 0.75,
         "confirmed": true
+      },
+      "benchmarks": {
+        "gpqa_diamond": 73.7,
+        "humanitys_last_exam": 9.3,
+        "critpt": 0,
+        "scicode": 32.3,
+        "ifbench": 35.2,
+        "tau2_bench": 79.5,
+        "terminal_bench": 18.2,
+        "gdpval_aa": 22.53,
+        "aa_lcr": 40
       }
     },
     {
-      "name": "GLM-4.7 Flash",
-      "slug": "glm-47-flash",
-      "provider": "zhipu",
-      "context_window_input": 202752,
-      "context_window_output": 8192,
-      "is_open_source": true,
-      "is_reasoning_model": false,
-      "release_date": "2026-01-19",
-      "tags": [
-        "multimodal",
-        "function_calling",
-        "vision",
-        "long_context"
-      ],
-      "pricing": {
-        "input_per_1m": 0.06,
-        "output_per_1m": 0.4,
-        "confirmed": true
-      }
-    },
-    {
-      "name": "GPT-5.2 Pro",
-      "slug": "gpt-52-pro",
-      "provider": "openai",
-      "context_window_input": 400000,
-      "context_window_output": 128000,
-      "is_open_source": false,
-      "is_reasoning_model": false,
-      "release_date": "2025-12-10",
-      "tags": [
-        "multimodal",
-        "function_calling",
-        "vision",
-        "long_context"
-      ],
-      "pricing": {
-        "input_per_1m": 21,
-        "output_per_1m": 168,
-        "confirmed": true
-      }
-    },
-    {
-      "name": "MiniMax M2.1",
-      "slug": "minimax-m21",
-      "provider": "minimax",
-      "context_window_input": 196608,
-      "context_window_output": 8192,
-      "is_open_source": false,
-      "is_reasoning_model": false,
-      "release_date": "2025-12-23",
-      "tags": [
-        "multimodal",
-        "function_calling",
-        "vision",
-        "long_context"
-      ],
-      "pricing": {
-        "input_per_1m": 0.27,
-        "output_per_1m": 0.95,
-        "confirmed": true
-      }
-    },
-    {
-      "name": "DeepSeek-V3.2 Speciale",
-      "slug": "deepseek-v32-speciale",
-      "provider": "deepseek",
-      "context_window_input": 163840,
+      "name": "Qwen3 Coder Plus",
+      "slug": "qwen3-coder-plus",
+      "provider": "alibaba",
+      "context_window_input": 1000000,
       "context_window_output": 65536,
       "is_open_source": true,
       "is_reasoning_model": false,
-      "release_date": "2025-12-01",
-      "tags": [
-        "function_calling",
-        "long_context"
-      ],
+      "release_date": "2025-09-23",
+      "tags": [],
       "pricing": {
         "input_per_1m": 0.4,
-        "output_per_1m": 1.2,
-        "confirmed": true
-      }
+        "output_per_1m": 1.6,
+        "confirmed": false
+      },
+      "benchmarks": {}
     },
     {
-      "name": "GPT-5.1 Codex Mini",
-      "slug": "gpt-51-codex-mini",
-      "provider": "openai",
-      "context_window_input": 400000,
-      "context_window_output": 100000,
-      "is_open_source": false,
-      "is_reasoning_model": true,
-      "release_date": "2025-11-13",
-      "tags": [
-        "function_calling",
-        "long_context",
-        "agentic_coding"
-      ],
-      "pricing": {
-        "input_per_1m": 0.25,
-        "output_per_1m": 2,
-        "confirmed": true
-      }
-    },
-    {
-      "name": "Devstral 2",
-      "slug": "devstral-2",
-      "provider": "mistral",
+      "name": "Qwen3 Max Thinking",
+      "slug": "qwen3-max-thinking",
+      "provider": "alibaba",
       "context_window_input": 262144,
-      "context_window_output": 8192,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": true,
+      "release_date": "2026-02-09",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.2,
+        "output_per_1m": 6,
+        "confirmed": true
+      },
+      "benchmarks": {
+        "math_bench": 97.13,
+        "mmlu_pro": 83.8,
+        "aa_lcr": 57.7,
+        "gpqa_diamond": 76.4,
+        "tau2_bench": 83.6,
+        "humanitys_last_exam": 9.3,
+        "scicode": 38.7,
+        "aime_2025": 75,
+        "critpt": 0,
+        "livecode_bench": 65.1,
+        "ifbench": 48,
+        "terminal_bench": 19.7,
+        "gdpval_aa": 17.54
+      }
+    },
+    {
+      "name": "Qwen3 Next 80B A3B Instruct",
+      "slug": "qwen3-next-80b-a3b-instruct",
+      "provider": "alibaba",
+      "context_window_input": 262144,
+      "context_window_output": 0,
       "is_open_source": true,
       "is_reasoning_model": false,
-      "release_date": "2025-12-09",
-      "tags": [
-        "function_calling",
-        "long_context"
-      ],
+      "release_date": "2025-09-11",
+      "tags": [],
       "pricing": {
-        "input_per_1m": 0.4,
-        "output_per_1m": 2,
-        "confirmed": true
+        "input_per_1m": 0.3,
+        "output_per_1m": 1.2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "critpt": 0,
+        "livecode_bench": 78.4,
+        "scicode": 30.7,
+        "ifbench": 60.7,
+        "tau2_bench": 41.5,
+        "terminal_bench": 9.8,
+        "mmlu_pro": 82.4,
+        "gpqa_diamond": 75.9,
+        "gdpval_aa": 13.36,
+        "humanitys_last_exam": 11.7,
+        "aime_2025": 84.3,
+        "aa_lcr": 51.3
       }
     },
     {
-      "name": "Kimi K2 Thinking",
-      "slug": "kimi-k2-thinking",
-      "provider": "moonshot",
-      "context_window_input": 131072,
-      "context_window_output": 8192,
-      "is_open_source": false,
+      "name": "Qwen3 Next 80B A3B Thinking",
+      "slug": "qwen3-next-80b-a3b-thinking",
+      "provider": "alibaba",
+      "context_window_input": 128000,
+      "context_window_output": 0,
+      "is_open_source": true,
       "is_reasoning_model": true,
-      "release_date": "2025-11-06",
-      "tags": [
-        "function_calling",
-        "long_context"
-      ],
+      "release_date": "2025-09-11",
+      "tags": [],
       "pricing": {
-        "input_per_1m": 0.47,
+        "input_per_1m": 0.3,
+        "output_per_1m": 1.2,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen3 VL 235B A22B Instruct",
+      "slug": "qwen3-vl-235b-a22b-instruct",
+      "provider": "alibaba",
+      "context_window_input": 262144,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-09-23",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
         "output_per_1m": 2,
-        "confirmed": true
+        "confirmed": false
+      },
+      "benchmarks": {
+        "mmlu_pro": 83.6,
+        "terminal_bench": 11.4,
+        "gpqa_diamond": 77.2,
+        "gdpval_aa": 12.64,
+        "humanitys_last_exam": 10.1,
+        "critpt": 0,
+        "scicode": 35.9,
+        "ifbench": 56.5,
+        "aime_2025": 88.3,
+        "aa_lcr": 31.7,
+        "tau2_bench": 54.1,
+        "livecode_bench": 64.6
       }
+    },
+    {
+      "name": "Qwen3 VL 235B A22B Thinking",
+      "slug": "qwen3-vl-235b-a22b-thinking",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": true,
+      "release_date": "2025-09-23",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen3 VL 30B A3B Instruct",
+      "slug": "qwen3-vl-30b-a3b-instruct",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-10-06",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.14,
+        "output_per_1m": 0.56,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "aa_lcr": 23.7,
+        "tau2_bench": 19,
+        "terminal_bench": 6.1,
+        "mmlu_pro": 76.4,
+        "gdpval_aa": 2.47,
+        "gpqa_diamond": 69.5,
+        "critpt": 0,
+        "livecode_bench": 47.6,
+        "scicode": 30.8,
+        "ifbench": 33.1,
+        "aime_2025": 72.3,
+        "humanitys_last_exam": 6.4
+      }
+    },
+    {
+      "name": "Qwen3 VL 30B A3B Thinking",
+      "slug": "qwen3-vl-30b-a3b-thinking",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": true,
+      "release_date": "2025-10-06",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.14,
+        "output_per_1m": 0.56,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen3 VL 32B Instruct",
+      "slug": "qwen3-vl-32b-instruct",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-10-23",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.14,
+        "output_per_1m": 0.56,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "gdpval_aa": 0,
+        "gpqa_diamond": 67.1,
+        "humanitys_last_exam": 6.3,
+        "critpt": 0,
+        "livecode_bench": 51.4,
+        "aime_2025": 68.3,
+        "tau2_bench": 29.2,
+        "mmlu_pro": 79.1,
+        "terminal_bench": 8.3,
+        "scicode": 30.1,
+        "aa_lcr": 31.3,
+        "ifbench": 39.2
+      }
+    },
+    {
+      "name": "Qwen3 VL 8B Instruct",
+      "slug": "qwen3-vl-8b-instruct",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2025-10-14",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.06,
+        "output_per_1m": 0.25,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "aa_lcr": 15.3,
+        "tau2_bench": 22.5,
+        "terminal_bench": 3.8,
+        "mmlu_pro": 74.9,
+        "gpqa_diamond": 57.9,
+        "gdpval_aa": 10.56,
+        "humanitys_last_exam": 3.3,
+        "critpt": 0,
+        "livecode_bench": 35.3,
+        "scicode": 17.4,
+        "ifbench": 39.9,
+        "aime_2025": 30.7
+      }
+    },
+    {
+      "name": "Qwen3 VL 8B Thinking",
+      "slug": "qwen3-vl-8b-thinking",
+      "provider": "alibaba",
+      "context_window_input": 131072,
+      "context_window_output": 32768,
+      "is_open_source": true,
+      "is_reasoning_model": true,
+      "release_date": "2025-10-14",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.06,
+        "output_per_1m": 0.25,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen3-235B-A22B",
+      "slug": "qwen3-235b-a22b",
+      "provider": "alibaba",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "simplebench": 17.2,
+        "tau2_bench": 27.2,
+        "aider_polyglot": 59.6,
+        "terminal_bench": 6.1,
+        "gdpval_aa": 14.21,
+        "humanitys_last_exam": 4.7,
+        "critpt": 0,
+        "scicode": 39.9,
+        "ifbench": 36.6,
+        "math_bench": 90.2,
+        "aime_2025": 82,
+        "livecode_bench": 34.3,
+        "mmlu_pro": 76.2,
+        "gpqa_diamond": 61.3,
+        "aa_lcr": 0
+      }
+    },
+    {
+      "name": "Qwen3-235B-A22B-Thinking (Jul 2025)",
+      "slug": "qwen3-235b-a22b-thinking-jul-2025",
+      "provider": "alibaba",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": true,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen3-Coder-480B-A35B",
+      "slug": "qwen3-coder-480b-a35b",
+      "provider": "alibaba",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.8,
+        "output_per_1m": 3.2,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "terminal_bench": 18.9,
+        "swe_bench": 55.4,
+        "tau2_bench": 43.6,
+        "gpqa_diamond": 61.8,
+        "math_bench": 94.2,
+        "livecode_bench": 58.5,
+        "humanitys_last_exam": 4.4,
+        "gdpval_aa": 2.97,
+        "mmlu_pro": 78.8,
+        "aime_2025": 39.3,
+        "ifbench": 40.5
+      }
+    },
+    {
+      "name": "Qwen3-Max",
+      "slug": "qwen3-max",
+      "provider": "alibaba",
+      "context_window_input": 0,
+      "context_window_output": 0,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 1.6,
+        "output_per_1m": 6.4,
+        "confirmed": false
+      },
+      "benchmarks": {
+        "aa_lcr": 46.7,
+        "math_bench": 97.13,
+        "tau2_bench": 74.3,
+        "terminal_bench": 20.5,
+        "gdpval_aa": 27.77,
+        "gpqa_diamond": 76.4,
+        "humanitys_last_exam": 11.1,
+        "aime_2025": 80.7,
+        "critpt": 0,
+        "livecode_bench": 76.7,
+        "scicode": 38.3,
+        "ifbench": 44.1,
+        "mmlu_pro": 84.1
+      }
+    },
+    {
+      "name": "Qwen3.5 397B A17B",
+      "slug": "qwen35-397b-a17b",
+      "provider": "alibaba",
+      "context_window_input": 262144,
+      "context_window_output": 65536,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2026-02-16",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {}
+    },
+    {
+      "name": "Qwen3.5 Plus 2026-02-15",
+      "slug": "qwen35-plus-2026-02-15",
+      "provider": "alibaba",
+      "context_window_input": 1000000,
+      "context_window_output": 65536,
+      "is_open_source": true,
+      "is_reasoning_model": false,
+      "release_date": "2026-02-16",
+      "tags": [],
+      "pricing": {
+        "input_per_1m": 0.8,
+        "output_per_1m": 2,
+        "confirmed": false
+      },
+      "benchmarks": {}
     }
   ]
 }
