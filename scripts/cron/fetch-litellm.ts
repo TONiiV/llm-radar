@@ -23,15 +23,23 @@ async function main() {
   const data = await res.json() as Record<string, LiteLLMModel>
 
   const rows = Object.entries(data)
-    .filter(([, v]) => v.input_cost_per_token != null && v.output_cost_per_token != null)
-    .map(([name, v]) => ({
-      source_key: 'litellm',
-      model_name: name,
-      input_price_per_1m: (v.input_cost_per_token ?? 0) * 1_000_000,
-      output_price_per_1m: (v.output_cost_per_token ?? 0) * 1_000_000,
-      context_window: v.max_input_tokens ?? v.max_tokens ?? null,
-      status: 'pending',
-    }))
+    .filter(([key, v]) => key !== 'sample_spec' && v.input_cost_per_token != null && v.output_cost_per_token != null)
+    .filter(([, v]) => typeof v.input_cost_per_token === 'number' && typeof v.output_cost_per_token === 'number')
+    .map(([name, v]) => {
+      const maxInput = v.max_input_tokens
+      const maxTokens = v.max_tokens
+      const ctxWindow = typeof maxInput === 'number' ? maxInput
+        : typeof maxTokens === 'number' ? maxTokens
+        : null
+      return {
+        source_key: 'litellm',
+        model_name: name,
+        input_price_per_1m: (v.input_cost_per_token ?? 0) * 1_000_000,
+        output_price_per_1m: (v.output_cost_per_token ?? 0) * 1_000_000,
+        context_window: ctxWindow,
+        status: 'pending',
+      }
+    })
 
   // Insert in batches of 100
   for (let i = 0; i < rows.length; i += 100) {
