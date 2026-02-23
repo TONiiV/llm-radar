@@ -17,6 +17,7 @@ const BENCHMARK_MAP: Record<string, { key: string; multiply: number }> = {
   'FrontierMath-2025-02-28-Private':  { key: 'frontiermath',   multiply: 100 },
   'SimpleBench':                      { key: 'simplebench',    multiply: 100 },
   'Aider polyglot':                   { key: 'aider_polyglot', multiply: 100 },
+  'Terminal Bench':                    { key: 'terminal_bench', multiply: 100 },
 }
 
 // Epoch model name → our model slug (built-in fallback mappings)
@@ -63,6 +64,33 @@ const MODEL_NAME_MAP: Record<string, string> = {
   'GLM-4.7':                            'glm-47',
   'Kimi K2':                            'kimi-k2',
   'Kimi K2.5':                          'kimi-k25',
+  'Kimi K2 Thinking':                   'kimi-k2-thinking',
+  'DeepSeek-V3.2':                      'deepseek-v32',
+  'DeepSeek-V3.2-Exp':                  'deepseek-v32-exp',
+  'DeepSeek-V3 (Mar 2025)':            'deepseek-v3-0325',
+  'GPT-4.1 nano':                       'gpt-41-nano',
+  'GPT-4.5':                            'gpt-45',
+  'GPT-5 Pro':                          'gpt-5-pro',
+  'GPT-5 mini':                         'gpt-5-mini',
+  'GPT-5 nano':                         'gpt-5-nano',
+  'o1-mini':                            'o1-mini',
+  'o1-preview':                         'o1-preview',
+  'o3-pro':                             'o3-pro',
+  'Gemini 2.0 Flash Thinking (Jan 2025)': 'gemini-20-flash-thinking',
+  'Gemini 2.0 Pro':                     'gemini-20-pro',
+  'Gemini 2.5 Pro (Mar 2025)':          'gemini-25-pro-0325',
+  'Gemini 2.5 Pro (May 2025)':          'gemini-25-pro-0525',
+  'Gemini 2.5 Flash (Apr 2025)':        'gemini-25-flash-0425',
+  'Gemini 2.5 Flash (May 2025)':        'gemini-25-flash-0525',
+  'Gemini 2.5 Flash (Sep 2025)':        'gemini-25-flash-0925',
+  'Mistral Large':                      'mistral-large',
+  'Mistral Large 2':                    'mistral-large-2',
+  'Qwen3-235B-A22B-Thinking (Jul 2025)': 'qwen3-235b-thinking',
+  'Qwen3-Coder-480B-A35B':             'qwen3-coder-480b',
+  'Qwen Plus':                          'qwen-plus',
+  'Llama 3.3 70B':                      'llama-33-70b',
+  'Llama 3.2 90B':                      'llama-32-90b',
+  'Grok-2':                             'grok-2',
 }
 
 interface EpochRow {

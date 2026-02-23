@@ -25,6 +25,45 @@ const PROVIDER_PATTERNS: [RegExp, { slug: string; name: string; color: string }]
   [/^Nemotron/i,              { slug: 'nvidia',    name: 'NVIDIA',     color: '#76B900' }],
 ]
 
+// ─── Frontier model filter ──────────────────────────────────────
+// Only register models that are "frontier-class" — skip old/small models
+// that would clutter the radar. Patterns match model names we do NOT want.
+
+const SKIP_PATTERNS: RegExp[] = [
+  // Old/small LLaMA variants
+  /^LLaMA-/i,
+  /^Llama [23]\b/i,             // Llama 2-*, Llama 3-*, Llama 3.x-*
+  // Old GPT models
+  /^GPT-3/i,
+  /^GPT-4 (?!\.)/i,            // GPT-4 (any date) but not GPT-4.x
+  /^GPT-4o (?!mini)/i,         // GPT-4o date variants (keep GPT-4o mini)
+  // Old Claude models
+  /^Claude [23]\b/i,           // Claude 2, Claude 3 Haiku/Opus/Sonnet
+  /^Claude Instant/i,
+  // Small coder/specialized models
+  /Coder \d+B\b/i,             // DeepSeek Coder 1.3B, Qwen2.5-Coder (7B), etc.
+  /Coder.*\(\d+B\)/i,
+  /^DeepSeek Coder/i,
+  // Old DeepSeek
+  /^DeepSeek-V2/i,             // DeepSeek-V2 variants
+  // Old/small Qwen
+  /^Qwen-/i,                   // Qwen-7B, Qwen-14B (old gen)
+  /^Qwen2-/i,                  // Qwen2-72B
+  /^Qwen2\.5-(?!Max)/i,        // Qwen2.5-72B, Qwen2.5-Coder but keep Qwen2.5-Max
+  // Old Mistral
+  /^Mistral (?:7B|NeMo)\b/i,
+  // Old Gemini
+  /^Gemini 1\./i,
+  // Small Nemotron
+  /^Nemotron-4 15B/i,
+  // Old Grok
+  /^Grok-2\b/i,
+]
+
+function isFrontierModel(name: string): boolean {
+  return !SKIP_PATTERNS.some(p => p.test(name))
+}
+
 // ─── Utility functions ──────────────────────────────────────────
 
 function generateSlug(name: string): string {
@@ -55,7 +94,27 @@ interface OpenRouterModel {
   pricing: { prompt: string; completion: string }
   context_length: number
   created: number
+  top_provider?: { max_completion_tokens?: number }
 }
+
+// OpenRouter provider prefix → our provider slug
+const OR_PROVIDER_MAP: Record<string, string> = {
+  'google': 'google',
+  'anthropic': 'anthropic',
+  'openai': 'openai',
+  'x-ai': 'xai',
+  'deepseek': 'deepseek',
+  'meta-llama': 'meta',
+  'mistralai': 'mistral',
+  'qwen': 'alibaba',
+  'z-ai': 'zhipu',
+  'moonshotai': 'moonshot',
+  'minimax': 'minimax',
+  'nvidia': 'nvidia',
+}
+
+// OpenRouter model IDs to skip (variants, free tiers, wrappers)
+const OR_SKIP_PATTERNS = /(free|:extended|:nitro|:floor|:online|beta)/i
 
 // ─── Parse Epoch CSV ────────────────────────────────────────────
 
@@ -71,6 +130,14 @@ function extractEpochModelNames(csvText: string): Set<string> {
   return names
 }
 
+// Clean OpenRouter display name → our model name
+function cleanORName(orId: string, orName: string): string {
+  // Remove "Provider: " prefix (e.g. "Google: Gemini 3.1 Pro Preview")
+  const cleaned = orName.replace(/^[^:]+:\s*/, '')
+  // Remove " Preview" suffix
+  return cleaned.replace(/\s+Preview$/i, '')
+}
+
 // ─── Main ───────────────────────────────────────────────────────
 
 async function main() {
@@ -84,7 +151,7 @@ async function main() {
   const epochNames = extractEpochModelNames(epochText)
   console.log(`  Found ${epochNames.size} unique model names in Epoch AI`)
 
-  // 2. Fetch OpenRouter models for metadata
+  // 2. Fetch OpenRouter models — used BOTH as discovery source AND metadata
   console.log('  Fetching OpenRouter models...')
   let openRouterModels: OpenRouterModel[] = []
   try {
@@ -104,6 +171,19 @@ async function main() {
     if (m.name) orByName.set(m.name.toLowerCase(), m)
   }
 
+  // Extract frontier model names from OpenRouter (top providers only)
+  const orFrontierNames = new Set<string>()
+  const orMetaById = new Map<string, OpenRouterModel>()
+  for (const m of openRouterModels) {
+    const provPrefix = m.id.split('/')[0]
+    if (!OR_PROVIDER_MAP[provPrefix]) continue
+    if (OR_SKIP_PATTERNS.test(m.id)) continue
+    const cleanName = cleanORName(m.id, m.name || m.id.split('/')[1])
+    orFrontierNames.add(cleanName)
+    orMetaById.set(cleanName.toLowerCase(), m)
+  }
+  console.log(`  ${orFrontierNames.size} frontier models from OpenRouter`)
+
   // 3. Load existing models and mappings from DB
   const { data: existingModels } = await supabase
     .from('models')
@@ -122,46 +202,65 @@ async function main() {
     .select('slug, name, color')
   const providerSlugs = new Set((existingProviders ?? []).map(p => p.slug))
 
-  // 5. Find new models (from Epoch AI only — these are frontier models)
+  // 5. Merge discovery sources: Epoch AI + OpenRouter frontier models
+  const allCandidates = new Map<string, { name: string; source: string; orMeta?: OpenRouterModel }>()
+
+  // Add Epoch models
+  for (const epochName of Array.from(epochNames)) {
+    if (!isFrontierModel(epochName)) continue
+    const orMeta = orByName.get(epochName.toLowerCase())
+    allCandidates.set(epochName.toLowerCase(), { name: epochName, source: 'epoch_ai', orMeta })
+  }
+
+  // Add OpenRouter frontier models (new models not in Epoch)
+  for (const orName of Array.from(orFrontierNames)) {
+    const key = orName.toLowerCase()
+    if (!allCandidates.has(key) && isFrontierModel(orName)) {
+      const orMeta = orMetaById.get(key)
+      allCandidates.set(key, { name: orName, source: 'openrouter', orMeta })
+    }
+  }
+
+  console.log(`  ${allCandidates.size} total unique frontier candidates`)
+
   const newModels: {
     name: string
     slug: string
     provider: { slug: string; name: string; color: string }
     orMeta: OpenRouterModel | undefined
+    source: string
   }[] = []
 
-  for (const epochName of Array.from(epochNames)) {
+  for (const [, candidate] of Array.from(allCandidates.entries())) {
+    const { name: modelName, source, orMeta } = candidate
+
     // Skip if already mapped
-    if (mappedNames.has(epochName)) continue
+    if (mappedNames.has(modelName)) continue
 
     // Try to infer provider
-    const provider = inferProvider(epochName)
-    if (!provider) {
-      console.log(`  ⏭️  Skipping "${epochName}" — unknown provider`)
-      continue
-    }
+    const provider = inferProvider(modelName)
+    if (!provider) continue
 
-    const slug = generateSlug(epochName)
+    const slug = generateSlug(modelName)
 
     // Skip if slug already exists
     if (existingSlugs.has(slug)) {
       // Model exists but mapping doesn't — create mapping only
-      console.log(`  📎 Model "${epochName}" exists (${slug}), adding mapping`)
-      await supabase.from('model_name_mappings').upsert({
-        source_key: 'epoch_ai',
-        source_name: epochName,
-        model_slug: slug,
-      }, { onConflict: 'source_key,source_name' })
+      if (source === 'epoch_ai') {
+        console.log(`  📎 Model "${modelName}" exists (${slug}), adding mapping`)
+        await supabase.from('model_name_mappings').upsert({
+          source_key: 'epoch_ai',
+          source_name: modelName,
+          model_slug: slug,
+        }, { onConflict: 'source_key,source_name' })
+      }
       continue
     }
 
     // Skip if name already exists (different slug format)
-    if (existingNames.has(epochName)) continue
+    if (existingNames.has(modelName)) continue
 
-    // Look up OpenRouter metadata
-    const orMeta = orByName.get(epochName.toLowerCase())
-
-    newModels.push({ name: epochName, slug, provider, orMeta })
+    newModels.push({ name: modelName, slug, provider, orMeta, source })
   }
 
   if (newModels.length === 0) {
@@ -219,7 +318,7 @@ async function main() {
       slug: m.slug,
       provider_id: providerId,
       context_window_input: m.orMeta?.context_length ?? null,
-      context_window_output: null,
+      context_window_output: m.orMeta?.top_provider?.max_completion_tokens ?? null,
       is_open_source: /^Llama|^Qwen|^Mistral|^DeepSeek|^GLM/i.test(m.name),
       is_reasoning_model: isReasoningModel(m.name),
       release_date: m.orMeta?.created
@@ -234,18 +333,26 @@ async function main() {
       continue
     }
 
-    // Create epoch_ai mapping
+    // Create source mapping
     await supabase.from('model_name_mappings').upsert({
-      source_key: 'epoch_ai',
-      source_name: m.name,
+      source_key: m.source,
+      source_name: m.source === 'openrouter' && m.orMeta ? m.orMeta.id : m.name,
       model_slug: m.slug,
     }, { onConflict: 'source_key,source_name' })
 
-    // Create openrouter mapping if we have metadata
-    if (m.orMeta) {
+    // Create cross-mapping if we have OpenRouter metadata and source is epoch_ai
+    if (m.source === 'epoch_ai' && m.orMeta) {
       await supabase.from('model_name_mappings').upsert({
         source_key: 'openrouter',
         source_name: m.orMeta.id,
+        model_slug: m.slug,
+      }, { onConflict: 'source_key,source_name' })
+    }
+    // Create epoch_ai mapping if source is openrouter
+    if (m.source === 'openrouter') {
+      await supabase.from('model_name_mappings').upsert({
+        source_key: 'epoch_ai',
+        source_name: m.name,
         model_slug: m.slug,
       }, { onConflict: 'source_key,source_name' })
     }
@@ -255,6 +362,26 @@ async function main() {
   }
 
   console.log(`\n✅ Discovery complete: ${registered} new models registered`)
+
+  // 9. Log OpenRouter SOTA overview by provider (for monitoring)
+  if (openRouterModels.length > 0) {
+    console.log('\n📊 OpenRouter SOTA by Provider (top model per provider):')
+    const byProvider = new Map<string, OpenRouterModel[]>()
+    for (const m of openRouterModels) {
+      const prov = m.id.split('/')[0]
+      if (!OR_PROVIDER_MAP[prov]) continue
+      if (OR_SKIP_PATTERNS.test(m.id)) continue
+      if (!byProvider.has(prov)) byProvider.set(prov, [])
+      byProvider.get(prov)!.push(m)
+    }
+    for (const [prov, models] of Array.from(byProvider.entries())) {
+      // Sort by creation date, newest first
+      models.sort((a, b) => (b.created || 0) - (a.created || 0))
+      const top = models[0]
+      const date = top.created ? new Date(top.created * 1000).toISOString().split('T')[0] : '???'
+      console.log(`  ${OR_PROVIDER_MAP[prov].padEnd(10)} → ${top.id.padEnd(45)} (${date})`)
+    }
+  }
 }
 
 main().catch((err) => {

@@ -51,9 +51,22 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
+      - name: Fetch Artificial Analysis Benchmarks
+        continue-on-error: true
+        run: npx tsx scripts/cron/fetch-artificial-analysis.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       # Step 2: Cross-validate and merge
-      - name: Validate and Merge
+      - name: Validate and Merge Prices
         run: npx tsx scripts/cron/validate-and-merge.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Validate and Merge Benchmarks
+        run: npx tsx scripts/cron/validate-and-merge-benchmarks.ts
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
