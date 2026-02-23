@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { buildMatchContext, resolveModelSlug } from '../../lib/model-matching'
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -7,155 +8,38 @@ const supabase = createClient(
 
 // AA evaluation pages to fetch — each page returns a DIFFERENT subset of models.
 // We must fetch ALL pages and merge by slug to get maximum coverage.
+// Removed: critpt, scicode, artificial-analysis-long-context-reasoning (deprecated)
 const AA_EVAL_PAGES = [
   'mmlu-pro',
   'gpqa-diamond',
   'humanitys-last-exam',
-  'critpt',
   'livecodebench',
-  'scicode',
   'ifbench',
   'math-500',
   'aime-2025',
-  'artificial-analysis-long-context-reasoning',
   'tau2-bench',
   'terminalbench-hard',
   'gdpval-aa',
+  'simplebench',
 ]
 
 const AA_BASE_URL = 'https://artificialanalysis.ai/evaluations'
 
 // AA benchmark field name → our benchmark key + score scale
 // AA scores are fractions (0-1) for most fields, so scale=100 converts to percentage
+// Removed: critpt, scicode, lcr (aa_lcr) — deprecated benchmarks
 const AA_BENCHMARK_MAP: Record<string, { key: string; scale: number }> = {
   mmlu_pro:           { key: 'mmlu_pro',            scale: 100 },
   gpqa:               { key: 'gpqa_diamond',        scale: 100 },
   hle:                { key: 'humanitys_last_exam',  scale: 100 },
-  critpt:             { key: 'critpt',              scale: 100 },
   livecodebench:      { key: 'livecode_bench',      scale: 100 },
-  scicode:            { key: 'scicode',             scale: 100 },
   ifbench:            { key: 'ifbench',             scale: 100 },
   math_500:           { key: 'math_bench',          scale: 100 },
   aime25:             { key: 'aime_2025',           scale: 100 },
-  lcr:                { key: 'aa_lcr',              scale: 100 },
   tau2:               { key: 'tau2_bench',          scale: 100 },
   terminalbench_hard: { key: 'terminal_bench',      scale: 100 },
   gdpval_normalized:  { key: 'gdpval_aa',           scale: 100 },
-}
-
-// AA slug → our model slug (built-in fallback mappings)
-const AA_MODEL_MAP: Record<string, string> = {
-  // Claude
-  'claude-opus-4-6':              'claude-opus-46',
-  'claude-opus-4-6-adaptive':     'claude-opus-46',
-  'claude-opus-4-5':              'claude-opus-45',
-  'claude-4-1-opus':              'claude-opus-41',
-  'claude-4-opus':                'claude-opus-4',
-  'claude-4-5-sonnet':            'claude-sonnet-45',
-  'claude-4-6-sonnet':            'claude-sonnet-46',
-  'claude-4-sonnet':              'claude-sonnet-4',
-  'claude-4-5-haiku':             'claude-haiku-45',
-  'claude-3-7-sonnet':            'claude-37-sonnet',
-  'claude-35-sonnet':             'claude-35-sonnet',
-  'claude-3-5-haiku':             'claude-35-haiku',
-  // GPT
-  'gpt-5-2':                      'gpt-52',
-  'gpt-5':                        'gpt-5',
-  'gpt-5-1':                      'gpt-51',
-  'gpt-5-codex':                  'gpt-5-codex',
-  'gpt-5-2-codex':                'gpt-52-codex',
-  'gpt-5-1-codex':                'gpt-51-codex',
-  'gpt-5-1-codex-mini':           'gpt-51-codex-mini',
-  'gpt-5-1-codex-max':            'gpt-51-codex-max',
-  'gpt-4-1':                      'gpt-41',
-  'gpt-4-1-mini':                 'gpt-41-mini',
-  'gpt-4-1-nano':                 'gpt-41-nano',
-  'gpt-4o':                       'gpt-4o',
-  'gpt-4o-mini':                  'gpt-4o-mini',
-  'gpt-4-5':                      'gpt-45',
-  'gpt-5-mini':                   'gpt-5-mini',
-  'gpt-5-nano':                   'gpt-5-nano',
-  'gpt-5-pro':                    'gpt-5-pro',
-  // OpenAI reasoning
-  'o3':                           'o3',
-  'o3-mini':                      'o3-mini',
-  'o3-pro':                       'o3-pro',
-  'o4-mini':                      'o4-mini',
-  'o1':                           'o1',
-  'o1-mini':                      'o1-mini',
-  'o1-preview':                   'o1-preview',
-  // DeepSeek
-  'deepseek-r1':                  'deepseek-r1',
-  'deepseek-r1-0528':             'deepseek-r1-may-2025',
-  'deepseek-v3':                  'deepseek-v3',
-  'deepseek-v3-1':                'deepseek-v31',
-  'deepseek-v3-2':                'deepseek-v32',
-  'deepseek-v3-2-speciale':       'deepseek-v32-speciale',
-  'deepseek-v3-2-exp':            'deepseek-v32-exp',
-  'deepseek-v3-0324':             'deepseek-v3-0324',
-  // Gemini
-  'gemini-2-5-pro':               'gemini-25-pro',
-  'gemini-2-5-flash':             'gemini-25-flash',
-  'gemini-2-0-flash':             'gemini-20-flash',
-  'gemini-2-0-flash-lite':        'gemini-20-flash-lite',
-  'gemini-2-0-pro':               'gemini-20-pro',
-  'gemini-3-pro':                 'gemini-3-pro',
-  'gemini-3-flash':               'gemini-3-flash',
-  'gemini-3-1-pro':               'gemini-31-pro',
-  'gemini-2-5-flash-lite-preview-09-2025': 'gemini-25-flash-lite-preview-09-2025',
-  // Grok
-  'grok-3':                       'grok-3',
-  'grok-4':                       'grok-4',
-  'grok-3-mini':                  'grok-3-mini',
-  'grok-4-1-fast':                'grok-41-fast',
-  'grok-4-fast':                  'grok-4-fast',
-  'grok-code-fast-1':             'grok-code-fast-1',
-  // Meta
-  'llama-4-maverick':             'llama-4-maverick',
-  'llama-4-scout':                'llama-4-scout',
-  // Mistral
-  'mistral-medium-3':             'mistral-medium-3',
-  'mistral-medium-3-1':           'mistral-medium-31',
-  'mistral-large-3':              'mistral-large-3',
-  'mistral-large-3-2512':         'mistral-large-3-2512',
-  'mistral-small-3':              'mistral-small-3',
-  'mistral-small-3-1-24b':        'mistral-small-31-24b',
-  'mistral-small-3-2-24b':        'mistral-small-32-24b',
-  'devstral-2':                   'devstral-2',
-  'devstral-small-2':             'devstral-2',
-  'codestral-2508':               'codestral-2508',
-  // Qwen
-  'qwen3-235b-a22b-instruct':     'qwen3-235b-a22b',
-  'qwen3-235b-a22b':              'qwen3-235b-a22b',
-  'qwen3-max':                    'qwen3-max',
-  'qwen3-max-thinking-preview':   'qwen3-max-thinking',
-  'qwen-2-5-max':                 'qwen25-max',
-  'qwen3-30b-a3b':                'qwen3-30b-a3b',
-  'qwen3-32b':                    'qwen3-32b',
-  'qwen3-14b':                    'qwen3-14b',
-  'qwen3-8b':                     'qwen3-8b',
-  'qwen3-coder-480b-a35b':        'qwen3-coder-480b-a35b',
-  'qwen3-coder-flash':            'qwen3-coder-flash',
-  'qwen3-coder-next':             'qwen3-coder-next',
-  'qwen3-coder-plus':             'qwen3-coder-plus',
-  'qwen-3-5-397b-a17b':           'qwen35-397b-a17b',
-  'qwen-plus':                    'qwen-plus',
-  // GLM
-  'glm-4-7':                      'glm-47',
-  'glm-4-6':                      'glm-46',
-  'glm-4-5':                      'glm-45',
-  'glm-5':                        'glm-5',
-  // Kimi
-  'kimi-k2':                      'kimi-k2',
-  'kimi-k2-0905':                 'kimi-k25',
-  'kimi-k2-thinking':             'kimi-k2-thinking',
-  // MiniMax
-  'minimax-m2-1':                 'minimax-m21',
-  'minimax-m2':                   'minimax-m2',
-  'minimax-m2-5':                 'minimax-m25',
-  // Nvidia
-  'nvidia-nemotron-3-nano-30b-a3b': 'nvidia-nemotron-3',
-  'nvidia-nemotron-nano-12b-v2-vl': 'nemotron-nano-12b-2-vl',
+  simplebench:        { key: 'simplebench',         scale: 100 },
 }
 
 interface AADataPoint {
@@ -190,73 +74,7 @@ function extractDefaultData(rscText: string): AADataPoint[] {
   return JSON.parse(jsonStr) as AADataPoint[]
 }
 
-// Variant suffixes to strip for fuzzy matching
-const VARIANT_SUFFIXES = [
-  '-adaptive',
-  '-reasoning', '-non-reasoning', '-thinking',
-  '-low', '-medium', '-high', '-xhigh',
-]
-
-function stripVariantSuffix(slug: string): string {
-  let result = slug
-  for (const suffix of VARIANT_SUFFIXES) {
-    if (result.endsWith(suffix)) {
-      result = result.slice(0, -suffix.length)
-      break
-    }
-  }
-  return result
-}
-
-function resolveModelSlug(
-  aaSlug: string,
-  dbMappings: Map<string, string>,
-  dbSlugs: Set<string>
-): string | null {
-  const dbSlug = dbMappings.get(aaSlug)
-  if (dbSlug) return dbSlug
-
-  const builtinSlug = AA_MODEL_MAP[aaSlug]
-  if (builtinSlug) return builtinSlug
-
-  if (dbSlugs.has(aaSlug)) return aaSlug
-
-  const normalized = stripVariantSuffix(aaSlug)
-  if (normalized !== aaSlug) {
-    const normDbSlug = dbMappings.get(normalized)
-    if (normDbSlug) return normDbSlug
-    const normBuiltin = AA_MODEL_MAP[normalized]
-    if (normBuiltin) return normBuiltin
-    if (dbSlugs.has(normalized)) return normalized
-  }
-
-  return null
-}
-
-async function loadDbMappings(): Promise<Map<string, string>> {
-  try {
-    const { data, error } = await supabase
-      .from('model_name_mappings')
-      .select('source_name, model_slug')
-      .eq('source_key', 'artificial_analysis')
-    if (error || !data) return new Map()
-    return new Map(data.map(r => [r.source_name, r.model_slug]))
-  } catch {
-    return new Map()
-  }
-}
-
-async function loadDbModelSlugs(): Promise<Set<string>> {
-  try {
-    const { data, error } = await supabase
-      .from('models')
-      .select('slug')
-    if (error || !data) return new Set()
-    return new Set(data.map(m => m.slug))
-  } catch {
-    return new Set()
-  }
-}
+// Model matching now uses unified lib/model-matching.ts
 
 async function fetchEvalPage(page: string): Promise<AADataPoint[]> {
   const url = `${AA_BASE_URL}/${page}`
@@ -309,9 +127,8 @@ async function main() {
 
   console.log(`  Merged: ${mergedModels.size} unique models across all pages`)
 
-  const dbMappings = await loadDbMappings()
-  const dbSlugs = await loadDbModelSlugs()
-  console.log(`  Loaded ${dbMappings.size} DB mappings, ${dbSlugs.size} DB model slugs`)
+  const ctx = await buildMatchContext(supabase, 'artificial_analysis')
+  console.log(`  Match context: ${ctx.dbMappings.size} DB mappings, ${ctx.dbSlugs.size} model slugs`)
 
   const stagingRows: {
     source_key: string
@@ -326,12 +143,12 @@ async function main() {
   const unmappedSlugs = new Set<string>()
   const resolvedSlugs = new Map<string, string>()
 
-  for (const [aaSlug, entry] of mergedModels) {
-    const slug = resolveModelSlug(aaSlug, dbMappings, dbSlugs)
+  mergedModels.forEach((entry, aaSlug) => {
+    const slug = resolveModelSlug(aaSlug, ctx)
     if (!slug) {
       unmapped++
       unmappedSlugs.add(aaSlug)
-      continue
+      return
     }
 
     resolvedSlugs.set(aaSlug, slug)
@@ -354,7 +171,7 @@ async function main() {
         status: 'pending',
       })
     }
-  }
+  })
 
   console.log(`  Mapped: ${mapped} scores from ${resolvedSlugs.size} models, Unmapped: ${unmapped} models`)
   if (unmappedSlugs.size > 0) {

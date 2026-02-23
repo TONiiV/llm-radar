@@ -1,13 +1,11 @@
-name: Daily Data Update
+name: Fix Data Gaps (One-time)
 on:
-  schedule:
-    - cron: '0 0 * * *'  # Every day at UTC 00:00
-  workflow_dispatch: {}    # Manual trigger support
+  workflow_dispatch: {}
 
 jobs:
-  update:
+  fix:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -15,28 +13,14 @@ jobs:
           node-version: '20'
       - run: npm ci
 
-      # Step 0: Discover new models from data sources
-      - name: Discover New Models
-        continue-on-error: true
-        run: npx tsx scripts/cron/discover-models.ts
+      # Step 1: Fix missing prices (manual + OpenRouter)
+      - name: Fix Missing Prices
+        run: npx tsx scripts/migrate/fix-data-gaps.ts
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      # Step 1: Fetch price data → staging
-      - name: Fetch OpenRouter
-        run: npx tsx scripts/cron/fetch-openrouter.ts
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-
-      - name: Fetch LiteLLM
-        run: npx tsx scripts/cron/fetch-litellm.ts
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-
-      # Step 1b: Fetch benchmark data → staging
+      # Step 2: Re-fetch all benchmark data to fill gaps
       - name: Fetch LMArena Benchmarks
         continue-on-error: true
         run: npx tsx scripts/cron/fetch-benchmarks.ts
@@ -66,7 +50,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      # Step 2: Cross-validate and merge
+      # Step 3: Validate and merge all staging data
       - name: Validate and Merge Prices
         run: npx tsx scripts/cron/validate-and-merge.ts
         env:
@@ -79,28 +63,14 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      # Step 3: Recalculate normalized scores
+      # Step 4: Recalculate scores
       - name: Recalculate Scores
         run: npx tsx scripts/cron/recalculate-scores.ts
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      # Step 4: Trigger Vercel page revalidation
-      - name: Revalidate Vercel Pages
-        continue-on-error: true
-        run: |
-          CLEAN_URL=$(echo "$VERCEL_URL" | xargs)
-          echo "Revalidating: ${CLEAN_URL}/api/revalidate"
-          curl -sf -X POST "${CLEAN_URL}/api/revalidate" \
-            -H "Content-Type: application/json" \
-            -d "{\"secret\": \"$REVALIDATION_SECRET\"}" \
-            --max-time 10
-        env:
-          VERCEL_URL: ${{ secrets.VERCEL_URL }}
-          REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
-
-      # Step 5: Regenerate seed.json from DB
+      # Step 5: Regenerate seed.json with updated data
       - name: Regenerate seed.json
         continue-on-error: true
         run: npx tsx scripts/cron/regenerate-seed.ts
@@ -113,12 +83,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --quiet data/seed.json || (git add data/seed.json && git commit -m "chore: auto-update seed.json" && git push)
+          git diff --quiet data/seed.json || (git add data/seed.json && git commit -m "fix: update seed.json with fixed prices and scores" && git push)
 
-      # Step 7: Weekly cleanup (Sundays only)
-      - name: Cleanup Old Staging Data
-        if: github.event.schedule == '0 0 * * 0' || github.event_name == 'workflow_dispatch'
-        run: npx tsx scripts/cron/cleanup-staging.ts
+      # Step 6: Trigger Vercel revalidation
+      - name: Revalidate Vercel Pages
+        continue-on-error: true
+        run: |
+          CLEAN_URL=$(echo "$VERCEL_URL" | xargs)
+          curl -sf -X POST "${CLEAN_URL}/api/revalidate" \
+            -H "Content-Type: application/json" \
+            -d "{\"secret\": \"$REVALIDATION_SECRET\"}" \
+            --max-time 10
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          VERCEL_URL: ${{ secrets.VERCEL_URL }}
+          REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}

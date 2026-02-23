@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { buildMatchContext, resolveModelSlug } from '../../lib/model-matching'
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -8,11 +9,11 @@ const supabase = createClient(
 const EPOCH_CSV_URL = 'https://epoch.ai/data/eci_benchmarks.csv'
 
 // Epoch benchmark name → our benchmark key + score multiplier
+// Removed: GSM8K (saturated >95%)
 const BENCHMARK_MAP: Record<string, { key: string; multiply: number }> = {
   'GPQA diamond':                     { key: 'gpqa_diamond',   multiply: 100 },
   'MATH level 5':                     { key: 'math_bench',     multiply: 100 },
   'OTIS Mock AIME 2024-2025':         { key: 'aime_2025',      multiply: 100 },
-  'GSM8K':                            { key: 'gsm8k',          multiply: 100 },
   'SWE-Bench Verified (Bash Only)':   { key: 'swe_bench',      multiply: 100 },
   'FrontierMath-2025-02-28-Private':  { key: 'frontiermath',   multiply: 100 },
   'SimpleBench':                      { key: 'simplebench',    multiply: 100 },
@@ -20,101 +21,7 @@ const BENCHMARK_MAP: Record<string, { key: string; multiply: number }> = {
   'Terminal Bench':                    { key: 'terminal_bench', multiply: 100 },
 }
 
-// Epoch model name → our model slug (built-in fallback mappings)
-const MODEL_NAME_MAP: Record<string, string> = {
-  'Claude Opus 4.6':                    'claude-opus-46',
-  'Claude Opus 4.5':                    'claude-opus-45',
-  'Claude Opus 4.1':                    'claude-opus-41',
-  'Claude Opus 4':                      'claude-opus-4',
-  'Claude Sonnet 4.5':                  'claude-sonnet-45',
-  'Claude Sonnet 4':                    'claude-sonnet-4',
-  'Claude Haiku 4.5':                   'claude-haiku-45',
-  'Claude 3.7 Sonnet':                  'claude-37-sonnet',
-  'Claude 3.5 Sonnet (October 2024)':   'claude-35-sonnet',
-  'Claude 3.5 Haiku':                   'claude-35-haiku',
-  'GPT-5.2':                            'gpt-52',
-  'GPT-5':                              'gpt-5',
-  'GPT-5.1':                            'gpt-51',
-  'GPT-4.1':                            'gpt-41',
-  'GPT-4.1 mini':                       'gpt-41-mini',
-  'GPT-4o (Nov 2024)':                  'gpt-4o',
-  'GPT-4o mini':                        'gpt-4o-mini',
-  'o3':                                 'o3',
-  'o3-mini':                            'o3-mini',
-  'o4-mini':                            'o4-mini',
-  'o1':                                 'o1',
-  'DeepSeek-R1':                        'deepseek-r1',
-  'DeepSeek-R1 (May 2025)':            'deepseek-r1-0528',
-  'DeepSeek-V3':                        'deepseek-v3',
-  'DeepSeek-V3.1':                      'deepseek-v31',
-  'Gemini 2.5 Pro (Jun 2025)':          'gemini-25-pro',
-  'Gemini 2.5 Flash (Jun 2025)':        'gemini-25-flash',
-  'Gemini 2.0 Flash':                   'gemini-20-flash',
-  'Gemini 3 Pro':                       'gemini-3-pro',
-  'Gemini 3 Flash':                     'gemini-3-flash',
-  'Grok 3':                             'grok-3',
-  'Grok 4':                             'grok-4',
-  'Grok-3 mini':                        'grok-3-mini',
-  'Llama 4 Maverick':                   'llama-4-maverick',
-  'Llama 4 Scout':                      'llama-4-scout',
-  'Mistral Medium 3':                   'mistral-medium-3',
-  'Qwen3-235B-A22B':                    'qwen3-235b',
-  'Qwen3-Max':                          'qwen3-max',
-  'Qwen2.5-Max':                        'qwen25-max',
-  'GLM-4.7':                            'glm-47',
-  'Kimi K2':                            'kimi-k2',
-  'Kimi K2.5':                          'kimi-k25',
-  'Kimi K2 Thinking':                   'kimi-k2-thinking',
-  'DeepSeek-V3.2':                      'deepseek-v32',
-  'DeepSeek-V3.2-Exp':                  'deepseek-v32-exp',
-  'DeepSeek-V3 (Mar 2025)':            'deepseek-v3-0325',
-  'GPT-4.1 nano':                       'gpt-41-nano',
-  'GPT-4.5':                            'gpt-45',
-  'GPT-5 Pro':                          'gpt-5-pro',
-  'GPT-5 mini':                         'gpt-5-mini',
-  'GPT-5 nano':                         'gpt-5-nano',
-  'o1-mini':                            'o1-mini',
-  'o1-preview':                         'o1-preview',
-  'o3-pro':                             'o3-pro',
-  'Gemini 2.0 Flash Thinking (Jan 2025)': 'gemini-20-flash-thinking',
-  'Gemini 2.0 Pro':                     'gemini-20-pro',
-  'Gemini 2.5 Pro (Mar 2025)':          'gemini-25-pro-0325',
-  'Gemini 2.5 Pro (May 2025)':          'gemini-25-pro-0525',
-  'Gemini 2.5 Flash (Apr 2025)':        'gemini-25-flash-0425',
-  'Gemini 2.5 Flash (May 2025)':        'gemini-25-flash-0525',
-  'Gemini 2.5 Flash (Sep 2025)':        'gemini-25-flash-0925',
-  'Mistral Large':                      'mistral-large',
-  'Mistral Large 2':                    'mistral-large-2',
-  'Qwen3-235B-A22B-Thinking (Jul 2025)': 'qwen3-235b-thinking',
-  'Qwen3-Coder-480B-A35B':             'qwen3-coder-480b',
-  'Qwen Plus':                          'qwen-plus',
-  'Llama 3.3 70B':                      'llama-33-70b',
-  'Llama 3.2 90B':                      'llama-32-90b',
-  'Grok-2':                             'grok-2',
-  // Additional models
-  'Claude Sonnet 4.6':                  'claude-sonnet-46',
-  'GPT-5.2 Codex':                      'gpt-52-codex',
-  'GPT-5.2 Pro':                        'gpt-52-pro',
-  'GPT-5.1 Codex Mini':                 'gpt-51-codex-mini',
-  'Grok 4.1':                           'grok-41',
-  'Grok 4.1 Fast':                      'grok-41-fast',
-  'GLM-4.7 Flash':                      'glm-47-flash',
-  'GLM-5':                              'glm-5',
-  'MiniMax-M21':                        'minimax-m21',
-  'MiniMax-M25':                        'minimax-m25',
-  'MiniMax M2.1':                       'minimax-m21',
-  'MiniMax M2.5':                       'minimax-m25',
-  'Nvidia Nemotron 3':                  'nvidia-nemotron-3',
-  'Nemotron 3':                         'nvidia-nemotron-3',
-  'Qwen3.5-397B':                       'qwen35-397b',
-  'Qwen3.5 Plus':                       'qwen35-plus',
-  'Qwen3-Max-Thinking':                 'qwen3-max-thinking',
-  'Qwen3-Coder-Next':                   'qwen3-coder-next',
-  'Mistral Large 3':                    'mistral-large-3',
-  'Devstral 2':                         'devstral-2',
-  'DeepSeek-V3.2-Speciale':             'deepseek-v32-speciale',
-  'Gemini 3.1 Pro':                     'gemini-31-pro',
-}
+// Model matching now uses unified lib/model-matching.ts
 
 interface EpochRow {
   model: string
@@ -143,33 +50,7 @@ function parseCSV(text: string): EpochRow[] {
   return results
 }
 
-function resolveModelSlug(
-  epochName: string,
-  dbMappings: Map<string, string>
-): string | null {
-  // Try DB mappings first
-  const dbSlug = dbMappings.get(epochName)
-  if (dbSlug) return dbSlug
-
-  // Try built-in mappings
-  const builtinSlug = MODEL_NAME_MAP[epochName]
-  if (builtinSlug) return builtinSlug
-
-  return null
-}
-
-async function loadDbMappings(): Promise<Map<string, string>> {
-  try {
-    const { data, error } = await supabase
-      .from('model_name_mappings')
-      .select('source_name, model_slug')
-      .eq('source_key', 'epoch_ai')
-    if (error || !data) return new Map()
-    return new Map(data.map(r => [r.source_name, r.model_slug]))
-  } catch {
-    return new Map()
-  }
-}
+// Model matching uses unified lib/model-matching.ts
 
 async function main() {
   console.log('Fetching Epoch AI benchmark data...')
@@ -181,8 +62,8 @@ async function main() {
   const allRows = parseCSV(text)
   console.log(`  Parsed ${allRows.length} rows from Epoch CSV`)
 
-  const dbMappings = await loadDbMappings()
-  console.log(`  Loaded ${dbMappings.size} DB model name mappings`)
+  const ctx = await buildMatchContext(supabase, 'epoch_ai')
+  console.log(`  Match context: ${ctx.dbMappings.size} DB mappings, ${ctx.dbSlugs.size} model slugs`)
 
   const stagingRows: {
     source_key: string
@@ -199,7 +80,7 @@ async function main() {
     const bmConfig = BENCHMARK_MAP[row.benchmark]
     if (!bmConfig) continue // not a benchmark we care about
 
-    const slug = resolveModelSlug(row.model, dbMappings)
+    const slug = resolveModelSlug(row.model, ctx)
     if (!slug) {
       unmapped++
       continue

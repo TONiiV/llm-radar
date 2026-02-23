@@ -7,7 +7,7 @@ import CategoryDetail from "@/components/charts/d3/CategoryDetail"
 import StatsTable from "@/components/charts/StatsTable"
 import BenchmarkRanking from "@/components/charts/BenchmarkRanking"
 import ModelSelector from "@/components/ModelSelector"
-import { getParetoFrontier } from "@/lib/data"
+import { getParetoFrontier, computeComparativeScores } from "@/lib/data"
 import { RadarIcon, PriceIcon, ClearIcon } from "@/components/icons/CategoryIcons"
 import { getModelColor } from "@/lib/colors"
 import { useLocale } from "@/lib/i18n-context"
@@ -44,6 +44,14 @@ export default function CompareClient({ allModels, providers, categories, source
   const selectedModels = useMemo(
     () => allModels.filter((m) => selectedSlugs.includes(m.slug)),
     [allModels, selectedSlugs]
+  )
+
+  // Common-benchmark comparative scoring
+  const comparative = useMemo(
+    () => selectedModels.length > 1
+      ? computeComparativeScores(selectedModels, allModels, categories)
+      : { models: selectedModels, commonCount: 0, totalCount: 0 },
+    [selectedModels, allModels, categories]
   )
 
   return (
@@ -154,6 +162,18 @@ export default function CompareClient({ allModels, providers, categories, source
               {/* Radar Tab */}
               {activeTab === "radar" && (
                 <>
+                  {/* Coverage indicator for common-benchmark comparison */}
+                  {selectedModels.length > 1 && comparative.commonCount < comparative.totalCount && (
+                    <div className="paper-card-flat px-4 py-2 text-sm text-txt-muted flex items-center gap-2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-accent-blue flex-shrink-0">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                        <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                      <span>
+                        {`基于 ${comparative.commonCount}/${comparative.totalCount} 个共同指标比较`}
+                      </span>
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Radar Chart */}
                     <div className="paper-card p-5">

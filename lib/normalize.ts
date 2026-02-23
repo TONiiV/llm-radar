@@ -1,5 +1,27 @@
 import { CategoryResult } from "./types"
 
+/**
+ * Percentile rank normalization for metrics without fixed upper bounds
+ * (e.g., output_tps in tok/s, ttft_ms in ms).
+ * Returns 0-100 score based on rank among all models.
+ */
+export function percentileRank(
+  value: number,
+  allValues: number[],
+  higherIsBetter = true
+): number {
+  const n = allValues.length
+  if (n <= 1) return 50
+
+  const sorted = [...allValues].sort((a, b) => a - b)
+  const rank = sorted.filter((v) => v < value).length
+  let score = (rank / (n - 1)) * 100
+
+  if (!higherIsBetter) score = 100 - score
+
+  return Math.round(score * 100) / 100
+}
+
 // 基于理论最大值的归一化函数
 export function normalizeByMaxScore(
   value: number,
