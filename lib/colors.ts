@@ -6,6 +6,12 @@ export const MODEL_COLORS = [
   "#f43f5e", // rose
   "#a78bfa", // violet
   "#06b6d4", // cyan
+  "#ec4899", // pink
+  "#84cc16", // lime
+  "#f97316", // orange
+  "#14b8a6", // teal
+  "#e879f9", // fuchsia
+  "#facc15", // yellow
 ]
 
 export function getModelColor(index: number): string {

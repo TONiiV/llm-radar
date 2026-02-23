@@ -91,3 +91,6 @@ export function compositeScore(
 
   return reliable.reduce((sum, c) => sum + c.score, 0) / reliable.length
 }
+
+/** Radar Score — alias for compositeScore (our unified overall rating) */
+export const radarIdx = compositeScore

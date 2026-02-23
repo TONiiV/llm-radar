@@ -115,7 +115,7 @@ export default function ModelsClient({ models, categories, providers }: Props) {
           <div className="flex items-center gap-2">
             <span className="text-xs text-txt-muted font-body whitespace-nowrap">{isZh ? "排序:" : "Sort:"}</span>
             {([
-              { key: "score" as SortKey, label: isZh ? "综合分" : "Score" },
+              { key: "score" as SortKey, label: isZh ? "Radar Score" : "Radar Score" },
               { key: "name" as SortKey, label: isZh ? "名称" : "Name" },
               { key: "price" as SortKey, label: isZh ? "价格" : "Price" },
             ]).map((opt) => (

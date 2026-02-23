@@ -61,6 +61,7 @@ export interface CategoryResult {
 export interface ModelWithScores extends Model {
   categoryScores: Record<string, CategoryResult>
   compositeScore: number
+  radarIdx: number
   providerColor: string
 }
 

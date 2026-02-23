@@ -8,7 +8,8 @@ import StatsTable from "@/components/charts/StatsTable"
 import BenchmarkRanking from "@/components/charts/BenchmarkRanking"
 import ModelSelector from "@/components/ModelSelector"
 import { getParetoFrontier } from "@/lib/data"
-import { RadarIcon, PriceIcon } from "@/components/icons/CategoryIcons"
+import { RadarIcon, PriceIcon, ClearIcon } from "@/components/icons/CategoryIcons"
+import { getModelColor } from "@/lib/colors"
 import { useLocale } from "@/lib/i18n-context"
 import Navbar from "@/components/Navbar"
 import { useUrlParams, type CompareTab } from "@/lib/useUrlParams"
@@ -35,7 +36,7 @@ export default function CompareClient({ allModels, providers, categories, source
     setActiveTab,
     drilldownCategory,
     setDrilldownCategory,
-  } = useUrlParams()
+  } = useUrlParams(allModels)
   const { t } = useLocale()
 
   const paretoSlugs = useMemo(() => getParetoFrontier(allModels), [allModels])
@@ -50,15 +51,66 @@ export default function CompareClient({ allModels, providers, categories, source
       <Navbar />
     <main className="max-w-7xl mx-auto px-4 py-2">
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Sidebar - Model Selector */}
+        {/* Sidebar - Selected Models + Model Selector */}
         <aside className="lg:w-72 flex-shrink-0">
-          <div className="paper-card p-4 sticky top-20">
-            <ModelSelector
-              models={allModels}
-              providers={providers}
-              selectedSlugs={selectedSlugs}
-              onSelectionChange={setSelectedSlugs}
-            />
+          <div className="sticky top-20 space-y-3">
+            {/* Selected Models Panel */}
+            {selectedSlugs.length > 0 && (
+              <div className="paper-card p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-heading italic font-semibold text-sm text-txt-primary">
+                    {t("selector.selectedModels" as any)} <span className="text-txt-muted font-mono text-xs">({selectedSlugs.length})</span>
+                  </h3>
+                  <button
+                    onClick={() => setSelectedSlugs([])}
+                    className="flex items-center gap-1 font-mono text-[11px] text-txt-muted hover:text-score-low transition-colors"
+                    title={t("selector.unselectAll")}
+                  >
+                    <ClearIcon size={12} />
+                    {t("selector.unselectAll")}
+                  </button>
+                </div>
+                <div className="space-y-0.5 max-h-48 overflow-y-auto">
+                  {selectedSlugs.map((slug, idx) => {
+                    const model = allModels.find((m) => m.slug === slug)
+                    if (!model) return null
+                    return (
+                      <div
+                        key={slug}
+                        className="flex items-center gap-2 px-2 py-1 text-sm group"
+                        style={{ borderLeft: `2px solid ${getModelColor(idx)}`, paddingLeft: '6px' }}
+                      >
+                        <span
+                          className="w-2 h-2 flex-shrink-0 rounded-full"
+                          style={{ backgroundColor: getModelColor(idx) }}
+                        />
+                        <span className="flex-1 truncate text-txt-primary text-xs">{model.name}</span>
+                        <span className="font-mono text-[10px] text-txt-muted">
+                          {Math.round(model.compositeScore)}
+                        </span>
+                        <button
+                          onClick={() => setSelectedSlugs(selectedSlugs.filter((s) => s !== slug))}
+                          className="opacity-0 group-hover:opacity-100 text-txt-muted hover:text-score-low transition-all"
+                          title={t("selector.remove" as any)}
+                        >
+                          <ClearIcon size={10} />
+                        </button>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Model Selector */}
+            <div className="paper-card p-4">
+              <ModelSelector
+                models={allModels}
+                providers={providers}
+                selectedSlugs={selectedSlugs}
+                onSelectionChange={setSelectedSlugs}
+              />
+            </div>
           </div>
         </aside>
 

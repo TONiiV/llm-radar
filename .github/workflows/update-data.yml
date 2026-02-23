@@ -30,7 +30,15 @@ jobs:
 
       # Step 1b: Fetch benchmark data → staging
       - name: Fetch LMArena Benchmarks
+        continue-on-error: true
         run: npx tsx scripts/cron/fetch-benchmarks.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Fetch Epoch AI Benchmarks
+        continue-on-error: true
+        run: npx tsx scripts/cron/fetch-epoch.ts
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}

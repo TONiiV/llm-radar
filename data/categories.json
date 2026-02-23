@@ -5,7 +5,8 @@
       { "key": "mmlu_pro", "label": "MMLU-Pro", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" },
       { "key": "gpqa_diamond", "label": "GPQA Diamond", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" },
       { "key": "humanitys_last_exam", "label": "Humanity's Last Exam", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" },
-      { "key": "critpt", "label": "CritPt", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" }
+      { "key": "critpt", "label": "CritPt", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" },
+      { "key": "simplebench", "label": "SimpleBench", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "epoch_ai" }
     ]
   },
   "coding": {
@@ -14,7 +15,8 @@
       { "key": "swe_bench", "label": "SWE-Bench Verified", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "swe_bench" },
       { "key": "livecode_bench", "label": "LiveCodeBench", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "livecode_bench" },
       { "key": "terminal_bench", "label": "Terminal-Bench Hard", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" },
-      { "key": "scicode", "label": "SciCode", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" }
+      { "key": "scicode", "label": "SciCode", "weight": 0.7, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" },
+      { "key": "aider_polyglot", "label": "Aider Polyglot", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "epoch_ai" }
     ]
   },
   "math": {
@@ -22,7 +24,8 @@
     "benchmarks": [
       { "key": "aime_2025", "label": "AIME 2025", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" },
       { "key": "math_bench", "label": "MATH", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" },
-      { "key": "gsm8k", "label": "GSM8K", "weight": 0.6, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" }
+      { "key": "gsm8k", "label": "GSM8K", "weight": 0.6, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis" },
+      { "key": "frontiermath", "label": "FrontierMath", "weight": 0.8, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "epoch_ai" }
     ]
   },
   "chat": {

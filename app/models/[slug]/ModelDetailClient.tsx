@@ -66,8 +66,8 @@ export default function ModelDetailClient({ model, categories, providers }: Prop
             </div>
             <div className="flex flex-col items-end gap-2">
               <div className="text-right">
-                <div className="text-xs text-txt-muted mb-1">Composite Score</div>
-                <span className="font-mono text-5xl text-txt-primary">{Math.round(model.compositeScore)}</span>
+                <div className="text-xs text-txt-muted mb-1">Radar Score</div>
+                <span className="font-mono text-5xl text-txt-primary">{Math.round(model.radarIdx)}</span>
                 <span className="text-txt-muted text-lg">/100</span>
               </div>
               <Link href={`/compare?ids=${model.slug}`} className="btn-primary px-4 py-2 text-sm inline-block mt-2">

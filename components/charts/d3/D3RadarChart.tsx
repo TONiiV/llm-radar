@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, useCallback } from "react"
 import type { ModelWithScores, Categories } from "@/lib/types"
 import { getModelColor, CATEGORY_COLORS } from "@/lib/colors"
 import { useChartDimensions } from "./useChartDimensions"
@@ -84,16 +84,122 @@ export default function D3RadarChart({
           const cs = m.categoryScores[key]
           return cs ? Math.round(cs.score) : 0
         })
+        const vertices = scores.map((score, idx) =>
+          getScoreVertex(score, idx, categoryKeys.length, cx, cy, maxRadius)
+        )
         return {
           model: m,
           index: i,
           path: getModelPolygonPath(scores, cx, cy, maxRadius),
           scores,
           color: getModelColor(i),
+          vertices,
         }
       }),
     [models, categoryKeys, cx, cy, maxRadius]
   )
+
+  // Distance squared from point (px,py) to the nearest point on segment (ax,ay)-(bx,by)
+  const distSqToSegment = useCallback(
+    (px: number, py: number, ax: number, ay: number, bx: number, by: number) => {
+      const abx = bx - ax, aby = by - ay
+      const apx = px - ax, apy = py - ay
+      const ab2 = abx * abx + aby * aby
+      if (ab2 === 0) return apx * apx + apy * apy
+      const t = Math.max(0, Math.min(1, (apx * abx + apy * aby) / ab2))
+      const projX = ax + t * abx, projY = ay + t * aby
+      const dx = px - projX, dy = py - projY
+      return dx * dx + dy * dy
+    },
+    []
+  )
+
+  // Find nearest model by minimum distance to polygon edges (line segments)
+  const findNearestModel = useCallback(
+    (px: number, py: number) => {
+      let bestSlug: string | null = null
+      let bestDist = Infinity
+      for (const mp of modelPolygons) {
+        const verts = mp.vertices
+        const n = verts.length
+        let minDist = Infinity
+        for (let i = 0; i < n; i++) {
+          const a = verts[i], b = verts[(i + 1) % n]
+          const d = distSqToSegment(px, py, a.x, a.y, b.x, b.y)
+          if (d < minDist) minDist = d
+        }
+        if (minDist < bestDist) {
+          bestDist = minDist
+          bestSlug = mp.model.slug
+        }
+      }
+      // Only highlight if pointer is reasonably close
+      if (bestDist > maxRadius * maxRadius) return null
+      return bestSlug
+    },
+    [modelPolygons, maxRadius, distSqToSegment]
+  )
+
+  const handleOverlayMouseMove = useCallback(
+    (e: React.MouseEvent<SVGRectElement>) => {
+      const svg = e.currentTarget.closest("svg")
+      if (!svg) return
+      const pt = svg.createSVGPoint()
+      pt.x = e.clientX
+      pt.y = e.clientY
+      const svgPt = pt.matrixTransform(svg.getScreenCTM()!.inverse())
+      const nearest = findNearestModel(svgPt.x, svgPt.y)
+      setHoveredSlug(nearest)
+      if (nearest) {
+        const mp = modelPolygons.find((m) => m.model.slug === nearest)
+        if (mp) {
+          const scores = categoryKeys.map((key, idx) => ({
+            label: getCategoryLabel(key),
+            score: mp.scores[idx],
+            color: CATEGORY_COLORS[key] || "#94a3b8",
+          }))
+          showTooltip(
+            e,
+            <div>
+              <p className="font-heading font-semibold text-txt-primary mb-1.5">
+                {mp.model.name}
+              </p>
+              {scores.map((s) => (
+                <div
+                  key={s.label}
+                  className="flex items-center gap-2 font-mono text-xs"
+                >
+                  <span
+                    className="w-2 h-2 inline-block flex-shrink-0"
+                    style={{ backgroundColor: s.color }}
+                  />
+                  <span className="text-txt-secondary">{s.label}</span>
+                  <span className="text-txt-primary ml-auto font-semibold">
+                    {s.score}
+                  </span>
+                </div>
+              ))}
+              <div className="border-t border-border mt-1.5 pt-1.5 flex justify-between font-mono text-xs">
+                <span className="text-txt-secondary">Radar Score</span>
+                <span className="text-accent-blue font-semibold">
+                  {Math.round(mp.model.compositeScore)}
+                </span>
+              </div>
+            </div>
+          )
+        }
+      } else {
+        hideTooltip()
+      }
+      moveTooltip(e)
+    },
+    [findNearestModel, modelPolygons, categoryKeys, getCategoryLabel, showTooltip, moveTooltip, hideTooltip, locale]
+  )
+
+  const handleOverlayMouseLeave = useCallback(() => {
+    setHoveredSlug(null)
+    hideTooltip()
+  }, [hideTooltip])
 
   if (size === 0) {
     return <div ref={containerRef as React.RefObject<HTMLDivElement>} className="w-full" style={{ minHeight: 420 }} />
@@ -173,7 +279,7 @@ export default function D3RadarChart({
           const isOtherHovered = hoveredSlug !== null && !isHovered
 
           return (
-            <g key={mp.model.slug}>
+            <g key={mp.model.slug} style={{ pointerEvents: "none" }}>
               {/* Filled polygon */}
               <path
                 d={mp.path}
@@ -182,48 +288,6 @@ export default function D3RadarChart({
                 strokeWidth={isHovered ? 2.5 : 1.5}
                 opacity={isOtherHovered ? 0.15 : 1}
                 style={{ transition: "opacity 0.2s ease, stroke-width 0.2s ease" }}
-                onMouseEnter={(e) => {
-                  setHoveredSlug(mp.model.slug)
-                  const scores = categoryKeys.map((key, idx) => ({
-                    label: getCategoryLabel(key),
-                    score: mp.scores[idx],
-                    color: CATEGORY_COLORS[key] || "#94a3b8",
-                  }))
-                  showTooltip(
-                    e,
-                    <div>
-                      <p className="font-heading font-semibold text-txt-primary mb-1.5">
-                        {mp.model.name}
-                      </p>
-                      {scores.map((s) => (
-                        <div
-                          key={s.label}
-                          className="flex items-center gap-2 font-mono text-xs"
-                        >
-                          <span
-                            className="w-2 h-2 inline-block flex-shrink-0"
-                            style={{ backgroundColor: s.color }}
-                          />
-                          <span className="text-txt-secondary">{s.label}</span>
-                          <span className="text-txt-primary ml-auto font-semibold">
-                            {s.score}
-                          </span>
-                        </div>
-                      ))}
-                      <div className="border-t border-border mt-1.5 pt-1.5 flex justify-between font-mono text-xs">
-                        <span className="text-txt-secondary">{locale === "zh" ? "综合" : "Overall"}</span>
-                        <span className="text-accent-blue font-semibold">
-                          {Math.round(mp.model.compositeScore)}
-                        </span>
-                      </div>
-                    </div>
-                  )
-                }}
-                onMouseMove={moveTooltip}
-                onMouseLeave={() => {
-                  setHoveredSlug(null)
-                  hideTooltip()
-                }}
               />
 
               {/* Score dots at vertices when hovered */}
@@ -257,6 +321,17 @@ export default function D3RadarChart({
             </g>
           )
         })}
+
+        {/* Invisible overlay for proximity-based hover detection */}
+        <rect
+          x={0}
+          y={0}
+          width={size}
+          height={height}
+          fill="transparent"
+          onMouseMove={handleOverlayMouseMove}
+          onMouseLeave={handleOverlayMouseLeave}
+        />
 
         {/* Axis labels with icons */}
         {categoryKeys.map((key, i) => {

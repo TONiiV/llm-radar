@@ -1,17 +1,65 @@
 {
   "providers": [
-    { "name": "Anthropic", "slug": "anthropic", "color": "#D97706" },
-    { "name": "OpenAI", "slug": "openai", "color": "#10A37F" },
-    { "name": "Google", "slug": "google", "color": "#4285F4" },
-    { "name": "DeepSeek", "slug": "deepseek", "color": "#5B6CF0" },
-    { "name": "Meta", "slug": "meta", "color": "#1877F2" },
-    { "name": "xAI", "slug": "xai", "color": "#1DA1F2" },
-    { "name": "Mistral", "slug": "mistral", "color": "#FF7000" },
-    { "name": "Alibaba", "slug": "alibaba", "color": "#FF6A00" },
-    { "name": "智谱 Zhipu", "slug": "zhipu", "color": "#6366F1" },
-    { "name": "Moonshot", "slug": "moonshot", "color": "#8B5CF6" },
-    { "name": "MiniMax", "slug": "minimax", "color": "#EC4899" },
-    { "name": "NVIDIA", "slug": "nvidia", "color": "#76B900" }
+    {
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "color": "#D97706"
+    },
+    {
+      "name": "OpenAI",
+      "slug": "openai",
+      "color": "#10A37F"
+    },
+    {
+      "name": "Google",
+      "slug": "google",
+      "color": "#4285F4"
+    },
+    {
+      "name": "DeepSeek",
+      "slug": "deepseek",
+      "color": "#5B6CF0"
+    },
+    {
+      "name": "Meta",
+      "slug": "meta",
+      "color": "#1877F2"
+    },
+    {
+      "name": "xAI",
+      "slug": "xai",
+      "color": "#1DA1F2"
+    },
+    {
+      "name": "Mistral",
+      "slug": "mistral",
+      "color": "#FF7000"
+    },
+    {
+      "name": "Alibaba",
+      "slug": "alibaba",
+      "color": "#FF6A00"
+    },
+    {
+      "name": "智谱 Zhipu",
+      "slug": "zhipu",
+      "color": "#6366F1"
+    },
+    {
+      "name": "Moonshot",
+      "slug": "moonshot",
+      "color": "#8B5CF6"
+    },
+    {
+      "name": "MiniMax",
+      "slug": "minimax",
+      "color": "#EC4899"
+    },
+    {
+      "name": "NVIDIA",
+      "slug": "nvidia",
+      "color": "#76B900"
+    }
   ],
   "models": [
     {
@@ -23,10 +71,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2026-01-15",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 5.00,
-        "output_per_1m": 25.00,
+        "input_per_1m": 5,
+        "output_per_1m": 25,
         "confirmed": true,
         "source": "openrouter"
       },
@@ -47,7 +100,9 @@
         "alpaca_eval": 57.2,
         "tau2_bench": 68.5,
         "gdpval_aa": 71.2,
-        "aa_lcr": 62.8
+        "aa_lcr": 62.8,
+        "simplebench": 61.1,
+        "frontiermath": 40
       }
     },
     {
@@ -59,31 +114,38 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-12-11",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
         "input_per_1m": 1.75,
-        "output_per_1m": 14.00,
+        "output_per_1m": 14,
         "confirmed": true,
         "source": "openrouter"
       },
       "benchmarks": {
-        "mmlu_pro": 82.0,
+        "mmlu_pro": 82,
         "gpqa_diamond": 92.4,
         "humanitys_last_exam": 32.8,
         "critpt": 84.5,
-        "swe_bench": 80.0,
-        "livecode_bench": 78.0,
+        "swe_bench": 80,
+        "livecode_bench": 78,
         "terminal_bench": 55.6,
         "scicode": 51.8,
-        "aime_2025": 100.0,
-        "math_bench": 97.0,
+        "aime_2025": 100,
+        "math_bench": 97,
         "gsm8k": 99.2,
         "lmarena_elo": 1398,
         "ifbench": 93.5,
         "alpaca_eval": 59.8,
         "tau2_bench": 98.7,
         "gdpval_aa": 81.5,
-        "aa_lcr": 77.4
+        "aa_lcr": 77.4,
+        "simplebench": 35,
+        "frontiermath": 40.7
       }
     },
     {
@@ -95,31 +157,37 @@
       "is_open_source": false,
       "is_reasoning_model": true,
       "release_date": "2025-12-11",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 21.00,
-        "output_per_1m": 168.00,
+        "input_per_1m": 21,
+        "output_per_1m": 168,
         "confirmed": true,
         "source": "openrouter"
       },
       "benchmarks": {
-        "mmlu_pro": 82.0,
+        "mmlu_pro": 82,
         "gpqa_diamond": 93.2,
         "humanitys_last_exam": 36.6,
         "critpt": 87.2,
-        "swe_bench": 80.0,
-        "livecode_bench": 78.0,
+        "swe_bench": 80,
+        "livecode_bench": 78,
         "terminal_bench": 55.6,
         "scicode": 53.4,
-        "aime_2025": 100.0,
-        "math_bench": 97.0,
+        "aime_2025": 100,
+        "math_bench": 97,
         "gsm8k": 99.2,
         "lmarena_elo": 1412,
         "ifbench": 93.5,
         "alpaca_eval": 61.2,
         "tau2_bench": 98.7,
         "gdpval_aa": 83.2,
-        "aa_lcr": 79.1
+        "aa_lcr": 79.1,
+        "simplebench": 53.9
       }
     },
     {
@@ -131,10 +199,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2026-01-14",
-      "tags": ["multimodal", "function_calling", "vision", "agentic_coding"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "agentic_coding"
+      ],
       "pricing": {
         "input_per_1m": 1.75,
-        "output_per_1m": 14.00,
+        "output_per_1m": 14,
         "confirmed": true,
         "source": "openrouter"
       },
@@ -145,11 +218,11 @@
         "critpt": 82.3,
         "swe_bench": 82.5,
         "livecode_bench": 81.3,
-        "terminal_bench": 64.0,
+        "terminal_bench": 64,
         "scicode": 55.2,
         "aime_2025": 98.5,
         "math_bench": 95.8,
-        "gsm8k": 99.0,
+        "gsm8k": 99,
         "lmarena_elo": 1388,
         "ifbench": 91.2,
         "alpaca_eval": 57.4,
@@ -167,10 +240,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2026-01-20",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
         "input_per_1m": 1.25,
-        "output_per_1m": 10.00,
+        "output_per_1m": 10,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -191,7 +269,9 @@
         "alpaca_eval": 52.1,
         "tau2_bench": 61.8,
         "gdpval_aa": 64.5,
-        "aa_lcr": 72.1
+        "aa_lcr": 72.1,
+        "simplebench": 71.7,
+        "frontiermath": 37.6
       }
     },
     {
@@ -203,7 +283,12 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-12-10",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
         "input_per_1m": 0.55,
         "output_per_1m": 2.19,
@@ -227,7 +312,8 @@
         "alpaca_eval": 48.5,
         "tau2_bench": 55.2,
         "gdpval_aa": 58.4,
-        "aa_lcr": 52.1
+        "aa_lcr": 52.1,
+        "frontiermath": 22.1
       }
     },
     {
@@ -239,7 +325,12 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-11-15",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
         "input_per_1m": 0.27,
         "output_per_1m": 0.85,
@@ -263,7 +354,10 @@
         "alpaca_eval": 45.2,
         "tau2_bench": 51.8,
         "gdpval_aa": 54.2,
-        "aa_lcr": 48.5
+        "aa_lcr": 48.5,
+        "simplebench": 13.2,
+        "frontiermath": 0.7,
+        "aider_polyglot": 15.6
       }
     },
     {
@@ -275,10 +369,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-10-20",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 5.00,
-        "output_per_1m": 25.00,
+        "input_per_1m": 5,
+        "output_per_1m": 25,
         "confirmed": true,
         "source": "openrouter"
       },
@@ -299,7 +398,9 @@
         "alpaca_eval": 55.4,
         "tau2_bench": 65.1,
         "gdpval_aa": 68.9,
-        "aa_lcr": 60.2
+        "aa_lcr": 60.2,
+        "simplebench": 54.4,
+        "frontiermath": 20.7
       }
     },
     {
@@ -311,10 +412,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-08-15",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
         "input_per_1m": 1.25,
-        "output_per_1m": 10.00,
+        "output_per_1m": 10,
         "confirmed": true,
         "source": "openrouter"
       },
@@ -335,7 +441,10 @@
         "alpaca_eval": 50.3,
         "tau2_bench": 58.4,
         "gdpval_aa": 61.7,
-        "aa_lcr": 54.6
+        "aa_lcr": 54.6,
+        "simplebench": 54.9,
+        "frontiermath": 14.1,
+        "aider_polyglot": 83.1
       }
     },
     {
@@ -347,10 +456,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-12-01",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 3.00,
-        "output_per_1m": 15.00,
+        "input_per_1m": 3,
+        "output_per_1m": 15,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -371,7 +485,10 @@
         "alpaca_eval": 53.7,
         "tau2_bench": 63.5,
         "gdpval_aa": 66.3,
-        "aa_lcr": 57.9
+        "aa_lcr": 57.9,
+        "simplebench": 52.6,
+        "frontiermath": 19.7,
+        "aider_polyglot": 79.6
       }
     },
     {
@@ -383,10 +500,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-09-10",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 3.00,
-        "output_per_1m": 15.00,
+        "input_per_1m": 3,
+        "output_per_1m": 15,
         "confirmed": true,
         "source": "openrouter"
       },
@@ -407,7 +529,9 @@
         "alpaca_eval": 51.6,
         "tau2_bench": 59.7,
         "gdpval_aa": 63.1,
-        "aa_lcr": 55.8
+        "aa_lcr": 55.8,
+        "simplebench": 45.2,
+        "frontiermath": 15.2
       }
     },
     {
@@ -419,10 +543,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-09-10",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 1.00,
-        "output_per_1m": 5.00,
+        "input_per_1m": 1,
+        "output_per_1m": 5,
         "confirmed": true,
         "source": "openrouter"
       },
@@ -443,7 +572,9 @@
         "alpaca_eval": 42.1,
         "tau2_bench": 46.3,
         "gdpval_aa": 50.8,
-        "aa_lcr": 44.2
+        "aa_lcr": 44.2,
+        "frontiermath": 5.9,
+        "aider_polyglot": 28
       }
     },
     {
@@ -455,10 +586,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-11-01",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
         "input_per_1m": 1.25,
-        "output_per_1m": 5.00,
+        "output_per_1m": 5,
         "confirmed": true,
         "source": "openrouter"
       },
@@ -479,7 +615,10 @@
         "alpaca_eval": 52.4,
         "tau2_bench": 60.4,
         "gdpval_aa": 63.8,
-        "aa_lcr": 56.3
+        "aa_lcr": 56.3,
+        "simplebench": 48,
+        "frontiermath": 32.4,
+        "aider_polyglot": 88
       }
     },
     {
@@ -491,10 +630,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-11-01",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 0.30,
-        "output_per_1m": 1.20,
+        "input_per_1m": 0.3,
+        "output_per_1m": 1.2,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -515,7 +659,8 @@
         "alpaca_eval": 40.3,
         "tau2_bench": 43.8,
         "gdpval_aa": 48.2,
-        "aa_lcr": 41.7
+        "aa_lcr": 41.7,
+        "frontiermath": 27.2
       }
     },
     {
@@ -527,10 +672,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2026-01-10",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
         "input_per_1m": 1.25,
-        "output_per_1m": 5.00,
+        "output_per_1m": 5,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -551,7 +701,9 @@
         "alpaca_eval": 53.2,
         "tau2_bench": 62.7,
         "gdpval_aa": 65.9,
-        "aa_lcr": 57.1
+        "aa_lcr": 57.1,
+        "simplebench": 43.8,
+        "frontiermath": 31
       }
     },
     {
@@ -563,10 +715,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2026-01-20",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 0.10,
-        "output_per_1m": 0.40,
+        "input_per_1m": 0.1,
+        "output_per_1m": 0.4,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -587,7 +744,9 @@
         "alpaca_eval": 41.8,
         "tau2_bench": 44.9,
         "gdpval_aa": 49.5,
-        "aa_lcr": 42.9
+        "aa_lcr": 42.9,
+        "simplebench": 53.3,
+        "frontiermath": 35.6
       }
     },
     {
@@ -599,10 +758,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-10-05",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 2.00,
-        "output_per_1m": 6.00,
+        "input_per_1m": 2,
+        "output_per_1m": 6,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -635,10 +799,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-12-01",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 0.20,
-        "output_per_1m": 1.00,
+        "input_per_1m": 0.2,
+        "output_per_1m": 1,
         "confirmed": true,
         "source": "openrouter"
       },
@@ -671,7 +840,10 @@
       "is_open_source": true,
       "is_reasoning_model": true,
       "release_date": "2025-06-15",
-      "tags": ["function_calling", "long_context"],
+      "tags": [
+        "function_calling",
+        "long_context"
+      ],
       "pricing": {
         "input_per_1m": 0.55,
         "output_per_1m": 2.19,
@@ -695,7 +867,9 @@
         "alpaca_eval": 44.7,
         "tau2_bench": 48.9,
         "gdpval_aa": 55.6,
-        "aa_lcr": 47.8
+        "aa_lcr": 47.8,
+        "simplebench": 17.1,
+        "aider_polyglot": 56.9
       }
     },
     {
@@ -707,7 +881,12 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-11-15",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
         "input_per_1m": 0.27,
         "output_per_1m": 0.85,
@@ -731,7 +910,8 @@
         "alpaca_eval": 43.5,
         "tau2_bench": 48.5,
         "gdpval_aa": 52.4,
-        "aa_lcr": 46.1
+        "aa_lcr": 46.1,
+        "frontiermath": 0
       }
     },
     {
@@ -743,10 +923,15 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-12-20",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 0.50,
-        "output_per_1m": 2.00,
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -779,10 +964,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-11-25",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 0.50,
-        "output_per_1m": 2.00,
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -803,7 +993,9 @@
         "alpaca_eval": 46.4,
         "tau2_bench": 52.1,
         "gdpval_aa": 55.1,
-        "aa_lcr": 49.3
+        "aa_lcr": 49.3,
+        "simplebench": 37.2,
+        "frontiermath": 2.4
       }
     },
     {
@@ -815,10 +1007,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-10-15",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 0.60,
-        "output_per_1m": 2.40,
+        "input_per_1m": 0.6,
+        "output_per_1m": 2.4,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -839,7 +1036,8 @@
         "alpaca_eval": 45.8,
         "tau2_bench": 50.7,
         "gdpval_aa": 53.8,
-        "aa_lcr": 47.2
+        "aa_lcr": 47.2,
+        "frontiermath": 27.9
       }
     },
     {
@@ -851,17 +1049,22 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-09-20",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 0.50,
-        "output_per_1m": 2.00,
+        "input_per_1m": 0.5,
+        "output_per_1m": 2,
         "confirmed": false,
         "source": "openrouter"
       },
       "benchmarks": {
         "mmlu_pro": 70.9,
         "gpqa_diamond": 57.8,
-        "humanitys_last_exam": 7.0,
+        "humanitys_last_exam": 7,
         "critpt": 54.8,
         "swe_bench": 54.2,
         "livecode_bench": 43.2,
@@ -887,10 +1090,15 @@
       "is_open_source": true,
       "is_reasoning_model": false,
       "release_date": "2025-08-30",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 0.40,
-        "output_per_1m": 1.60,
+        "input_per_1m": 0.4,
+        "output_per_1m": 1.6,
         "confirmed": false,
         "source": "openrouter"
       },
@@ -923,10 +1131,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2025-06-01",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 2.50,
-        "output_per_1m": 10.00,
+        "input_per_1m": 2.5,
+        "output_per_1m": 10,
         "confirmed": true,
         "source": "openrouter"
       },
@@ -947,7 +1160,8 @@
         "alpaca_eval": 47.3,
         "tau2_bench": 53.9,
         "gdpval_aa": 57.2,
-        "aa_lcr": 50.8
+        "aa_lcr": 50.8,
+        "aider_polyglot": 18.2
       }
     },
     {
@@ -959,10 +1173,15 @@
       "is_open_source": false,
       "is_reasoning_model": false,
       "release_date": "2026-02-15",
-      "tags": ["multimodal", "function_calling", "vision", "long_context"],
+      "tags": [
+        "multimodal",
+        "function_calling",
+        "vision",
+        "long_context"
+      ],
       "pricing": {
-        "input_per_1m": 3.00,
-        "output_per_1m": 15.00,
+        "input_per_1m": 3,
+        "output_per_1m": 15,
         "confirmed": true,
         "source": "openrouter"
       },

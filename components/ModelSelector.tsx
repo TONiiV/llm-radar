@@ -17,18 +17,22 @@ import {
 import { ProviderIcon } from "@/components/icons/ProviderIcons"
 import { useLocale } from "@/lib/i18n-context"
 
-const MAX_MODELS = 6
-
-const PRESET_SLUGS: Record<string, string[]> = {
-  frontier: [
-    "claude-opus-46",
-    "gpt-52",
-    "gemini-3-pro",
-    "deepseek-v32",
-    "llama-4-maverick",
-  ],
-  value: ["deepseek-v32", "llama-4-maverick", "gemini-3-pro"],
-  opensource: ["deepseek-v32", "llama-4-maverick"],
+/**
+ * Pick top N models by compositeScore, one per provider.
+ * Models are sorted by score descending; the first model seen
+ * from each provider wins.
+ */
+function topPerProvider(models: ModelWithScores[], n: number): string[] {
+  const seen = new Set<string>()
+  const result: string[] = []
+  const sorted = [...models].sort((a, b) => b.compositeScore - a.compositeScore)
+  for (const m of sorted) {
+    if (seen.has(m.provider)) continue
+    seen.add(m.provider)
+    result.push(m.slug)
+    if (result.length >= n) break
+  }
+  return result
 }
 
 type FilterKey = "all" | "opensource" | "multimodal" | "vision" | "toolUse" | "reasoning" | "longContext" | `provider:${string}`
@@ -88,10 +92,23 @@ export default function ModelSelector({
     return map
   }, [providers])
 
+  const frontierSlugs = useMemo(() => topPerProvider(models, 5), [models])
+  const valueSlugs = useMemo(
+    () => topPerProvider(models.filter((m) => {
+      const avg = m.pricing ? (m.pricing.input_per_1m + m.pricing.output_per_1m) / 2 : Infinity
+      return avg < 10 // affordable models under $10 avg per 1M tokens
+    }), 3),
+    [models]
+  )
+  const openSourceSlugs = useMemo(
+    () => topPerProvider(models.filter((m) => m.is_open_source), 3),
+    [models]
+  )
+
   const presets: Record<string, { label: string; slugs: string[] }> = {
-    frontier: { label: t("selector.presetFrontier"), slugs: PRESET_SLUGS.frontier },
-    value: { label: t("selector.presetValue"), slugs: PRESET_SLUGS.value },
-    opensource: { label: t("selector.presetOpenSource"), slugs: PRESET_SLUGS.opensource },
+    frontier: { label: t("selector.presetFrontier"), slugs: frontierSlugs },
+    value: { label: t("selector.presetValue"), slugs: valueSlugs },
+    opensource: { label: t("selector.presetOpenSource"), slugs: openSourceSlugs },
   }
 
   // Filter by tab, then by search
@@ -120,7 +137,7 @@ export default function ModelSelector({
   const toggle = (slug: string) => {
     if (selectedSlugs.includes(slug)) {
       onSelectionChange(selectedSlugs.filter((s) => s !== slug))
-    } else if (selectedSlugs.length < MAX_MODELS) {
+    } else {
       onSelectionChange([...selectedSlugs, slug])
     }
   }
@@ -128,7 +145,7 @@ export default function ModelSelector({
   const applyPreset = (key: string) => {
     const preset = presets[key]
     if (preset) {
-      onSelectionChange(preset.slugs.slice(0, MAX_MODELS))
+      onSelectionChange(preset.slugs)
       setActiveFilter("all")
     }
   }
@@ -137,18 +154,8 @@ export default function ModelSelector({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="font-heading italic font-semibold text-sm text-txt-primary">
-          {t("selector.title")} <span className="text-txt-muted">({selectedSlugs.length}/{MAX_MODELS})</span>
+          {t("selector.title")}
         </h3>
-        {selectedSlugs.length > 0 && (
-          <button
-            onClick={() => onSelectionChange([])}
-            className="flex items-center gap-1 font-mono text-[11px] text-txt-muted hover:text-score-low transition-colors"
-            title={t("selector.unselectAll")}
-          >
-            <ClearIcon size={12} />
-            {t("selector.unselectAll")}
-          </button>
-        )}
       </div>
 
       {/* Preset buttons */}
@@ -254,8 +261,6 @@ export default function ModelSelector({
               {providerModels.map((m) => {
                 const isSelected = selectedSlugs.includes(m.slug)
                 const selectedIndex = selectedSlugs.indexOf(m.slug)
-                const isDisabled = !isSelected && selectedSlugs.length >= MAX_MODELS
-
                 return (
                   <label
                     key={m.slug}
@@ -263,15 +268,13 @@ export default function ModelSelector({
                       isSelected
                         ? "bg-card"
                         : "hover:bg-card"
-                    } ${isDisabled ? "opacity-30 cursor-not-allowed" : ""}`}
+                    }`}
                     style={isSelected && selectedIndex >= 0 ? { borderLeft: `2px solid ${getModelColor(selectedIndex)}`, paddingLeft: '6px' } : undefined}
-                    title={isDisabled ? t("selector.maxModels").replace("{n}", String(MAX_MODELS)) : ""}
                   >
                     <input
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => toggle(m.slug)}
-                      disabled={isDisabled}
                       className="border-border bg-transparent accent-accent-blue"
                     />
                     {isSelected && (

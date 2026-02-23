@@ -1,6 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import type { ModelWithScores } from "@/lib/types"
 
 export type CompareTab = "radar" | "scatter" | "ranking"
 
@@ -10,17 +11,25 @@ interface UrlParamsState {
   drilldownCategory: string | null
 }
 
-const DEFAULT_SELECTED = [
-  "claude-opus-46",
-  "gpt-52",
-  "gemini-3-pro",
-  "deepseek-v32",
-  "llama-4-maverick",
-]
+/**
+ * Pick top N models by compositeScore, one per provider.
+ */
+export function topPerProvider(models: ModelWithScores[], n: number): string[] {
+  const seen = new Set<string>()
+  const result: string[] = []
+  const sorted = [...models].sort((a, b) => b.compositeScore - a.compositeScore)
+  for (const m of sorted) {
+    if (seen.has(m.provider)) continue
+    seen.add(m.provider)
+    result.push(m.slug)
+    if (result.length >= n) break
+  }
+  return result
+}
 
-function parseParams(): UrlParamsState {
+function parseParams(defaultSlugs: string[]): UrlParamsState {
   if (typeof window === "undefined") {
-    return { selectedSlugs: DEFAULT_SELECTED, activeTab: "radar", drilldownCategory: null }
+    return { selectedSlugs: defaultSlugs, activeTab: "radar", drilldownCategory: null }
   }
 
   const params = new URLSearchParams(window.location.search)
@@ -29,21 +38,21 @@ function parseParams(): UrlParamsState {
   const drill = params.get("drill")
 
   return {
-    selectedSlugs: ids ? ids.split(",").filter(Boolean) : DEFAULT_SELECTED,
+    selectedSlugs: ids ? ids.split(",").filter(Boolean) : defaultSlugs,
     activeTab: tab && ["radar", "scatter", "ranking"].includes(tab) ? tab : "radar",
     drilldownCategory: drill || null,
   }
 }
 
-function updateUrl(state: UrlParamsState) {
+function updateUrl(state: UrlParamsState, defaultSlugs: string[]) {
   if (typeof window === "undefined") return
 
   const params = new URLSearchParams()
 
   // Only set ids if different from default
   const isDefault =
-    state.selectedSlugs.length === DEFAULT_SELECTED.length &&
-    state.selectedSlugs.every((s) => DEFAULT_SELECTED.includes(s))
+    state.selectedSlugs.length === defaultSlugs.length &&
+    state.selectedSlugs.every((s) => defaultSlugs.includes(s))
 
   if (!isDefault) {
     params.set("ids", state.selectedSlugs.join(","))
@@ -62,13 +71,14 @@ function updateUrl(state: UrlParamsState) {
   window.history.replaceState(null, "", url)
 }
 
-export function useUrlParams() {
-  const [state, setState] = useState<UrlParamsState>(parseParams)
+export function useUrlParams(models: ModelWithScores[]) {
+  const defaultSlugs = useMemo(() => topPerProvider(models, 5), [models])
+  const [state, setState] = useState<UrlParamsState>(() => parseParams(defaultSlugs))
 
   // Sync to URL on state change
   useEffect(() => {
-    updateUrl(state)
-  }, [state])
+    updateUrl(state, defaultSlugs)
+  }, [state, defaultSlugs])
 
   const setSelectedSlugs = useCallback((slugs: string[]) => {
     setState((prev) => ({ ...prev, selectedSlugs: slugs }))

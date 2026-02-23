@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const title = `${model.name}`
-  const description = `${model.name} capability scores and benchmark results. Composite score: ${Math.round(model.compositeScore)}/100. Input: $${model.pricing.input_per_1m}/1M, Output: $${model.pricing.output_per_1m}/1M tokens.`
+  const description = `${model.name} capability scores and benchmark results. Radar Score: ${Math.round(model.radarIdx)}/100. Input: $${model.pricing.input_per_1m}/1M, Output: $${model.pricing.output_per_1m}/1M tokens.`
 
   return {
     title,

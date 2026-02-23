@@ -204,10 +204,12 @@ export async function fetchModelWithScores(models?: Model[]): Promise<ModelWithS
 
     const provider = providers.find((p) => p.slug === model.provider)
 
+    const score = compositeScore(catScores)
     return {
       ...model,
       categoryScores: catScores,
-      compositeScore: compositeScore(catScores),
+      compositeScore: score,
+      radarIdx: score,
       providerColor: provider?.color ?? "#888888",
     }
   })
@@ -290,10 +292,12 @@ export function getModelWithScores(models?: Model[]): ModelWithScores[] {
 
     const provider = seed.providers.find((p) => p.slug === model.provider)
 
+    const score = compositeScore(catScores)
     return {
       ...model,
       categoryScores: catScores,
-      compositeScore: compositeScore(catScores),
+      compositeScore: score,
+      radarIdx: score,
       providerColor: provider?.color ?? "#888888",
     }
   })
