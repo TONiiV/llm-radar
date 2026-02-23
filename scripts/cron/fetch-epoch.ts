@@ -34,7 +34,6 @@ const MODEL_NAME_MAP: Record<string, string> = {
   'GPT-5.2':                            'gpt-52',
   'GPT-5':                              'gpt-5',
   'GPT-5.1':                            'gpt-51',
-  'GPT-5 Pro':                          'gpt-52-pro',
   'GPT-4.1':                            'gpt-41',
   'GPT-4.1 mini':                       'gpt-41-mini',
   'GPT-4o (Nov 2024)':                  'gpt-4o',
