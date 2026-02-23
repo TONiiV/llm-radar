@@ -103,6 +103,30 @@ npm run lint         # 代码检查
 4. 当多个数据源提供同一 benchmark 时，必须用 `SOURCE_PRIORITY` 显式声明优先级
 5. DB schema 变更后，必须检查所有写入该表的脚本是否兼容
 
+## Bug 复盘：AA 分数换算 + Supabase 分页限制 (2026-02-23)
+
+**根因**（三个 Bug 叠加导致所有模型缺失 AA 数据）：
+
+1. **AA 分数是小数（0-1），但代码当作百分比（0-100）存入**
+   - AA 返回 `mmlu_pro: 0.889`（即 88.9%），代码注释写 "already percentages" 直接存 0.889
+   - `bmConfig.scale = 100` 定义了但从未使用
+   - merge 脚本检测到与现有分数相差 >30pt → 全部 flagged（拒绝）
+
+2. **AA 模型 slug 不匹配**
+   - AA 对 Claude 使用不一致命名：opus = `claude-opus-4-5`，但 sonnet = `claude-4-5-sonnet`
+   - 我们映射写的是 `claude-sonnet-4-5` → 完全匹配不上
+   - 多个模型使用不同命名（如 `nvidia-nemotron-3-nano-30b-a3b` 而非 `nvidia-nemotron-3`）
+
+3. **Supabase 默认限制 1000 行**
+   - `benchmark_scores` 查询不带分页 → 超过 1000 行被截断
+   - 部分模型数据丢失
+
+**防范规则**：
+1. **外部 API 分数范围**：抓取前用 Playwright 验证实际返回值的范围（0-1 vs 0-100），在代码注释中记录
+2. **slug 映射验证**：每次添加新数据源时，用实际 API 数据验证 slug 格式，不要猜测
+3. **Supabase 查询必须分页**：任何可能超过 1000 行的查询都用 `.range()` 分页
+4. **CI 日志要记录 unmapped 数量**：方便发现映射覆盖问题
+
 ## 复盘学习规范
 
 Bug 修复后执行复盘流程：
