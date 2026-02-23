@@ -12,13 +12,13 @@ LLM 能力雷达 + 价格性价比分析工具。对比主流大语言模型在�
 
 ## Benchmarks Tracked
 
-| 维度 | Benchmarks |
-|------|-----------|
-| 推理 Reasoning | MMLU-Pro, GPQA Diamond, Humanity's Last Exam, CritPt |
-| 代码 Coding | SWE-Bench Verified, LiveCodeBench, Terminal-Bench Hard, SciCode |
-| 数学 Math | AIME 2025, MATH, GSM8K |
-| 对话 Chat | LMArena ELO, IFBench, AlpacaEval |
-| Agent | t2-Bench, GDPval-AA, AA-LCR |
+| 维度           | Benchmarks                                                      |
+| -------------- | --------------------------------------------------------------- |
+| 推理 Reasoning | MMLU-Pro, GPQA Diamond, Humanity's Last Exam, CritPt            |
+| 代码 Coding    | SWE-Bench Verified, LiveCodeBench, Terminal-Bench Hard, SciCode |
+| 数学 Math      | AIME 2025, MATH, GSM8K                                          |
+| 对话 Chat      | LMArena ELO, IFBench, AlpacaEval                                |
+| Agent          | t2-Bench, GDPval-AA, AA-LCR                                     |
 
 ## Tech Stack
 
@@ -55,16 +55,6 @@ Open [http://localhost:3000](http://localhost:3000).
 ├── data/                # 种子数据 JSON
 └── scripts/cron/        # 数据自动更新脚本
 ```
-
-## Development Roadmap
-
-- [x] Phase 1: 纯前端 MVP — JSON 数据 + 雷达图 + 散点图
-- [ ] Phase 2: L2 下钻 + 排行榜 + URL 同步
-- [ ] Phase 3: Supabase 集成 + 24 模型
-- [ ] Phase 4: 部署 + Admin 面板
-- [ ] Phase 5: 价格数据自动化
-- [ ] Phase 6: Benchmark 数据自动化
-- [ ] Phase 7: 迭代增强
 
 ## License
 
