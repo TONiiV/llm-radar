@@ -45,9 +45,11 @@ export async function fetchModels(): Promise<Model[]> {
       .order("name")
     if (modelsErr || !models) throw modelsErr
 
+    // Order so official source comes last and overwrites others in the grouping loop
     const { data: scores, error: scoresErr } = await supabase
       .from("benchmark_scores")
-      .select("model_id, benchmark_key, raw_score")
+      .select("model_id, benchmark_key, raw_score, source")
+      .order("source", { ascending: true })
     if (scoresErr || !scores) throw scoresErr
 
     const { data: prices, error: pricesErr } = await supabase
@@ -63,13 +65,20 @@ export async function fetchModels(): Promise<Model[]> {
     const idToSlug = new Map((modelIds ?? []).map((m) => [m.id, m.slug]))
     const slugToId = new Map((modelIds ?? []).map((m) => [m.slug, m.id]))
 
-    // Group scores by model_id
+    // Group scores by model_id — prefer official > artificial_analysis > epoch_ai > others
+    const SOURCE_PRIORITY: Record<string, number> = { official: 4, artificial_analysis: 3, epoch_ai: 2, lmarena: 1 }
     const scoresByModel = new Map<string, Record<string, number>>()
+    const sourceByModel = new Map<string, Record<string, number>>()
     for (const s of scores) {
       const slug = idToSlug.get(s.model_id)
       if (!slug) continue
-      if (!scoresByModel.has(slug)) scoresByModel.set(slug, {})
-      scoresByModel.get(slug)![s.benchmark_key] = Number(s.raw_score)
+      if (!scoresByModel.has(slug)) { scoresByModel.set(slug, {}); sourceByModel.set(slug, {}) }
+      const priority = SOURCE_PRIORITY[(s as { source?: string }).source ?? ''] ?? 0
+      const existing = sourceByModel.get(slug)![s.benchmark_key] ?? -1
+      if (priority >= existing) {
+        scoresByModel.get(slug)![s.benchmark_key] = Number(s.raw_score)
+        sourceByModel.get(slug)![s.benchmark_key] = priority
+      }
     }
 
     // Get latest price per model
