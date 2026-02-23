@@ -123,11 +123,12 @@ async function main() {
     }
 
     // Upsert into benchmark_scores
+    // Note: staging_benchmarks uses 'source_key', benchmark_scores uses 'source'
     const { error } = await supabase.from('benchmark_scores').upsert({
       model_id: modelId,
       benchmark_key: sb.benchmark_key,
       raw_score: sb.raw_score,
-      source_key: sb.source_key,
+      source: sb.source_key,
       recorded_at: new Date().toISOString(),
     }, {
       onConflict: 'model_id,benchmark_key',
