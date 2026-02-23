@@ -6,15 +6,17 @@ import { CATEGORY_ICONS } from "@/components/icons/CategoryIcons"
 import { useLocale } from "@/lib/i18n-context"
 import { estimateTypicalQueryCost, formatPrice } from "@/lib/pricing"
 import Navbar from "@/components/Navbar"
-import type { ModelWithScores, Categories, Provider } from "@/lib/types"
+import SourceIcon from "@/components/SourceIcon"
+import type { ModelWithScores, Categories, Provider, Sources } from "@/lib/types"
 
 interface Props {
   model: ModelWithScores
   categories: Categories
   providers: Provider[]
+  sources: Sources
 }
 
-export default function ModelDetailClient({ model, categories, providers }: Props) {
+export default function ModelDetailClient({ model, categories, providers, sources }: Props) {
   const { t, getCategoryLabel } = useLocale()
 
   const provider = providers.find((p) => p.slug === model.provider)
@@ -126,7 +128,10 @@ export default function ModelDetailClient({ model, categories, providers }: Prop
                         const hasData = raw != null
                         return (
                           <div key={bm.key} className="flex items-center gap-3 text-sm">
-                            <div className="w-40 text-txt-secondary font-body truncate" title={bm.label}>{bm.label}</div>
+                            <div className="w-40 text-txt-secondary font-body flex items-center gap-0.5">
+                              <span className="truncate" title={bm.label}>{bm.label}</span>
+                              {bm.source && <SourceIcon sourceKey={bm.source} sources={sources} size={12} />}
+                            </div>
                             <div className="flex-1">
                               {hasData ? (
                                 <div className="flex items-center gap-2">

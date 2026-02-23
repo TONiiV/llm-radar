@@ -4,9 +4,9 @@ interface IconProps {
   style?: React.CSSProperties
 }
 
-export function ReasoningIcon({ className = "", size = 20 }: IconProps) {
+export function ReasoningIcon({ className = "", size = 20, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
       <path
         d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"
         stroke="currentColor"
@@ -22,26 +22,34 @@ export function ReasoningIcon({ className = "", size = 20 }: IconProps) {
   )
 }
 
-export function CodingIcon({ className = "", size = 20 }: IconProps) {
+export function CodingIcon({ className = "", size = 20, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
       <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M14.5 4l-5 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   )
 }
 
-export function MathIcon({ className = "", size = 20 }: IconProps) {
+export function MathIcon({ className = "", size = 20, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M4.5 6h3l-3 12h3M12 6v12M9.5 12h5M17 6l3.5 12M17 12h3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+      {/* f — italic hook with crossbar */}
+      <path d="M5.5 20l2.5-13C8.4 4.8 9.2 3.5 10.5 3.5c1 0 1.5.7 1.5.7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4.5 12h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      {/* ( */}
+      <path d="M13 6c-1 2.5-1 9.5 0 12" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+      {/* x — two crossing strokes */}
+      <path d="M15.5 9l4 6M19.5 9l-4 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      {/* ) */}
+      <path d="M22 6c1 2.5 1 9.5 0 12" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
     </svg>
   )
 }
 
-export function ChatIcon({ className = "", size = 20 }: IconProps) {
+export function ChatIcon({ className = "", size = 20, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
       <path
         d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"
         stroke="currentColor"
@@ -56,9 +64,9 @@ export function ChatIcon({ className = "", size = 20 }: IconProps) {
   )
 }
 
-export function AgentIcon({ className = "", size = 20 }: IconProps) {
+export function AgentIcon({ className = "", size = 20, style }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
       <rect x="5" y="4" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
       <circle cx="9.5" cy="10" r="1.5" stroke="currentColor" strokeWidth="1.2" />
       <circle cx="14.5" cy="10" r="1.5" stroke="currentColor" strokeWidth="1.2" />

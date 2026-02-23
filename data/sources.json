@@ -18,5 +18,9 @@
   "swe_bench": {
     "name": "SWE-Bench",
     "url": "https://www.swebench.com"
+  },
+  "epoch_ai": {
+    "name": "Epoch AI",
+    "url": "https://epoch.ai/data/llm-benchmark-data"
   }
 }

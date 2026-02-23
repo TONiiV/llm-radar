@@ -92,10 +92,10 @@ function getCoverageLevel(coverage: number): "solid" | "warn" | "insufficient" {
 // Constants
 // ---------------------------------------------------------------------------
 
-const BAR_HEIGHT = 18
-const BAR_GAP = 4
-const BENCHMARK_GAP = 16
-const LEFT_LABEL_WIDTH = 120
+const BAR_HEIGHT = 16
+const BAR_GAP = 3
+const BENCHMARK_GAP = 10
+const LEFT_LABEL_WIDTH = 140
 const RIGHT_VALUE_WIDTH = 54
 const CHART_PADDING_TOP = 8
 const CHART_PADDING_BOTTOM = 24 // room for x-axis ticks

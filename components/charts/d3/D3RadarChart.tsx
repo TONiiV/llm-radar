@@ -17,25 +17,31 @@ import ChartLegend from "./ChartLegend"
 import { useLocale } from "@/lib/i18n-context"
 
 // Category icon SVG paths (inline, no foreignObject)
-const CATEGORY_ICON_PATHS: Record<string, { path: string; viewBox: string }> = {
+const CATEGORY_ICON_PATHS: Record<string, { paths: string[]; viewBox: string }> = {
   reasoning: {
-    path: "M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z",
+    paths: ["M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"],
     viewBox: "0 0 24 24",
   },
   coding: {
-    path: "M16 18l6-6-6-6M8 6l-6 6 6 6",
+    paths: ["M16 18l6-6-6-6M8 6l-6 6 6 6"],
     viewBox: "0 0 24 24",
   },
   math: {
-    path: "M4.5 6h3l-3 12h3M12 6v12M9.5 12h5M17 6l3.5 12M17 12h3.5",
+    paths: [
+      "M5.5 20l2.5-13C8.4 4.8 9.2 3.5 10.5 3.5c1 0 1.5.7 1.5.7",
+      "M4.5 12h6",
+      "M13 6c-1 2.5-1 9.5 0 12",
+      "M15.5 9l4 6M19.5 9l-4 6",
+      "M22 6c1 2.5 1 9.5 0 12",
+    ],
     viewBox: "0 0 24 24",
   },
   chat: {
-    path: "M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z",
+    paths: ["M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"],
     viewBox: "0 0 24 24",
   },
   agentic: {
-    path: "M5 4h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2zM9 16v2a2 2 0 002 2h2a2 2 0 002-2v-2",
+    paths: ["M5 4h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2zM9 16v2a2 2 0 002 2h2a2 2 0 002-2v-2"],
     viewBox: "0 0 24 24",
   },
 }
@@ -351,16 +357,19 @@ export default function D3RadarChart({
                 <g
                   transform={`translate(${labelPos.x - iconSize / 2}, ${labelPos.y + iconOffset - iconSize / 2})`}
                 >
-                  <path
-                    d={icon.path}
-                    fill="none"
-                    stroke={CATEGORY_COLORS[key] || "#94a3b8"}
-                    strokeWidth={1.5}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    transform={`scale(${iconSize / 24})`}
-                    opacity={0.7}
-                  />
+                  {icon.paths.map((d, pi) => (
+                    <path
+                      key={pi}
+                      d={d}
+                      fill="none"
+                      stroke={CATEGORY_COLORS[key] || "#94a3b8"}
+                      strokeWidth={1.5}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      transform={`scale(${iconSize / 24})`}
+                      opacity={0.7}
+                    />
+                  ))}
                 </g>
               )}
               {/* Category label */}
