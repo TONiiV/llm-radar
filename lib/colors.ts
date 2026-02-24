@@ -24,6 +24,7 @@ export const CATEGORY_COLORS: Record<string, string> = {
   math: "#f59e0b",
   chat: "#8b5cf6",
   agentic: "#f43f5e",
+  speed: "#06b6d4",
 }
 
 export function getCategoryColor(key: string): string {

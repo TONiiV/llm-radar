@@ -4,7 +4,7 @@ const translations = {
   zh: {
     meta: {
       title: "LLMRadar — LLM 能力雷达",
-      description: "LLM 模型能力对比与价格分析工具：五维雷达图 + 价格性价比散点图",
+      description: "LLM 模型能力对比与价格分析工具：六维雷达图 + 价格性价比散点图",
     },
     nav: {
       compare: "对比",
@@ -12,7 +12,7 @@ const translations = {
     },
     home: {
       heroDesc:
-        "LLM 模型能力对比与价格分析工具。五维雷达图展示推理、代码、数学、对话、Agent 能力，散点图分析价格性价比。",
+        "LLM 模型能力对比与价格分析工具。六维雷达图展示推理、代码、数学、对话、Agent、速度能力，散点图分析价格性价比。",
       cta: "开始对比",
       viewCompare: "查看详细对比",
       overview: "模型总览",
@@ -30,7 +30,7 @@ const translations = {
       tabRadar: "能力雷达",
       tabScatter: "价格性价比",
       tabRanking: "排行榜",
-      radarTitle: "五维能力雷达图",
+      radarTitle: "六维能力雷达图",
       radarDesc: "点击轴标签可查看该维度的详细 Benchmark 分数",
       scatterTitle: "价格性价比散点图",
       scatterDesc:
@@ -110,13 +110,14 @@ const translations = {
       math: "数学",
       chat: "对话",
       agentic: "Agent",
+      speed: "速度",
     },
   },
   en: {
     meta: {
       title: "LLMRadar — LLM Capability Radar",
       description:
-        "LLM model comparison & pricing analysis: 5-axis radar chart + price-performance scatter plot",
+        "LLM model comparison & pricing analysis: 6-axis radar chart + price-performance scatter plot",
     },
     nav: {
       compare: "Compare",
@@ -124,7 +125,7 @@ const translations = {
     },
     home: {
       heroDesc:
-        "LLM model comparison and pricing analysis tool. Five-axis radar chart for Reasoning, Coding, Math, Chat, and Agent capabilities, plus price-performance scatter plot.",
+        "LLM model comparison and pricing analysis tool. Six-axis radar chart for Reasoning, Coding, Math, Chat, Agent, and Speed capabilities, plus price-performance scatter plot.",
       cta: "Start Comparing",
       viewCompare: "View Detailed Comparison",
       overview: "Model Overview",
@@ -142,7 +143,7 @@ const translations = {
       tabRadar: "Capability Radar",
       tabScatter: "Price-Performance",
       tabRanking: "Rankings",
-      radarTitle: "Five-Axis Capability Radar",
+      radarTitle: "Six-Axis Capability Radar",
       radarDesc: "Click axis labels to see detailed benchmark scores",
       scatterTitle: "Price-Performance Scatter",
       scatterDesc:
@@ -222,6 +223,7 @@ const translations = {
       math: "Math",
       chat: "Chat",
       agentic: "Agent",
+      speed: "Speed",
     },
   },
 } as const

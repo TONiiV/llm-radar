@@ -13,7 +13,7 @@ import type {
 } from "./types"
 
 // JSON fallback data
-const seed = seedData as SeedData
+const seed = seedData as unknown as SeedData
 const categories = categoriesData as Categories
 const sources = sourcesData as Sources
 
@@ -74,7 +74,7 @@ export async function fetchModels(): Promise<Model[]> {
     const slugToId = new Map((modelIds ?? []).map((m) => [m.slug, m.id]))
 
     // Group scores by model_id — prefer artificial_analysis > epoch_ai > official > others
-    const SOURCE_PRIORITY: Record<string, number> = { artificial_analysis: 4, epoch_ai: 3, official: 2, lmarena: 1 }
+    const SOURCE_PRIORITY: Record<string, number> = { artificial_analysis: 4, openrouter: 3, epoch_ai: 3, official: 2, lmarena: 1 }
     const scoresByModel = new Map<string, Record<string, number>>()
     const sourceByModel = new Map<string, Record<string, number>>()
     for (const s of scores) {
@@ -136,7 +136,7 @@ export async function fetchCategories(): Promise<Categories> {
   try {
     const { data, error } = await supabase
       .from("benchmark_definitions")
-      .select("key, label, category, unit, higher_is_better, max_possible_score, weight, display_order, source")
+      .select("key, label, category, unit, higher_is_better, max_possible_score, weight, display_order, source, norm_method")
       .order("display_order")
     if (error || !data || data.length === 0) throw error
 
@@ -156,6 +156,7 @@ export async function fetchCategories(): Promise<Categories> {
         higher_is_better: row.higher_is_better ?? true,
         max_score: row.max_possible_score ? Number(row.max_possible_score) : null,
         source: row.source ?? undefined,
+        ...(row.norm_method ? { normMethod: row.norm_method } : {}),
       })
     }
     return cats

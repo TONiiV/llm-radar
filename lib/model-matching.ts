@@ -23,6 +23,7 @@ const VARIANT_SUFFIXES = [
 const PROVIDER_PREFIXES = [
   'anthropic/', 'openai/', 'google/', 'meta-llama/', 'mistralai/',
   'deepseek/', 'x-ai/', 'qwen/', 'nvidia/', 'cohere/',
+  'moonshot/', 'zhipu/', 'minimax/',
 ]
 
 /**
@@ -55,6 +56,10 @@ export function normalizeName(name: string): string {
       break
     }
   }
+
+  // Remove date suffixes: -20251101, -2025-12-11
+  s = s.replace(/-\d{8,}$/g, '')
+  s = s.replace(/-\d{4}-\d{2}-\d{2}$/g, '')
 
   // Unify version separators: dots and hyphens between digits → nothing
   // "4.6" → "46", "4-6" → "46", "3.5" → "35"
@@ -152,13 +157,15 @@ export async function buildMatchContext(
   // Load source-specific mappings
   const dbMappings = new Map<string, string>()
   try {
+    // Load mappings with model slug via join
     const { data, error } = await supabase
       .from('model_name_mappings')
-      .select('source_name, model_slug')
+      .select('external_name, model_id, models!inner(slug)')
       .eq('source_key', sourceKey)
     if (!error && data) {
       for (const r of data) {
-        dbMappings.set(r.source_name, r.model_slug)
+        const slug = (r as any).models?.slug
+        if (slug) dbMappings.set(r.external_name, slug)
       }
     }
   } catch { /* ignore */ }
@@ -192,10 +199,11 @@ export async function buildPricingMatchContext(
   try {
     const { data, error } = await supabase
       .from('model_name_mappings')
-      .select('source_name, model_slug')
+      .select('external_name, model_id, models!inner(slug)')
     if (!error && data) {
       for (const r of data) {
-        dbMappings.set(r.source_name, r.model_slug)
+        const slug = (r as any).models?.slug
+        if (slug) dbMappings.set(r.external_name, slug)
       }
     }
   } catch { /* ignore */ }

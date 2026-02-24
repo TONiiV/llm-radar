@@ -198,10 +198,26 @@ export function ClearIcon({ className = "", size = 20 }: IconProps) {
   )
 }
 
+export function SpeedIcon({ className = "", size = 20, style }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+      {/* Gauge arc */}
+      <path d="M4.5 16a8 8 0 0115 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      {/* Tick marks */}
+      <path d="M7 8.5l0.5 1M12 6.5v1M17 8.5l-0.5 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      {/* Needle */}
+      <path d="M12 16l4-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      {/* Center dot */}
+      <circle cx="12" cy="16" r="1.5" fill="currentColor" />
+    </svg>
+  )
+}
+
 export const CATEGORY_ICONS: Record<string, React.FC<IconProps>> = {
   reasoning: ReasoningIcon,
   coding: CodingIcon,
   math: MathIcon,
   chat: ChatIcon,
   agentic: AgentIcon,
+  speed: SpeedIcon,
 }

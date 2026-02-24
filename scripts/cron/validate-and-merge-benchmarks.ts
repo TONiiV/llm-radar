@@ -21,11 +21,15 @@ async function main() {
   }
   const modelIdBySlug = new Map(models.map(m => [m.slug, m.id]))
 
-  // Load benchmark definitions for validation
+  // Load benchmark definitions for validation (including range info)
   const { data: benchDefs } = await supabase
     .from('benchmark_definitions')
-    .select('key')
+    .select('key, max_possible_score, higher_is_better')
   const validBenchmarks = new Set((benchDefs ?? []).map(b => b.key))
+  const benchDefMap = new Map((benchDefs ?? []).map(b => [b.key, {
+    maxScore: b.max_possible_score != null ? Number(b.max_possible_score) : null,
+    higherIsBetter: b.higher_is_better ?? true,
+  }]))
 
   // Get ALL pending staging benchmarks (paginate past Supabase 1000-row default limit)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,8 +62,12 @@ async function main() {
   // Group by model_name + benchmark_key to handle multiple sources
   // Prefer: artificial_analysis > epoch_ai > lmarena
   const SOURCE_PRIORITY: Record<string, number> = {
-    'artificial_analysis': 3,
-    'epoch_ai': 2,
+    'artificial_analysis': 5,
+    'swe_bench': 4,
+    'bfcl': 4,
+    'openrouter': 3,
+    'epoch_ai': 3,
+    'official': 2,
     'lmarena': 1,
   }
 
@@ -100,15 +108,31 @@ async function main() {
       continue
     }
 
-    // Validate score range (0-100)
-    if (sb.raw_score < 0 || sb.raw_score > 100) {
-      flagged++
-      await supabase.from('staging_benchmarks').update({
-        status: 'flagged',
-        validation_notes: `Score ${sb.raw_score} out of valid range [0, 100]`,
-        processed_at: new Date().toISOString(),
-      }).eq('id', sb.id)
-      continue
+    // Validate score range — adaptive per benchmark definition
+    const def = benchDefMap.get(sb.benchmark_key)
+    const maxScore = def?.maxScore ?? null
+    if (maxScore != null) {
+      // Bounded benchmark (e.g. 0-100%): validate within range
+      if (sb.raw_score < 0 || sb.raw_score > maxScore) {
+        flagged++
+        await supabase.from('staging_benchmarks').update({
+          status: 'flagged',
+          validation_notes: `Score ${sb.raw_score} out of valid range [0, ${maxScore}]`,
+          processed_at: new Date().toISOString(),
+        }).eq('id', sb.id)
+        continue
+      }
+    } else {
+      // Unbounded benchmark (speed metrics, ELO): only reject negative scores
+      if (sb.raw_score < 0) {
+        flagged++
+        await supabase.from('staging_benchmarks').update({
+          status: 'flagged',
+          validation_notes: `Score ${sb.raw_score} is negative`,
+          processed_at: new Date().toISOString(),
+        }).eq('id', sb.id)
+        continue
+      }
     }
 
     // Check existing score for large deviation
@@ -121,15 +145,31 @@ async function main() {
       .single()
 
     if (existingScore) {
-      const change = Math.abs(sb.raw_score - existingScore.raw_score)
-      if (change > MAX_SCORE_CHANGE) {
-        flagged++
-        await supabase.from('staging_benchmarks').update({
-          status: 'flagged',
-          validation_notes: `Score change ${existingScore.raw_score} → ${sb.raw_score} exceeds ${MAX_SCORE_CHANGE}pt threshold`,
-          processed_at: new Date().toISOString(),
-        }).eq('id', sb.id)
-        continue
+      const oldScore = Number(existingScore.raw_score)
+      const change = Math.abs(sb.raw_score - oldScore)
+      if (maxScore != null) {
+        // Bounded benchmark: absolute threshold
+        if (change > MAX_SCORE_CHANGE) {
+          flagged++
+          await supabase.from('staging_benchmarks').update({
+            status: 'flagged',
+            validation_notes: `Score change ${oldScore} → ${sb.raw_score} exceeds ${MAX_SCORE_CHANGE}pt threshold`,
+            processed_at: new Date().toISOString(),
+          }).eq('id', sb.id)
+          continue
+        }
+      } else {
+        // Unbounded benchmark (speed/ELO): percentage threshold (50%)
+        const pctChange = oldScore > 0 ? change / oldScore : 0
+        if (pctChange > 0.5) {
+          flagged++
+          await supabase.from('staging_benchmarks').update({
+            status: 'flagged',
+            validation_notes: `Score change ${oldScore} → ${sb.raw_score} exceeds 50% threshold (${(pctChange * 100).toFixed(1)}%)`,
+            processed_at: new Date().toISOString(),
+          }).eq('id', sb.id)
+          continue
+        }
       }
     }
 

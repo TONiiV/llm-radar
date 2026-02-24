@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     default: "LLMRadar — LLM 能力雷达",
     template: "%s | LLMRadar",
   },
-  description: "LLM 模型能力对比与价格分析工具：五维雷达图 + 价格性价比散点图",
+  description: "LLM 模型能力对比与价格分析工具：六维雷达图 + 价格性价比散点图",
   metadataBase: new URL("https://llmradar.dev"),
   openGraph: {
     type: "website",
     siteName: "LLMRadar",
     title: "LLMRadar — LLM Capability Radar",
-    description: "LLM model comparison & pricing analysis: 5-axis radar chart + price-performance scatter plot",
+    description: "LLM model comparison & pricing analysis: 6-axis radar chart + price-performance scatter plot",
   },
 }
 

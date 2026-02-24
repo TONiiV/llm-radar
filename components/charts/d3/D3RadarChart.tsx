@@ -44,6 +44,10 @@ const CATEGORY_ICON_PATHS: Record<string, { paths: string[]; viewBox: string }> 
     paths: ["M5 4h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2zM9 16v2a2 2 0 002 2h2a2 2 0 002-2v-2"],
     viewBox: "0 0 24 24",
   },
+  speed: {
+    paths: ["M4.5 16a8 8 0 0115 0", "M12 16l4-6"],
+    viewBox: "0 0 24 24",
+  },
 }
 
 interface D3RadarChartProps {

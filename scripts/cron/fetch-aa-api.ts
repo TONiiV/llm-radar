@@ -88,6 +88,10 @@ async function main() {
   const ctx = await buildMatchContext(supabase, 'artificial_analysis')
   console.log(`  Match context: ${ctx.dbMappings.size} DB mappings, ${ctx.dbSlugs.size} model slugs`)
 
+  // Load slug → model_id for speed_metrics table
+  const { data: dbModels } = await supabase.from('models').select('id, slug')
+  const slugToModelId = new Map((dbModels ?? []).map(m => [m.slug, m.id]))
+
   const benchmarkRows: {
     source_key: string
     model_name: string
@@ -102,6 +106,18 @@ async function main() {
     benchmark_key: string
     raw_score: number
     status: string
+  }[] = []
+
+  const speedMetricRows: {
+    model_id: string
+    provider: string
+    route_provider: string | null
+    ttft_ms: number | null
+    output_tps: number | null
+    metric_percentile: string
+    source_type: string
+    observed_at: string
+    confidence: number
   }[] = []
 
   let mapped = 0
@@ -167,6 +183,26 @@ async function main() {
         })
       }
     }
+
+    // Also write to speed_metrics table for detailed data
+    const modelId = slugToModelId.get(slug)
+    if (modelId) {
+      const tpsVal = model.output_tps != null ? (typeof model.output_tps === 'number' ? model.output_tps : parseFloat(String(model.output_tps))) : NaN
+      const ttftVal = model.ttft_ms != null ? (typeof model.ttft_ms === 'number' ? model.ttft_ms : parseFloat(String(model.ttft_ms))) : NaN
+      if ((!isNaN(tpsVal) && tpsVal > 0) || (!isNaN(ttftVal) && ttftVal > 0)) {
+        speedMetricRows.push({
+          model_id: modelId,
+          provider: 'direct',
+          route_provider: null,
+          ttft_ms: !isNaN(ttftVal) && ttftVal > 0 ? Math.round(ttftVal * 100) / 100 : null,
+          output_tps: !isNaN(tpsVal) && tpsVal > 0 ? Math.round(tpsVal * 100) / 100 : null,
+          metric_percentile: 'p50',
+          source_type: 'artificial_analysis',
+          observed_at: new Date().toISOString(),
+          confidence: 0.9,
+        })
+      }
+    }
   }
 
   console.log(`  Mapped: ${mapped} models, Unmapped: ${unmapped}`)
@@ -195,6 +231,18 @@ async function main() {
     const batch = finalRows.slice(i, i + 100)
     const { error } = await supabase.from('staging_benchmarks').insert(batch)
     if (error) throw error
+  }
+
+  // Upsert speed_metrics table
+  if (speedMetricRows.length > 0) {
+    for (let i = 0; i < speedMetricRows.length; i += 100) {
+      const batch = speedMetricRows.slice(i, i + 100)
+      const { error } = await supabase.from('speed_metrics').upsert(batch, {
+        onConflict: 'model_id,provider,route_provider,metric_percentile,source_type',
+      })
+      if (error) console.warn(`  speed_metrics batch error: ${error.message}`)
+    }
+    console.log(`  Upserted ${speedMetricRows.length} speed_metrics rows`)
   }
 
   // Update data source status

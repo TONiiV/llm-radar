@@ -50,6 +50,7 @@ const DIMENSION_COLORS: Record<string, string> = {
   math: "#F59E0B",
   chat: "#8B5CF6",
   agentic: "#F43F5E",
+  speed: "#06b6d4",
 }
 
 interface Props {
@@ -183,9 +184,9 @@ export default function HomeClient({ models, categories, providers }: Props) {
       {/* ─── Five Dimensions Section ─── */}
       <section className="max-w-6xl mx-auto px-4 pb-16">
         <div className="section-divider mb-8">
-          <h2 className="font-heading text-2xl italic text-txt-primary">Five Dimensions</h2>
+          <h2 className="font-heading text-2xl italic text-txt-primary">Six Dimensions</h2>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {categoryKeys.map((key) => {
             const cat = categories[key]
             const Icon = CATEGORY_ICONS[key]
