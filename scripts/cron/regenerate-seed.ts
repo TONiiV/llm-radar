@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { writeFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 
 const supabase = createClient(
@@ -54,6 +54,16 @@ async function main() {
     .order('recorded_at', { ascending: false })
   if (pricesErr) throw new Error(`Prices fetch failed: ${pricesErr.message}`)
 
+  // Load valid benchmark keys from categories.json
+  const categoriesPath = join(process.cwd(), 'data', 'categories.json')
+  const categories = JSON.parse(readFileSync(categoriesPath, 'utf-8')) as Record<string, { benchmarks: { key: string }[] }>
+  const validBenchmarkKeys = new Set<string>()
+  for (const cat of Object.values(categories)) {
+    for (const bm of cat.benchmarks) {
+      validBenchmarkKeys.add(bm.key)
+    }
+  }
+
   // Build model_id → slug mapping
   const idToSlug = new Map(models.map(m => [m.id, m.slug]))
 
@@ -64,6 +74,8 @@ async function main() {
   for (const s of scores) {
     const slug = idToSlug.get(s.model_id)
     if (!slug) continue
+    // Only include benchmarks defined in categories.json
+    if (!validBenchmarkKeys.has(s.benchmark_key)) continue
     if (!scoresBySlug.has(slug)) { scoresBySlug.set(slug, {}); sourcePriBySlug.set(slug, {}) }
     const priority = SOURCE_PRIORITY[s.source ?? ''] ?? 0
     const existing = sourcePriBySlug.get(slug)![s.benchmark_key] ?? -1
