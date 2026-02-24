@@ -8,38 +8,32 @@ const supabase = createClient(
 
 // AA evaluation pages to fetch — each page returns a DIFFERENT subset of models.
 // We must fetch ALL pages and merge by slug to get maximum coverage.
-// Removed: critpt, scicode, artificial-analysis-long-context-reasoning (deprecated)
+// Removed: critpt, scicode, livecodebench, simplebench (deprecated)
 const AA_EVAL_PAGES = [
   'mmlu-pro',
   'gpqa-diamond',
-  'humanitys-last-exam',
-  'livecodebench',
   'ifbench',
-  'math-500',
   'aime-2025',
   'tau2-bench',
   'terminalbench-hard',
   'gdpval-aa',
-  'simplebench',
+  'humanitys-last-exam',
 ]
 
 const AA_BASE_URL = 'https://artificialanalysis.ai/evaluations'
 
 // AA benchmark field name → our benchmark key + score scale
 // AA scores are fractions (0-1) for most fields, so scale=100 converts to percentage
-// Removed: critpt, scicode, lcr (aa_lcr) — deprecated benchmarks
+// Removed: critpt, scicode, lcr, livecodebench, simplebench — deprecated benchmarks
 const AA_BENCHMARK_MAP: Record<string, { key: string; scale: number }> = {
   mmlu_pro:           { key: 'mmlu_pro',            scale: 100 },
   gpqa:               { key: 'gpqa_diamond',        scale: 100 },
-  hle:                { key: 'humanitys_last_exam',  scale: 100 },
-  livecodebench:      { key: 'livecode_bench',      scale: 100 },
   ifbench:            { key: 'ifbench',             scale: 100 },
-  math_500:           { key: 'math_bench',          scale: 100 },
   aime25:             { key: 'aime_2025',           scale: 100 },
   tau2:               { key: 'tau2_bench',          scale: 100 },
   terminalbench_hard: { key: 'terminal_bench',      scale: 100 },
   gdpval_normalized:  { key: 'gdpval_aa',           scale: 100 },
-  simplebench:        { key: 'simplebench',         scale: 100 },
+  hle:                { key: 'humanitys_last_exam', scale: 100 },
 }
 
 interface AADataPoint {

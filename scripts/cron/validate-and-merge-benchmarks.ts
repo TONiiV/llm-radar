@@ -64,7 +64,6 @@ async function main() {
   const SOURCE_PRIORITY: Record<string, number> = {
     'artificial_analysis': 5,
     'swe_bench': 4,
-    'bfcl': 4,
     'openrouter': 3,
     'epoch_ai': 3,
     'official': 2,

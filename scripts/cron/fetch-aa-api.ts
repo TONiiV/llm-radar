@@ -14,17 +14,12 @@ const AA_API_KEY = process.env.AA_API_KEY ?? ''
 const AA_BENCHMARK_MAP: Record<string, { key: string; scale: number }> = {
   mmlu_pro:           { key: 'mmlu_pro',            scale: 100 },
   gpqa:               { key: 'gpqa_diamond',        scale: 100 },
-  hle:                { key: 'humanitys_last_exam',  scale: 100 },
-  livecodebench:      { key: 'livecode_bench',      scale: 100 },
   ifbench:            { key: 'ifbench',             scale: 100 },
-  math_500:           { key: 'math_bench',          scale: 100 },
   aime25:             { key: 'aime_2025',           scale: 100 },
   tau2:               { key: 'tau2_bench',          scale: 100 },
   terminalbench_hard: { key: 'terminal_bench',      scale: 100 },
   gdpval_normalized:  { key: 'gdpval_aa',           scale: 100 },
-  simplebench:        { key: 'simplebench',         scale: 100 },
-  aider_polyglot:     { key: 'aider_polyglot',      scale: 100 },
-  frontiermath:       { key: 'frontiermath',        scale: 100 },
+  hle:                { key: 'humanitys_last_exam', scale: 100 },
 }
 
 // Speed metrics from AA API

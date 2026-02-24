@@ -12,11 +12,19 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
  * 4. Token-based fuzzy match (Jaccard > 0.7)
  */
 
-// Variant suffixes to strip during normalization
+// Variant suffixes to strip during normalization (order matters: longer/compound first)
 const VARIANT_SUFFIXES = [
-  '-adaptive', '-reasoning', '-non-reasoning', '-thinking',
+  // Compound suffixes (must come before their base forms)
+  '-thinking-16k', '-thinking-32k', '-thinking-64k', '-thinking-128k',
+  '-non-reasoning',
+  // Behavior variants
+  '-adaptive', '-reasoning', '-thinking',
+  '-so-true', '-so-false',
+  // Effort levels
   '-low', '-medium', '-high', '-xhigh',
+  // Release variants
   '-instruct', '-preview', '-experimental', '-exp',
+  '-beta', '-old', '-latest', '-free',
 ]
 
 // Provider prefixes to strip
@@ -49,17 +57,29 @@ export function normalizeName(name: string): string {
   // Remove parenthetical content
   s = s.replace(/\([^)]*\)/g, '')
 
-  // Strip variant suffixes
-  for (const suffix of VARIANT_SUFFIXES) {
-    if (s.endsWith(suffix)) {
-      s = s.slice(0, -suffix.length)
-      break
+  // Strip variant suffixes (may match multiple rounds, e.g. "-instruct" then "-preview")
+  let changed = true
+  while (changed) {
+    changed = false
+    for (const suffix of VARIANT_SUFFIXES) {
+      if (s.endsWith(suffix)) {
+        s = s.slice(0, -suffix.length)
+        changed = true
+        break
+      }
     }
   }
 
   // Remove date suffixes: -20251101, -2025-12-11
   s = s.replace(/-\d{8,}$/g, '')
   s = s.replace(/-\d{4}-\d{2}-\d{2}$/g, '')
+
+  // Remove short date-like suffixes at end: -02-24, -12-17 (month-day after preview/etc stripped)
+  s = s.replace(/-\d{2}-\d{2}$/g, '')
+
+  // Remove parameter suffixes like -17b-128e, -7b, -405b, -70b, etc.
+  // Matches: -<digits><b/e/m/k> patterns (model size params)
+  s = s.replace(/(-\d+[bemk])+(-\d+[bemk])*/gi, '')
 
   // Unify version separators: dots and hyphens between digits → nothing
   // "4.6" → "46", "4-6" → "46", "3.5" → "35"

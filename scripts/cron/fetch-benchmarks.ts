@@ -6,95 +6,178 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY!
 )
 
-// LMArena ELO sources
-const LMARENA_CSV = 'https://raw.githubusercontent.com/nakasyou/lmarena-history/main/output/result.csv'
-const LMARENA_JSON = 'https://raw.githubusercontent.com/nakasyou/lmarena-history/main/output/scores.json'
+// ─── Data Sources ────────────────────────────────────────────────────────────
+// Primary: arena.ai SSR leaderboard page (text category, ~314 models with ELO)
+// The page server-renders a full HTML table with rank, model name, score, votes.
+const ARENA_LEADERBOARD_URL = 'https://arena.ai/leaderboard/text'
 
-// Model matching now uses unified lib/model-matching.ts
+// Fallback: lmarena/arena-catalog GitHub repo JSON files
+// These contain category-specific scores (coding, chinese, creative_writing)
+// but NOT overall scores. We take the max across categories as a proxy.
+const ARENA_CATALOG_BASE = 'https://raw.githubusercontent.com/lmarena/arena-catalog/main/data'
+const ARENA_CATALOG_FILES = [
+  'leaderboard-text.json',
+  'leaderboard-text-style-control.json',
+]
 
+// ─── HTML Table Parser ───────────────────────────────────────────────────────
 /**
- * Parse CSV format: header row has model names, last row has latest ELO scores.
- * First column of each data row is the date (YYYYMMDD).
+ * Parse ELO scores from arena.ai SSR HTML table.
+ *
+ * Table row structure (confirmed from arena.ai/leaderboard/text):
+ *   <tr class="hover:bg-surface...">
+ *     <td>...<span class="text-sm font-medium">{rank}</span></td>
+ *     <td>...<a ... title="{model-name}">...</a></td>
+ *     <td>...<span class="text-sm">{score}</span></td>
+ *     <td>...<span class="text-sm">{votes}</span></td>
+ *   </tr>
  */
-function parseCSV(text: string): { model: string; score: number }[] {
-  const lines = text.trim().split('\n')
-  if (lines.length < 2) return []
-
-  // Header: ,model1,model2,...
-  const header = lines[0].split(',')
-  const modelNames = header.slice(1) // skip first empty column
-
-  // Last row = latest date's scores
-  const lastLine = lines[lines.length - 1]
-  const values = lastLine.split(',')
-  const date = values[0]
-  const scores = values.slice(1)
-
-  console.log(`  CSV latest date: ${date}, ${modelNames.length} models`)
-
+function parseArenaHTML(html: string): { model: string; score: number }[] {
   const results: { model: string; score: number }[] = []
-  for (let i = 0; i < modelNames.length; i++) {
-    const score = parseFloat(scores[i])
-    if (score > 0) {
-      results.push({ model: modelNames[i], score })
-    }
+
+  // Match each table row
+  const rowRegex = /<tr class="hover:bg-surface[\s\S]*?<\/tr>/g
+  let rowMatch: RegExpExecArray | null
+
+  while ((rowMatch = rowRegex.exec(html)) !== null) {
+    const row = rowMatch[0]
+
+    // Extract rank (to validate it's a data row)
+    const rankMatch = row.match(/<span class="text-sm font-medium">(\d+)<\/span>/)
+    if (!rankMatch) continue
+
+    // Extract model name from <a> tag's title attribute
+    const nameMatch = row.match(/<a[^>]*title="([^"]+)"/)
+    if (!nameMatch) continue
+
+    // Extract score and votes (text-sm spans without font-medium)
+    const spanMatches = row.match(/<span class="text-sm">([^<]+)<\/span>/g)
+    if (!spanMatches || spanMatches.length < 2) continue
+
+    const scoreText = spanMatches[0].replace(/<[^>]+>/g, '').replace(/,/g, '')
+    const score = parseInt(scoreText, 10)
+
+    if (isNaN(score) || score <= 0) continue
+
+    results.push({
+      model: nameMatch[1],
+      score,
+    })
   }
+
   return results
 }
 
+// ─── GitHub JSON Fallback Parser ─────────────────────────────────────────────
 /**
- * Parse the GitHub JSON format: { "20250522": { "text": { "overall": { "model-name": 1234.56 } } } }
+ * Parse arena-catalog JSON files.
+ * Format: { "category": { "model-name": { rating, rating_q975, rating_q025 } } }
+ * We collect all models across categories, keeping the highest rating per model.
  */
-function parseGitHubJSON(data: Record<string, unknown>): { model: string; score: number }[] {
-  const dates = Object.keys(data).sort()
-  if (dates.length === 0) return []
+function parseCatalogJSON(
+  data: Record<string, Record<string, { rating: number; rating_q975?: number; rating_q025?: number }>>
+): { model: string; score: number }[] {
+  const modelScores = new Map<string, number>()
 
-  const latest = data[dates[dates.length - 1]] as Record<string, unknown> | undefined
-  const text = latest?.text as Record<string, unknown> | undefined
-  const overall = text?.overall as Record<string, number> | undefined
-  if (!overall) return []
+  for (const category of Object.values(data)) {
+    for (const [model, info] of Object.entries(category)) {
+      if (typeof info?.rating !== 'number' || info.rating <= 0) continue
+      const existing = modelScores.get(model) ?? 0
+      if (info.rating > existing) {
+        modelScores.set(model, Math.round(info.rating))
+      }
+    }
+  }
 
-  return Object.entries(overall)
-    .filter(([, score]) => typeof score === 'number' && score > 0)
-    .map(([model, score]) => ({ model, score }))
+  return Array.from(modelScores.entries()).map(([model, score]) => ({ model, score }))
+}
+
+// ─── Data Fetching ───────────────────────────────────────────────────────────
+async function fetchFromArenaPage(): Promise<{ model: string; score: number }[]> {
+  console.log('  [Source 1] Fetching arena.ai/leaderboard/text SSR page...')
+  const res = await fetch(ARENA_LEADERBOARD_URL, {
+    signal: AbortSignal.timeout(30000),
+    headers: {
+      'User-Agent': 'llm-radar-bot/1.0 (benchmark-data-collection)',
+      'Accept': 'text/html',
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error(`arena.ai returned ${res.status} ${res.statusText}`)
+  }
+
+  const html = await res.text()
+  console.log(`  Page size: ${(html.length / 1024).toFixed(0)} KB`)
+
+  const results = parseArenaHTML(html)
+  if (results.length === 0) {
+    throw new Error('No scores found in arena.ai HTML — page structure may have changed')
+  }
+
+  console.log(`  Parsed ${results.length} models from HTML table`)
+  console.log(`  Score range: ${Math.min(...results.map(r => r.score))} - ${Math.max(...results.map(r => r.score))}`)
+  return results
+}
+
+async function fetchFromCatalogRepo(): Promise<{ model: string; score: number }[]> {
+  console.log('  [Source 2] Fetching from lmarena/arena-catalog GitHub...')
+  const allResults: { model: string; score: number }[] = []
+
+  for (const file of ARENA_CATALOG_FILES) {
+    const url = `${ARENA_CATALOG_BASE}/${file}`
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(15000) })
+      if (!res.ok) {
+        console.warn(`    ${file}: HTTP ${res.status}`)
+        continue
+      }
+      const data = await res.json()
+      const parsed = parseCatalogJSON(data as any)
+      console.log(`    ${file}: ${parsed.length} models`)
+      allResults.push(...parsed)
+    } catch (err) {
+      console.warn(`    ${file} failed:`, err instanceof Error ? err.message : String(err))
+    }
+  }
+
+  if (allResults.length === 0) {
+    throw new Error('All arena-catalog files failed or returned no data')
+  }
+
+  // Deduplicate: keep highest score per model
+  const modelScores = new Map<string, number>()
+  for (const { model, score } of allResults) {
+    const existing = modelScores.get(model) ?? 0
+    if (score > existing) modelScores.set(model, score)
+  }
+
+  const results = Array.from(modelScores.entries()).map(([model, score]) => ({ model, score }))
+  console.log(`  Catalog total: ${results.length} unique models`)
+  return results
 }
 
 async function fetchLMArenaELO(): Promise<{ model: string; score: number }[]> {
-  // Try CSV first (266KB vs 18MB JSON — much faster)
+  // Try primary source: arena.ai SSR HTML
   try {
-    console.log('  Trying CSV source (lightweight)...')
-    const res = await fetch(LMARENA_CSV, { signal: AbortSignal.timeout(30000) })
-    if (res.ok) {
-      const text = await res.text()
-      const results = parseCSV(text)
-      if (results.length > 0) {
-        console.log(`  CSV: ${results.length} models with scores`)
-        return results
-      }
-    }
+    const results = await fetchFromArenaPage()
+    if (results.length >= 50) return results // expect 200+ models
+    console.warn(`  Only ${results.length} models from HTML — trying fallback`)
   } catch (err) {
-    console.warn('  CSV failed:', err instanceof Error ? err.message : String(err))
+    console.warn('  arena.ai page failed:', err instanceof Error ? err.message : String(err))
   }
 
-  // Fallback to full JSON (18MB, needs more time)
+  // Fallback: arena-catalog GitHub repo
   try {
-    console.log('  Trying JSON source (large file)...')
-    const res = await fetch(LMARENA_JSON, { signal: AbortSignal.timeout(60000) })
-    if (res.ok) {
-      const data = await res.json()
-      const results = parseGitHubJSON(data as Record<string, unknown>)
-      if (results.length > 0) {
-        console.log(`  JSON: ${results.length} models found`)
-        return results
-      }
-    }
+    return await fetchFromCatalogRepo()
   } catch (err) {
-    console.warn('  JSON failed:', err instanceof Error ? err.message : String(err))
+    console.warn('  arena-catalog failed:', err instanceof Error ? err.message : String(err))
   }
 
   throw new Error('All LMArena sources failed')
 }
 
+// ─── Main ────────────────────────────────────────────────────────────────────
 async function main() {
   console.log('Fetching LMArena ELO data...')
 
@@ -127,7 +210,7 @@ async function main() {
 
     console.log(`  Mapped: ${mapped}, Unmapped: ${unmapped}`)
     if (unmappedNames.size > 0) {
-      console.log(`  Unmapped LMArena names: ${Array.from(unmappedNames).slice(0, 20).join(', ')}${unmappedNames.size > 20 ? ` ... (+${unmappedNames.size - 20} more)` : ''}`)
+      console.log(`  Unmapped LMArena names: ${Array.from(unmappedNames).slice(0, 30).join(', ')}${unmappedNames.size > 30 ? ` ... (+${unmappedNames.size - 30} more)` : ''}`)
     }
 
     // Insert in batches of 100
@@ -144,10 +227,10 @@ async function main() {
       consecutive_failures: 0,
     }).eq('key', 'lmarena')
 
-    console.log(`✅ LMArena: ${rows.length} ELO scores fetched`)
+    console.log(`Done: LMArena ${rows.length} ELO scores staged (${mapped} matched, ${unmapped} unmatched)`)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error('❌ LMArena fetch failed:', message)
+    console.error('LMArena fetch failed:', message)
 
     const { data } = await supabase
       .from('data_sources')
@@ -164,11 +247,11 @@ async function main() {
     }).eq('key', 'lmarena')
 
     // Don't exit(1) — partial failure is OK, keep going
-    console.warn('⚠️ LMArena data preserved from last successful fetch')
+    console.warn('LMArena data preserved from last successful fetch')
   }
 }
 
 main().catch((err) => {
-  console.error('❌ Benchmark fetch failed:', err.message)
+  console.error('Benchmark fetch failed:', err.message)
   process.exit(1)
 })

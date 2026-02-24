@@ -14,11 +14,12 @@ LLM 能力雷达 + 价格性价比分析工具。对比主流大语言模型在�
 
 | 维度           | Benchmarks                                                      |
 | -------------- | --------------------------------------------------------------- |
-| 推理 Reasoning | MMLU-Pro, GPQA Diamond, Humanity's Last Exam, CritPt            |
-| 代码 Coding    | SWE-Bench Verified, LiveCodeBench, Terminal-Bench Hard, SciCode |
-| 数学 Math      | AIME 2025, MATH, GSM8K                                          |
-| 对话 Chat      | LMArena ELO, IFBench, AlpacaEval                                |
-| Agent          | t2-Bench, GDPval-AA, AA-LCR                                     |
+| 推理 Reasoning | GPQA Diamond, MMLU-Pro, Humanity's Last Exam                    |
+| 代码 Coding    | SWE-Bench Verified, Terminal-Bench Hard                         |
+| 数学 Math      | AIME 2025                                                       |
+| 对话 Chat      | Chatbot Arena ELO, IFEval                                       |
+| Agent          | τ²-Bench, GDPval-AA                                             |
+| 速度 Speed     | Output TPS, TTFT                                                |
 
 ## Tech Stack
 

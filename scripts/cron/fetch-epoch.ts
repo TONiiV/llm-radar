@@ -12,12 +12,8 @@ const EPOCH_CSV_URL = 'https://epoch.ai/data/eci_benchmarks.csv'
 // Removed: GSM8K (saturated >95%)
 const BENCHMARK_MAP: Record<string, { key: string; multiply: number }> = {
   'GPQA diamond':                     { key: 'gpqa_diamond',   multiply: 100 },
-  'MATH level 5':                     { key: 'math_bench',     multiply: 100 },
   'OTIS Mock AIME 2024-2025':         { key: 'aime_2025',      multiply: 100 },
   'SWE-Bench Verified (Bash Only)':   { key: 'swe_bench',      multiply: 100 },
-  'FrontierMath-2025-02-28-Private':  { key: 'frontiermath',   multiply: 100 },
-  'SimpleBench':                      { key: 'simplebench',    multiply: 100 },
-  'Aider polyglot':                   { key: 'aider_polyglot', multiply: 100 },
   'Terminal Bench':                    { key: 'terminal_bench', multiply: 100 },
 }
 

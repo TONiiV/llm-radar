@@ -3,20 +3,21 @@
     "label": "推理 Reasoning",
     "benchmarks": [
       { "key": "gpqa_diamond", "label": "GPQA Diamond", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/gpqa-diamond" },
-      { "key": "mmlu_pro", "label": "MMLU-Pro", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/mmlu-pro" }
+      { "key": "mmlu_pro", "label": "MMLU-Pro", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/mmlu-pro" },
+      { "key": "humanitys_last_exam", "label": "Humanity's Last Exam", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/humanitys-last-exam" }
     ]
   },
   "coding": {
     "label": "代码 Coding",
     "benchmarks": [
-      { "key": "livecode_bench", "label": "LiveCodeBench", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/livecodebench" }
+      { "key": "swe_bench", "label": "SWE-Bench Verified", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "swe_bench", "sourceUrl": "https://www.swebench.com" },
+      { "key": "terminal_bench", "label": "Terminal-Bench Hard", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/terminalbench-hard" }
     ]
   },
   "math": {
     "label": "数学 Math",
     "benchmarks": [
-      { "key": "aime_2025", "label": "AIME 2025", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/aime-2025" },
-      { "key": "math_bench", "label": "MATH-500", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/math-500" }
+      { "key": "aime_2025", "label": "AIME 2025", "weight": 1.0, "unit": "%", "higher_is_better": true, "max_score": 100, "source": "artificial_analysis", "sourceUrl": "https://artificialanalysis.ai/evaluations/aime-2025" }
     ]
   },
   "chat": {
