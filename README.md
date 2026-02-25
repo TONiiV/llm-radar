@@ -42,7 +42,7 @@ npm run dev
 npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [Vercel Link](https://llm-radar-peach.vercel.app/).
 
 ## Project Structure
 
