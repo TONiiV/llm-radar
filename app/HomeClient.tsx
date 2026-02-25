@@ -60,7 +60,13 @@ interface Props {
 }
 
 export default function HomeClient({ models, categories, providers }: Props) {
-  const sorted = useMemo(() => [...models].sort((a, b) => b.compositeScore - a.compositeScore), [models])
+  const sorted = useMemo(() => [...models].sort((a, b) => {
+    // Primary: more data available → ranked higher
+    const dataDiff = (b.availableBenchmarks ?? 0) - (a.availableBenchmarks ?? 0)
+    if (dataDiff !== 0) return dataDiff
+    // Secondary: higher score wins within same completeness tier
+    return b.compositeScore - a.compositeScore
+  }), [models])
   const { t, getCategoryLabel } = useLocale()
 
   const categoryKeys = Object.keys(categories)
@@ -167,6 +173,11 @@ export default function HomeClient({ models, categories, providers }: Props) {
                   <div>
                     <div className="text-xs text-txt-muted mb-0.5">{t("home.composite")}</div>
                     <span className="font-mono text-3xl text-txt-primary">{Math.round(m.compositeScore)}</span>
+                    {(m.availableBenchmarks ?? 0) < (m.totalBenchmarks ?? 12) && (
+                      <div className="text-[10px] font-mono text-txt-muted opacity-50 mt-0.5">
+                        {m.availableBenchmarks ?? 0}/{m.totalBenchmarks ?? 12} benchmarks
+                      </div>
+                    )}
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-txt-muted mb-0.5">{t("home.price")}</div>

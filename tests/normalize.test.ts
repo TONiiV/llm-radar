@@ -94,14 +94,14 @@ describe('categoryScore', () => {
 })
 
 describe('compositeScore', () => {
-  it('averages only reliable categories', () => {
+  it('sums reliable categories and divides by total category count', () => {
     const catScores = {
       reasoning: { score: 80, coverage: 1.0, isReliable: true, benchmarkCount: 2, availableCount: 2 },
       coding: { score: 60, coverage: 1.0, isReliable: true, benchmarkCount: 2, availableCount: 2 },
       math: { score: 40, coverage: 0.3, isReliable: false, benchmarkCount: 2, availableCount: 1 },
     }
-    // Only reasoning (80) + coding (60) → average = 70
-    expect(compositeScore(catScores)).toBe(70)
+    // reliable sum = 80+60 = 140, total categories = 3 → 140/3 ≈ 46.67
+    expect(compositeScore(catScores)).toBeCloseTo(46.67, 1)
   })
 
   it('returns 0 when no categories are reliable', () => {
@@ -109,6 +109,15 @@ describe('compositeScore', () => {
       reasoning: { score: 80, coverage: 0.3, isReliable: false, benchmarkCount: 2, availableCount: 1 },
     }
     expect(compositeScore(catScores)).toBe(0)
+  })
+
+  it('returns full score when all categories are reliable', () => {
+    const catScores = {
+      reasoning: { score: 80, coverage: 1.0, isReliable: true, benchmarkCount: 2, availableCount: 2 },
+      coding: { score: 60, coverage: 1.0, isReliable: true, benchmarkCount: 2, availableCount: 2 },
+    }
+    // reliable sum = 140, total = 2 → 70
+    expect(compositeScore(catScores)).toBe(70)
   })
 })
 
@@ -129,11 +138,12 @@ describe('50% Coverage Rule', () => {
     expect(none.isReliable).toBe(false)
   })
 
-  it('compositeScore excludes unreliable categories', () => {
+  it('compositeScore penalizes partial coverage via total-category denominator', () => {
     const scores = {
       good: { score: 90, coverage: 1.0, isReliable: true, benchmarkCount: 2, availableCount: 2 },
       bad: { score: 50, coverage: 0.2, isReliable: false, benchmarkCount: 2, availableCount: 0 },
     }
-    expect(compositeScore(scores)).toBe(90) // only 'good' contributes
+    // reliable sum = 90, total categories = 2 → 90/2 = 45
+    expect(compositeScore(scores)).toBe(45)
   })
 })

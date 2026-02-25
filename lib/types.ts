@@ -65,6 +65,10 @@ export interface ModelWithScores extends Model {
   compositeScore: number
   radarIdx: number
   providerColor: string
+  /** Total number of benchmark slots across all categories */
+  totalBenchmarks: number
+  /** Number of benchmarks with actual data for this model */
+  availableBenchmarks: number
 }
 
 export interface SeedData {
