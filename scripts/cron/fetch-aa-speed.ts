@@ -4,16 +4,19 @@ import { buildMatchContext, resolveModelSlug } from '../../lib/model-matching'
 /**
  * Fetch speed metrics (output_tps, ttft_ms) from Artificial Analysis.
  *
- * AA's evaluation pages embed `timescaleData` in the RSC defaultData payload,
- * which includes:
+ * Primary source: /models page RSC payload — contains a `"models":` array
+ * with 400+ models, each having `timescaleData` with:
  *   - median_output_speed: tokens per second
  *   - median_time_to_first_chunk: seconds (we convert to ms)
+ *   - percentile distributions (p05, p95, q25, q75)
  *
- * This script does NOT require an AA_API_KEY — it uses the same RSC scraping
- * approach as fetch-artificial-analysis.ts.
+ * Fallback: /evaluations/* pages (same RSC approach but fewer models per page).
  *
- * We fetch multiple eval pages and merge by slug to maximize model coverage,
- * since different pages may list different subsets of models.
+ * This script does NOT require an AA_API_KEY — it uses RSC scraping.
+ *
+ * Writes to:
+ *   1. staging_benchmarks — for the benchmark pipeline (output_tps, ttft_ms)
+ *   2. speed_metrics — detailed per-model speed data with percentiles
  */
 
 const supabase = createClient(
@@ -21,9 +24,11 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY!
 )
 
-// Eval pages to fetch — same as fetch-artificial-analysis.ts.
-// Each page returns timescaleData for the models it lists.
-// We merge across all pages for maximum coverage.
+const AA_MODELS_URL = 'https://artificialanalysis.ai/models'
+const AA_EVAL_BASE = 'https://artificialanalysis.ai/evaluations'
+const SOURCE_KEY = 'artificial_analysis'
+
+// Fallback eval pages if /models fails
 const AA_EVAL_PAGES = [
   'mmlu-pro',
   'gpqa-diamond',
@@ -35,125 +40,228 @@ const AA_EVAL_PAGES = [
   'humanitys-last-exam',
 ]
 
-const AA_BASE_URL = 'https://artificialanalysis.ai/evaluations'
-const SOURCE_KEY = 'artificial_analysis'
-
 interface TimescaleData {
+  model_id?: string
   median_output_speed?: number
   median_time_to_first_chunk?: number
   percentile_05_output_speed?: number
   percentile_95_output_speed?: number
+  quartile_25_output_speed?: number
+  quartile_75_output_speed?: number
   percentile_05_time_to_first_chunk?: number
   percentile_95_time_to_first_chunk?: number
+  quartile_25_time_to_first_chunk?: number
+  quartile_75_time_to_first_chunk?: number
   [key: string]: unknown
 }
 
-interface AADataPoint {
+interface AAModelEntry {
   slug?: string
   name?: string
+  short_name?: string
   timescaleData?: TimescaleData
+  host_models?: Array<{ slug?: string; host_model_string?: string }>
   [key: string]: unknown
 }
 
-function extractDefaultData(rscText: string): AADataPoint[] {
-  const marker = '"defaultData":'
-  const idx = rscText.indexOf(marker)
-  if (idx === -1) return []
+/**
+ * Extract a JSON array from RSC text using a marker key.
+ * Finds `"<marker>":` then parses the array that follows.
+ * If `validate` is provided, tries all occurrences until one passes validation.
+ */
+function extractArray(
+  rscText: string,
+  marker: string,
+  validate?: (arr: unknown[]) => boolean,
+): unknown[] {
+  const fullMarker = `"${marker}":`
+  let searchFrom = 0
 
-  const arrayStart = rscText.indexOf('[', idx + marker.length)
-  if (arrayStart === -1) return []
+  while (searchFrom < rscText.length) {
+    const idx = rscText.indexOf(fullMarker, searchFrom)
+    if (idx === -1) return []
 
-  let depth = 0
-  let arrayEnd = -1
-  for (let i = arrayStart; i < rscText.length; i++) {
-    if (rscText[i] === '[') depth++
-    else if (rscText[i] === ']') {
-      depth--
-      if (depth === 0) {
-        arrayEnd = i + 1
-        break
+    const arrayStart = rscText.indexOf('[', idx + fullMarker.length)
+    if (arrayStart === -1) return []
+
+    // Make sure the [ immediately follows the marker (allowing whitespace)
+    const between = rscText.slice(idx + fullMarker.length, arrayStart).trim()
+    if (between.length > 0) {
+      searchFrom = idx + fullMarker.length
+      continue
+    }
+
+    let depth = 0
+    let arrayEnd = -1
+    for (let i = arrayStart; i < rscText.length; i++) {
+      if (rscText[i] === '[') depth++
+      else if (rscText[i] === ']') {
+        depth--
+        if (depth === 0) {
+          arrayEnd = i + 1
+          break
+        }
       }
     }
+
+    if (arrayEnd === -1) {
+      searchFrom = arrayStart + 1
+      continue
+    }
+
+    const jsonStr = rscText.slice(arrayStart, arrayEnd)
+    try {
+      const result = JSON.parse(jsonStr) as unknown[]
+      if (!validate || validate(result)) {
+        return result
+      }
+    } catch {
+      // Parse failed, try next occurrence
+    }
+
+    searchFrom = arrayEnd
   }
 
-  if (arrayEnd === -1) return []
-  const jsonStr = rscText.slice(arrayStart, arrayEnd)
-  return JSON.parse(jsonStr) as AADataPoint[]
+  return []
 }
 
-async function fetchEvalPage(page: string): Promise<AADataPoint[]> {
-  const url = `${AA_BASE_URL}/${page}`
-  try {
-    const res = await fetch(url, {
-      headers: {
-        'RSC': '1',
-        'Next-Router-State-Tree': encodeURIComponent(JSON.stringify([''])),
-        'User-Agent': 'Mozilla/5.0 (compatible; LLMRadar/1.0)',
-      },
-      signal: AbortSignal.timeout(30000),
-    })
-    if (!res.ok) {
-      console.warn(`  ${page}: HTTP ${res.status}`)
-      return []
-    }
-    const rscText = await res.text()
-    const data = extractDefaultData(rscText)
-    const withSpeed = data.filter(
-      (m) =>
-        m.timescaleData &&
-        ((m.timescaleData.median_output_speed ?? 0) > 0 ||
-          (m.timescaleData.median_time_to_first_chunk ?? 0) > 0)
+/**
+ * Fetch RSC payload from a URL.
+ */
+async function fetchRSC(url: string): Promise<string> {
+  const res = await fetch(url, {
+    headers: {
+      'RSC': '1',
+      'Next-Router-State-Tree': encodeURIComponent(JSON.stringify([''])),
+      'User-Agent': 'Mozilla/5.0 (compatible; LLMRadar/1.0)',
+    },
+    signal: AbortSignal.timeout(60000),
+  })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.text()
+}
+
+/**
+ * Primary source: fetch /models page and extract the "models" array.
+ * This array contains 400+ models with timescaleData embedded.
+ */
+async function fetchModelsPage(): Promise<AAModelEntry[]> {
+  console.log('  Fetching /models page...')
+  const rscText = await fetchRSC(AA_MODELS_URL)
+
+  // The /models page has multiple "models": arrays. We need the one
+  // containing model objects with timescaleData (speed metrics).
+  // The first "models": array is a list of model creators (labs).
+  // The correct one has objects with keys like "slug", "timescaleData", "name".
+  const models = extractArray(rscText, 'models', (arr) => {
+    if (arr.length < 10) return false // The correct array has 400+ items
+    const first = arr[0]
+    return (
+      typeof first === 'object' &&
+      first !== null &&
+      'slug' in first &&
+      'timescaleData' in first
     )
-    console.log(`  ${page}: ${data.length} models, ${withSpeed.length} with speed data`)
-    return data
-  } catch (err) {
-    console.warn(`  ${page}: fetch failed - ${err instanceof Error ? err.message : err}`)
-    return []
+  }) as AAModelEntry[]
+
+  // Filter to only dict-like entries with slugs
+  const valid = models.filter(
+    (m): m is AAModelEntry =>
+      typeof m === 'object' && m !== null && typeof m.slug === 'string'
+  )
+
+  const withSpeed = valid.filter(
+    (m) =>
+      m.timescaleData &&
+      ((m.timescaleData.median_output_speed ?? 0) > 0 ||
+        (m.timescaleData.median_time_to_first_chunk ?? 0) > 0)
+  )
+
+  console.log(`  /models: ${valid.length} models, ${withSpeed.length} with speed data`)
+  return valid
+}
+
+/**
+ * Fallback: fetch evaluation pages and merge by slug.
+ * Each eval page has a "defaultData" array with timescaleData.
+ */
+async function fetchEvalPagesFallback(): Promise<AAModelEntry[]> {
+  console.log('  Falling back to evaluation pages...')
+  const mergedModels = new Map<string, AAModelEntry>()
+
+  for (const page of AA_EVAL_PAGES) {
+    try {
+      const rscText = await fetchRSC(`${AA_EVAL_BASE}/${page}`)
+      const data = extractArray(rscText, 'defaultData') as AAModelEntry[]
+      const valid = data.filter(
+        (m): m is AAModelEntry =>
+          typeof m === 'object' && m !== null && typeof m.slug === 'string'
+      )
+      console.log(`    ${page}: ${valid.length} models`)
+
+      for (const entry of valid) {
+        if (!entry.slug) continue
+        const existing = mergedModels.get(entry.slug)
+        if (existing) {
+          // Merge timescaleData
+          if (entry.timescaleData && !existing.timescaleData) {
+            existing.timescaleData = entry.timescaleData
+          } else if (entry.timescaleData && existing.timescaleData) {
+            const ts = existing.timescaleData
+            const newTs = entry.timescaleData
+            if ((!ts.median_output_speed || ts.median_output_speed === 0) &&
+                newTs.median_output_speed && newTs.median_output_speed > 0) {
+              ts.median_output_speed = newTs.median_output_speed
+            }
+            if ((!ts.median_time_to_first_chunk || ts.median_time_to_first_chunk === 0) &&
+                newTs.median_time_to_first_chunk && newTs.median_time_to_first_chunk > 0) {
+              ts.median_time_to_first_chunk = newTs.median_time_to_first_chunk
+            }
+          }
+        } else {
+          mergedModels.set(entry.slug, { ...entry })
+        }
+      }
+    } catch (err) {
+      console.warn(`    ${page}: failed - ${err instanceof Error ? err.message : err}`)
+    }
   }
+
+  const results = Array.from(mergedModels.values())
+  const withSpeed = results.filter(
+    (m) =>
+      m.timescaleData &&
+      ((m.timescaleData.median_output_speed ?? 0) > 0 ||
+        (m.timescaleData.median_time_to_first_chunk ?? 0) > 0)
+  )
+  console.log(`  Eval pages merged: ${results.length} models, ${withSpeed.length} with speed data`)
+  return results
 }
 
 async function main() {
   console.log('Fetching AA speed metrics (output_tps, ttft_ms) via RSC scraping...')
 
-  // Fetch all evaluation pages and merge models by slug
-  const mergedModels = new Map<string, AADataPoint>()
-
-  for (const page of AA_EVAL_PAGES) {
-    const entries = await fetchEvalPage(page)
-    for (const entry of entries) {
-      if (!entry.slug) continue
-      const existing = mergedModels.get(entry.slug)
-      if (existing) {
-        // Merge timescaleData: prefer non-null/non-zero values
-        if (entry.timescaleData && !existing.timescaleData) {
-          existing.timescaleData = entry.timescaleData
-        } else if (entry.timescaleData && existing.timescaleData) {
-          // Fill in missing speed fields
-          const existingTs = existing.timescaleData
-          const newTs = entry.timescaleData
-          if (
-            (!existingTs.median_output_speed || existingTs.median_output_speed === 0) &&
-            newTs.median_output_speed && newTs.median_output_speed > 0
-          ) {
-            existingTs.median_output_speed = newTs.median_output_speed
-          }
-          if (
-            (!existingTs.median_time_to_first_chunk || existingTs.median_time_to_first_chunk === 0) &&
-            newTs.median_time_to_first_chunk && newTs.median_time_to_first_chunk > 0
-          ) {
-            existingTs.median_time_to_first_chunk = newTs.median_time_to_first_chunk
-          }
-        }
-      } else {
-        mergedModels.set(entry.slug, { ...entry })
-      }
-    }
+  // Try /models page first (superset of eval pages: ~408 vs ~343 models)
+  let models: AAModelEntry[]
+  try {
+    models = await fetchModelsPage()
+    if (models.length === 0) throw new Error('No models found on /models page')
+  } catch (err) {
+    console.warn(`  /models page failed: ${err instanceof Error ? err.message : err}`)
+    models = await fetchEvalPagesFallback()
   }
 
-  console.log(`  Merged: ${mergedModels.size} unique models across all pages`)
+  if (models.length === 0) {
+    console.log('  No models found from any source.')
+    return
+  }
 
   const ctx = await buildMatchContext(supabase, SOURCE_KEY)
   console.log(`  Match context: ${ctx.dbMappings.size} DB mappings, ${ctx.dbSlugs.size} model slugs`)
+
+  // Load model slug -> model_id mapping for speed_metrics table
+  const { data: dbModels } = await supabase.from('models').select('id, slug')
+  const slugToModelId = new Map((dbModels ?? []).map((m) => [m.slug, m.id]))
 
   const stagingRows: {
     source_key: string
@@ -163,26 +271,46 @@ async function main() {
     status: string
   }[] = []
 
-  let mapped = 0
+  const speedMetricRows: {
+    model_id: string
+    provider: string
+    route_provider: string | null
+    ttft_ms: number | null
+    output_tps: number | null
+    metric_percentile: string
+    source_type: string
+    observed_at: string
+    confidence: number
+  }[] = []
+
+  let matched = 0
   let unmapped = 0
   let withSpeed = 0
   const unmappedSlugs = new Set<string>()
 
-  mergedModels.forEach((entry, aaSlug) => {
-    const slug = resolveModelSlug(aaSlug, ctx)
+  for (const entry of models) {
+    if (!entry.slug) continue
+
+    const slug = resolveModelSlug(entry.slug, ctx)
     if (!slug) {
       unmapped++
-      unmappedSlugs.add(aaSlug)
-      return
+      unmappedSlugs.add(entry.slug)
+      continue
     }
 
     const ts = entry.timescaleData
-    if (!ts) return
+    if (!ts) continue
 
     const tps = ts.median_output_speed
     const ttftSec = ts.median_time_to_first_chunk
 
-    // output_tps: tokens per second (already in correct unit)
+    if ((tps == null || tps <= 0) && (ttftSec == null || ttftSec <= 0)) continue
+
+    withSpeed++
+    matched++
+
+    // --- staging_benchmarks: best values for benchmark pipeline ---
+
     if (tps != null && tps > 0) {
       stagingRows.push({
         source_key: SOURCE_KEY,
@@ -191,10 +319,8 @@ async function main() {
         raw_score: Math.round(tps * 100) / 100,
         status: 'pending',
       })
-      mapped++
     }
 
-    // ttft_ms: convert from seconds to milliseconds
     if (ttftSec != null && ttftSec > 0) {
       const ttftMs = ttftSec * 1000
       stagingRows.push({
@@ -204,16 +330,56 @@ async function main() {
         raw_score: Math.round(ttftMs * 100) / 100,
         status: 'pending',
       })
-      // Count models that have at least one speed metric
-      if (!(tps != null && tps > 0)) mapped++
     }
 
-    if ((tps != null && tps > 0) || (ttftSec != null && ttftSec > 0)) {
-      withSpeed++
-    }
-  })
+    // --- speed_metrics: detailed data with percentiles ---
 
-  console.log(`  Models with speed data: ${withSpeed}, Unmapped: ${unmapped}`)
+    const modelId = slugToModelId.get(slug)
+    if (!modelId) continue
+
+    const ttftMs = ttftSec != null && ttftSec > 0
+      ? Math.round(ttftSec * 1000 * 100) / 100
+      : null
+    const outputTps = tps != null && tps > 0
+      ? Math.round(tps * 100) / 100
+      : null
+
+    // Median (p50) row
+    speedMetricRows.push({
+      model_id: modelId,
+      provider: 'artificial_analysis',
+      route_provider: null,
+      ttft_ms: ttftMs,
+      output_tps: outputTps,
+      metric_percentile: 'p50',
+      source_type: 'artificial_analysis',
+      observed_at: new Date().toISOString(),
+      confidence: 0.9,
+    })
+
+    // p95 row (worst-case / tail latency performance)
+    const p95Tps = ts.percentile_95_output_speed
+    const p95TtftSec = ts.percentile_95_time_to_first_chunk
+    if ((p95Tps != null && p95Tps > 0) || (p95TtftSec != null && p95TtftSec > 0)) {
+      speedMetricRows.push({
+        model_id: modelId,
+        provider: 'artificial_analysis',
+        route_provider: null,
+        ttft_ms: p95TtftSec != null && p95TtftSec > 0
+          ? Math.round(p95TtftSec * 1000 * 100) / 100
+          : null,
+        output_tps: p95Tps != null && p95Tps > 0
+          ? Math.round(p95Tps * 100) / 100
+          : null,
+        metric_percentile: 'p95',
+        source_type: 'artificial_analysis',
+        observed_at: new Date().toISOString(),
+        confidence: 0.9,
+      })
+    }
+  }
+
+  console.log(`  Models with speed data: ${withSpeed}, Matched: ${matched}, Unmapped: ${unmapped}`)
   if (unmappedSlugs.size > 0) {
     console.log(
       `  Unmapped AA slugs: ${Array.from(unmappedSlugs).slice(0, 20).join(', ')}${
@@ -222,35 +388,70 @@ async function main() {
     )
   }
 
-  if (stagingRows.length === 0) {
-    console.log('  No speed scores to insert.')
-    return
-  }
-
-  // Deduplicate: keep one score per (model, benchmark)
-  const deduped = new Map<string, (typeof stagingRows)[0]>()
+  // --- Deduplicate staging rows ---
+  const dedupedStaging = new Map<string, (typeof stagingRows)[0]>()
   for (const row of stagingRows) {
     const key = `${row.model_name}:${row.benchmark_key}`
-    if (!deduped.has(key)) {
-      deduped.set(key, row)
+    if (!dedupedStaging.has(key)) {
+      dedupedStaging.set(key, row)
     }
   }
-  const finalRows = Array.from(deduped.values())
-  console.log(`  After dedup: ${finalRows.length} unique (model, benchmark_key) scores`)
+  const finalStagingRows = Array.from(dedupedStaging.values())
+  console.log(`  Staging rows: ${finalStagingRows.length} (after dedup)`)
 
-  // Insert in batches of 100
-  for (let i = 0; i < finalRows.length; i += 100) {
-    const batch = finalRows.slice(i, i + 100)
-    const { error } = await supabase.from('staging_benchmarks').insert(batch)
-    if (error) throw error
+  // --- Insert staging_benchmarks ---
+  if (finalStagingRows.length > 0) {
+    for (let i = 0; i < finalStagingRows.length; i += 100) {
+      const batch = finalStagingRows.slice(i, i + 100)
+      const { error } = await supabase.from('staging_benchmarks').insert(batch)
+      if (error) throw error
+    }
+    console.log(`  Inserted ${finalStagingRows.length} staging benchmark rows`)
   }
 
-  // Update data source status
+  // --- Upsert speed_metrics (deduplicate first, then delete+insert) ---
+  if (speedMetricRows.length > 0) {
+    // Deduplicate: multiple AA slugs can resolve to the same model_id
+    const dedupedSpeed = new Map<string, (typeof speedMetricRows)[0]>()
+    for (const row of speedMetricRows) {
+      const key = `${row.model_id}:${row.provider}:${row.route_provider ?? ''}:${row.metric_percentile}:${row.source_type}`
+      if (!dedupedSpeed.has(key)) {
+        dedupedSpeed.set(key, row)
+      }
+    }
+    const finalSpeedRows = Array.from(dedupedSpeed.values())
+    console.log(`  Speed metric rows: ${finalSpeedRows.length} (after dedup from ${speedMetricRows.length})`)
+
+    // Delete old data, then insert fresh
+    const { error: delError } = await supabase
+      .from('speed_metrics')
+      .delete()
+      .eq('source_type', 'artificial_analysis')
+    if (delError) {
+      console.warn(`  speed_metrics delete error: ${delError.message}`)
+    } else {
+      console.log(`  Cleared old artificial_analysis speed_metrics`)
+    }
+
+    let insertedCount = 0
+    for (let i = 0; i < finalSpeedRows.length; i += 100) {
+      const batch = finalSpeedRows.slice(i, i + 100)
+      const { error } = await supabase.from('speed_metrics').insert(batch)
+      if (error) {
+        console.warn(`  speed_metrics batch error: ${error.message}`)
+      } else {
+        insertedCount += batch.length
+      }
+    }
+    console.log(`  Inserted ${insertedCount} speed metric rows`)
+  }
+
+  // --- Update data source status ---
   await supabase.from('data_sources').upsert(
     {
       key: 'aa_speed',
       name: 'Artificial Analysis (Speed)',
-      url: AA_BASE_URL,
+      url: AA_MODELS_URL,
       status: 'active',
       last_status: 'success',
       last_fetched_at: new Date().toISOString(),
@@ -260,7 +461,12 @@ async function main() {
     { onConflict: 'key' }
   )
 
-  console.log(`AA Speed: ${finalRows.length} speed scores fetched (${withSpeed} models)`)
+  const speedCount = speedMetricRows.length > 0
+    ? Array.from(new Map(speedMetricRows.map(r => [`${r.model_id}:${r.provider}:${r.route_provider ?? ''}:${r.metric_percentile}:${r.source_type}`, r])).values()).length
+    : 0
+  console.log(
+    `AA Speed: ${finalStagingRows.length} staging + ${speedCount} speed_metrics (${withSpeed} models)`
+  )
 }
 
 main().catch((err) => {
@@ -273,7 +479,7 @@ main().catch((err) => {
       {
         key: 'aa_speed',
         name: 'Artificial Analysis (Speed)',
-        url: AA_BASE_URL,
+        url: AA_MODELS_URL,
         last_status: 'failed',
         last_error: message,
       },
