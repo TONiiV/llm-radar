@@ -72,7 +72,13 @@ export default function ModelsClient({ models, categories, providers }: Props) {
     list = list.filter((m) => matchesFilter(m, activeFilter))
 
     list = [...list].sort((a, b) => {
-      if (sortKey === "score") return b.compositeScore - a.compositeScore
+      if (sortKey === "score") {
+        // Primary: more data → ranked higher
+        const dataDiff = (b.availableBenchmarks ?? 0) - (a.availableBenchmarks ?? 0)
+        if (dataDiff !== 0) return dataDiff
+        // Secondary: higher score within same completeness tier
+        return b.compositeScore - a.compositeScore
+      }
       if (sortKey === "name") return a.name.localeCompare(b.name)
       const avgA = (a.pricing.input_per_1m + a.pricing.output_per_1m) / 2
       const avgB = (b.pricing.input_per_1m + b.pricing.output_per_1m) / 2
@@ -216,6 +222,11 @@ export default function ModelsClient({ models, categories, providers }: Props) {
                         </div>
                       </div>
                     </div>
+                    {(m.availableBenchmarks ?? 0) < (m.totalBenchmarks ?? 12) && (
+                      <div className="mt-2 text-[10px] font-mono text-txt-muted opacity-60">
+                        {m.availableBenchmarks ?? 0}/{m.totalBenchmarks ?? 12} {isZh ? "基准数据" : "benchmarks"}
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center gap-4 mt-4 pt-3 border-t border-border">
                     <Link href={`/models/${m.slug}`} className="text-xs font-body text-accent-blue hover:underline transition-colors">

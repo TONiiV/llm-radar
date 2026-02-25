@@ -233,6 +233,9 @@ export async function fetchModelWithScores(models?: Model[]): Promise<ModelWithS
 
     const provider = providers.find((p) => p.slug === model.provider)
 
+    const totalBenchmarks = Object.values(cats).reduce((sum, c) => sum + c.benchmarks.length, 0)
+    const availableBenchmarks = Object.values(catScores).reduce((sum, c) => sum + c.availableCount, 0)
+
     const score = compositeScore(catScores)
     return {
       ...model,
@@ -240,6 +243,8 @@ export async function fetchModelWithScores(models?: Model[]): Promise<ModelWithS
       compositeScore: score,
       radarIdx: score,
       providerColor: provider?.color ?? "#888888",
+      totalBenchmarks,
+      availableBenchmarks,
     }
   })
 }
@@ -418,6 +423,9 @@ export function getModelWithScores(models?: Model[]): ModelWithScores[] {
 
     const provider = seed.providers.find((p) => p.slug === model.provider)
 
+    const totalBenchmarks = Object.values(cats).reduce((sum, c) => sum + c.benchmarks.length, 0)
+    const availableBenchmarks = Object.values(catScores).reduce((sum, c) => sum + c.availableCount, 0)
+
     const score = compositeScore(catScores)
     return {
       ...model,
@@ -425,6 +433,8 @@ export function getModelWithScores(models?: Model[]): ModelWithScores[] {
       compositeScore: score,
       radarIdx: score,
       providerColor: provider?.color ?? "#888888",
+      totalBenchmarks,
+      availableBenchmarks,
     }
   })
 }
