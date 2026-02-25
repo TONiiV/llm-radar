@@ -76,6 +76,13 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
+      - name: Fetch AA Speed Metrics (RSC)
+        continue-on-error: true
+        run: npx tsx scripts/cron/fetch-aa-speed.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       - name: Fetch OpenRouter Speed Metrics
         continue-on-error: true
         run: npx tsx scripts/cron/fetch-openrouter-speed.ts
