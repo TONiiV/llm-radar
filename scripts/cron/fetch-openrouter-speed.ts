@@ -37,11 +37,27 @@ async function fetchEndpoints(modelId: string): Promise<OREndpoint[]> {
     const res = await fetch(`${OR_API_BASE}/models/${encodeURIComponent(modelId)}/endpoints`, {
       signal: AbortSignal.timeout(15000),
     })
+    if (res.status === 404) {
+      // Endpoints API no longer available - return empty gracefully
+      return []
+    }
     if (!res.ok) return []
     const data = await res.json()
     return data.data ?? []
   } catch {
     return []
+  }
+}
+
+// Probe: check if endpoints API is available before iterating all models
+async function isEndpointsAPIAvailable(): Promise<boolean> {
+  try {
+    const res = await fetch(`${OR_API_BASE}/models/openai%2Fgpt-4o/endpoints`, {
+      signal: AbortSignal.timeout(10000),
+    })
+    return res.ok
+  } catch {
+    return false
   }
 }
 
@@ -58,6 +74,14 @@ async function main() {
   // Load model slug → model_id mapping for speed_metrics table
   const { data: dbModels } = await supabase.from('models').select('id, slug')
   const slugToModelId = new Map((dbModels ?? []).map(m => [m.slug, m.id]))
+
+  // Check if endpoints API is available before wasting time
+  const apiAvailable = await isEndpointsAPIAvailable()
+  if (!apiAvailable) {
+    console.log('  OpenRouter endpoints API unavailable (404). Speed data requires AA API instead.')
+    console.log('  Skipping OpenRouter speed fetch — use fetch-aa-api.ts for speed metrics.')
+    return
+  }
 
   const orModels = await fetchModels()
   console.log(`  OpenRouter: ${orModels.length} models`)
@@ -93,7 +117,14 @@ async function main() {
     const batch = orModels.slice(i, i + BATCH_SIZE)
 
     const endpointPromises = batch.map(async (model) => {
-      const slug = resolveModelSlug(model.id, ctx)
+      // Try matching: 1) full ID  2) stripped provider prefix  3) with :suffix removed
+      let slug = resolveModelSlug(model.id, ctx)
+      if (!slug) {
+        const parts = model.id.split('/')
+        const rawName = parts.length > 1 ? parts[1] : parts[0]
+        const cleanName = rawName.replace(/:.*$/, '') // remove :exacto etc.
+        slug = resolveModelSlug(cleanName, ctx)
+      }
       if (!slug) {
         skipped++
         return

@@ -333,28 +333,42 @@ async function main() {
       continue
     }
 
-    // Create source mapping
+    // Get the newly inserted model's UUID for mapping
+    const { data: insertedModel } = await supabase
+      .from('models')
+      .select('id')
+      .eq('slug', m.slug)
+      .single()
+    const modelUuid = insertedModel?.id
+    if (!modelUuid) {
+      console.warn(`  ⚠️ Could not find model ID for ${m.slug}`)
+      registered++
+      continue
+    }
+
+    // Create source mapping (correct column names: external_name, model_id)
+    const externalName = m.source === 'openrouter' && m.orMeta ? m.orMeta.id : m.name
     await supabase.from('model_name_mappings').upsert({
       source_key: m.source,
-      source_name: m.source === 'openrouter' && m.orMeta ? m.orMeta.id : m.name,
-      model_slug: m.slug,
-    }, { onConflict: 'source_key,source_name' })
+      external_name: externalName,
+      model_id: modelUuid,
+    }, { onConflict: 'external_name,source_key' })
 
     // Create cross-mapping if we have OpenRouter metadata and source is epoch_ai
     if (m.source === 'epoch_ai' && m.orMeta) {
       await supabase.from('model_name_mappings').upsert({
         source_key: 'openrouter',
-        source_name: m.orMeta.id,
-        model_slug: m.slug,
-      }, { onConflict: 'source_key,source_name' })
+        external_name: m.orMeta.id,
+        model_id: modelUuid,
+      }, { onConflict: 'external_name,source_key' })
     }
     // Create epoch_ai mapping if source is openrouter
     if (m.source === 'openrouter') {
       await supabase.from('model_name_mappings').upsert({
         source_key: 'epoch_ai',
-        source_name: m.name,
-        model_slug: m.slug,
-      }, { onConflict: 'source_key,source_name' })
+        external_name: m.name,
+        model_id: modelUuid,
+      }, { onConflict: 'external_name,source_key' })
     }
 
     registered++

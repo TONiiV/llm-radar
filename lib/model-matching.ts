@@ -16,15 +16,15 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 const VARIANT_SUFFIXES = [
   // Compound suffixes (must come before their base forms)
   '-thinking-16k', '-thinking-32k', '-thinking-64k', '-thinking-128k',
-  '-non-reasoning',
+  '-non-reasoning', '-no-thinking',
   // Behavior variants
-  '-adaptive', '-reasoning', '-thinking',
+  '-adaptive', '-reasoning', '-thinking', '-turbo', '-instant',
   '-so-true', '-so-false',
   // Effort levels
   '-low', '-medium', '-high', '-xhigh',
   // Release variants
   '-instruct', '-preview', '-experimental', '-exp',
-  '-beta', '-old', '-latest', '-free',
+  '-beta', '-beta1', '-old', '-latest', '-free',
 ]
 
 // Provider prefixes to strip
@@ -46,7 +46,7 @@ const PROVIDER_PREFIXES = [
 export function normalizeName(name: string): string {
   let s = name.toLowerCase().trim()
 
-  // Remove provider prefixes
+  // Remove provider prefixes (openai/, anthropic/, etc.)
   for (const prefix of PROVIDER_PREFIXES) {
     if (s.startsWith(prefix)) {
       s = s.slice(prefix.length)
@@ -54,13 +54,30 @@ export function normalizeName(name: string): string {
     }
   }
 
-  // Remove parenthetical content
+  // Remove parenthetical content: (extra high), (Nov 2024), (xhigh)
   s = s.replace(/\([^)]*\)/g, '')
 
-  // Strip variant suffixes (may match multiple rounds, e.g. "-instruct" then "-preview")
+  // Remove colon suffixes: :exacto, :free, :extended
+  s = s.replace(/:[\w-]+$/g, '')
+
+  // Alternating loop: strip dates and variant suffixes until stable
+  // Handles interleaved patterns like "claude-opus-4-5-20251101-thinking-32k"
   let changed = true
   while (changed) {
     changed = false
+    const before = s
+
+    // Remove date suffixes: -20251101, -2025-12-11
+    s = s.replace(/-\d{8,}$/g, '')
+    s = s.replace(/-\d{4}-\d{2}-\d{2}$/g, '')
+    // Short date-like suffixes: -02-24, -12-17
+    s = s.replace(/-\d{2}-\d{2}$/g, '')
+    // Four-digit suffixes that look like dates: -0528, -0709, -0110, -2508
+    s = s.replace(/-\d{4}$/g, '')
+
+    if (s !== before) { changed = true; continue }
+
+    // Strip variant suffixes
     for (const suffix of VARIANT_SUFFIXES) {
       if (s.endsWith(suffix)) {
         s = s.slice(0, -suffix.length)
@@ -69,13 +86,6 @@ export function normalizeName(name: string): string {
       }
     }
   }
-
-  // Remove date suffixes: -20251101, -2025-12-11
-  s = s.replace(/-\d{8,}$/g, '')
-  s = s.replace(/-\d{4}-\d{2}-\d{2}$/g, '')
-
-  // Remove short date-like suffixes at end: -02-24, -12-17 (month-day after preview/etc stripped)
-  s = s.replace(/-\d{2}-\d{2}$/g, '')
 
   // Remove parameter suffixes like -17b-128e, -7b, -405b, -70b, etc.
   // Matches: -<digits><b/e/m/k> patterns (model size params)
