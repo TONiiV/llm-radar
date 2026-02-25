@@ -248,9 +248,8 @@ export default function ModelsClient({ models, categories, providers }: Props) {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="font-heading text-xl tracking-[3px]">LLMRadar</div>
             <div className="flex gap-6 font-mono text-sm">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">GitHub</a>
-              <span className="opacity-70">Data Sources</span>
-              <span className="opacity-70">API</span>
+              <a href="https://github.com/TONiiV/llm-radar" target="_blank" rel="noopener noreferrer" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">GitHub</a>
+              <Link href="/compare" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">Compare</Link>
             </div>
           </div>
           <div className="mt-6 pt-4 border-t border-white/10 font-mono text-xs opacity-50">{t("home.footer")}</div>

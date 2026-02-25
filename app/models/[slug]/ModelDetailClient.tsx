@@ -71,6 +71,15 @@ export default function ModelDetailClient({ model, categories, providers, source
                 <div className="text-xs text-txt-muted mb-1">Radar Score</div>
                 <span className="font-mono text-5xl text-txt-primary">{Math.round(model.radarIdx)}</span>
                 <span className="text-txt-muted text-lg">/100</span>
+                {(() => {
+                  const avail = Object.values(model.categoryScores).reduce((s, c) => s + c.availableCount, 0)
+                  const total = Object.values(model.categoryScores).reduce((s, c) => s + c.benchmarkCount, 0)
+                  return avail < total ? (
+                    <div className="text-[10px] font-mono text-score-mid mt-1">
+                      {avail}/{total} benchmarks — partial data
+                    </div>
+                  ) : null
+                })()}
               </div>
               <Link href={`/compare?ids=${model.slug}`} className="btn-primary px-4 py-2 text-sm inline-block mt-2">
                 Compare with others →
@@ -138,8 +147,8 @@ export default function ModelDetailClient({ model, categories, providers, source
                                   <div className="flex-1 h-2 bg-border rounded-full overflow-hidden">
                                     <div className="h-full rounded-full" style={{ width: bm.max_score ? `${Math.min((raw / bm.max_score) * 100, 100)}%` : "50%", backgroundColor: color }} />
                                   </div>
-                                  <span className="font-mono text-txt-primary w-20 text-right">
-                                    {bm.unit === "ELO" ? raw.toFixed(0) : bm.unit === "%" ? `${raw.toFixed(1)}%` : raw.toFixed(1)}
+                                  <span className="font-mono text-txt-primary w-24 text-right">
+                                    {bm.unit === "ELO" ? `${raw.toFixed(0)} ELO` : bm.unit === "%" ? `${raw.toFixed(1)}%` : `${raw.toFixed(1)} ${bm.unit}`}
                                   </span>
                                 </div>
                               ) : (
@@ -191,15 +200,19 @@ export default function ModelDetailClient({ model, categories, providers, source
                 </div>
                 <div className="flex justify-between">
                   <span className="text-txt-muted">Release Date</span>
-                  <span className="text-txt-primary font-mono">{model.release_date}</span>
+                  <span className="text-txt-primary font-mono">{model.release_date || "—"}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-txt-muted">Context (Input)</span>
-                  <span className="text-txt-primary font-mono">{(model.context_window_input / 1000).toFixed(0)}K</span>
+                  <span className="text-txt-primary font-mono">
+                    {model.context_window_input > 0 ? `${(model.context_window_input / 1000).toFixed(0)}K` : "—"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-txt-muted">Context (Output)</span>
-                  <span className="text-txt-primary font-mono">{(model.context_window_output / 1000).toFixed(0)}K</span>
+                  <span className="text-txt-primary font-mono">
+                    {model.context_window_output > 0 ? `${(model.context_window_output / 1000).toFixed(0)}K` : "—"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-txt-muted">Open Source</span>
