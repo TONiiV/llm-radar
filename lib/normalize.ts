@@ -111,7 +111,10 @@ export function compositeScore(
 
   if (reliable.length === 0) return 0
 
-  return reliable.reduce((sum, c) => sum + c.score, 0) / reliable.length
+  // Divide by total category count (not just reliable ones) so that models
+  // with partial data don't inflate their score relative to fully-tested models.
+  // A model with only speed data (1/6 categories) gets at most ~17 points.
+  return reliable.reduce((sum, c) => sum + c.score, 0) / entries.length
 }
 
 /** Radar Score — alias for compositeScore (our unified overall rating) */
