@@ -173,7 +173,12 @@ export default function ModelsClient({ models, categories, providers }: Props) {
             {filtered.map((m) => {
               const provider = providerMap[m.provider]
               return (
-                <div key={m.slug} className="paper-card p-5 flex flex-col">
+                <Link
+                  key={m.slug}
+                  href={`/models/${m.slug}`}
+                  className="paper-card p-5 flex flex-col group"
+                  aria-label={isZh ? `查看 ${m.name} 详情` : `View details for ${m.name}`}
+                >
                   <div className="mb-3">
                     <span className="provider-tag px-2 py-0.5" style={{ color: provider?.color, borderBottom: `2px solid ${provider?.color}` }}>
                       {provider?.name ?? m.provider}
@@ -237,18 +242,20 @@ export default function ModelsClient({ models, categories, providers }: Props) {
                     )}
                   </div>
                   <div className="flex items-center gap-4 mt-4 pt-3 border-t border-border">
-                    <Link
-                      href={`/models/${m.slug}`}
-                      className="text-xs font-body text-accent-blue hover:underline transition-colors"
-                      aria-label={isZh ? `查看 ${m.name} 详情` : `View details for ${m.name}`}
-                    >
+                    <span className="text-xs font-body text-accent-blue group-hover:underline transition-colors">
                       {isZh ? "查看详情" : "View Details"} &rarr;
-                    </Link>
-                    <Link href={`/compare?ids=${m.slug}`} className="text-xs font-body text-txt-muted hover:text-txt-secondary transition-colors">
+                    </span>
+                    <span
+                      role="link"
+                      tabIndex={0}
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = `/compare?ids=${m.slug}` }}
+                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); window.location.href = `/compare?ids=${m.slug}` } }}
+                      className="text-xs font-body text-txt-muted hover:text-txt-secondary transition-colors cursor-pointer"
+                    >
                       {isZh ? "加入对比" : "Add to Compare"}
-                    </Link>
+                    </span>
                   </div>
-                </div>
+                </Link>
               )
             })}
           </div>
