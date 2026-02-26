@@ -44,28 +44,34 @@ export default function D3ScatterChart({
 
   const height = Math.max(320, Math.min(width * 0.65, 420))
 
-  // Prepare scatter data
+  // Prepare scatter data — all models, with isSelected flag for highlighting
   const data: ScatterPoint[] = useMemo(() => {
-    const selected = models.filter((m) => selectedSlugs.includes(m.slug))
-    return selected.map((m, i) => {
-      let xValue = avgPricePer1M(m.pricing.input_per_1m, m.pricing.output_per_1m)
-      if (pricingMode === "input") xValue = m.pricing.input_per_1m
-      if (pricingMode === "output") xValue = m.pricing.output_per_1m
-      
-      return {
-        x: xValue,
-        y: Math.round(m.compositeScore),
-        slug: m.slug,
-        name: m.name,
-        isPareto: paretoSlugs.includes(m.slug),
-        isReasoning: m.is_reasoning_model,
-        confirmed: m.pricing.confirmed,
-        color: getModelColor(i),
-        inputPrice: m.pricing.input_per_1m,
-        outputPrice: m.pricing.output_per_1m,
-        pricingSource: m.pricing.source,
-      }
-    })
+    return models
+      .filter((m) => m.pricing.input_per_1m != null || m.pricing.output_per_1m != null)
+      .map((m, i) => {
+        let xValue = avgPricePer1M(m.pricing.input_per_1m, m.pricing.output_per_1m)
+        if (pricingMode === "input") xValue = m.pricing.input_per_1m
+        if (pricingMode === "output") xValue = m.pricing.output_per_1m
+
+        const isSelected = selectedSlugs.includes(m.slug)
+        // Assign color index only for selected models so colors stay stable
+        const selectedIndex = selectedSlugs.indexOf(m.slug)
+
+        return {
+          x: xValue,
+          y: Math.round(m.compositeScore),
+          slug: m.slug,
+          name: m.name,
+          isPareto: paretoSlugs.includes(m.slug),
+          isReasoning: m.is_reasoning_model,
+          confirmed: m.pricing.confirmed,
+          color: isSelected ? getModelColor(selectedIndex) : "#94a3b8",
+          isSelected,
+          inputPrice: m.pricing.input_per_1m,
+          outputPrice: m.pricing.output_per_1m,
+          pricingSource: m.pricing.source,
+        }
+      })
   }, [models, selectedSlugs, paretoSlugs, pricingMode])
 
   const { xScale, yScale } = useMemo(
@@ -83,16 +89,17 @@ export default function D3ScatterChart({
     [paretoPoints, xScale, yScale]
   )
 
-  // Labels with collision avoidance
+  // Labels with collision avoidance — only for selected models
+  const selectedData = useMemo(() => data.filter((d) => d.isSelected), [data])
   const labels = useMemo(() => {
-    const raw = data.map((d) => ({
+    const raw = selectedData.map((d) => ({
       x: xScale(d.x) + 10,
       y: yScale(d.y),
       text: d.name,
       anchor: "start" as const,
     }))
     return avoidLabelCollisions(raw, 14)
-  }, [data, xScale, yScale])
+  }, [selectedData, xScale, yScale])
 
   // Median lines
   const medianX = useMemo(() => {
@@ -315,19 +322,23 @@ export default function D3ScatterChart({
           />
         )}
 
-        {/* Data points */}
-        {data.map((d, i) => {
+        {/* Data points — unselected models first (rendered behind), then selected on top */}
+        {[...data.filter((d) => !d.isSelected), ...data.filter((d) => d.isSelected)].map((d) => {
           const px = xScale(d.x)
           const py = yScale(d.y)
           const isHovered = hoveredSlug === d.slug
           const isOtherHovered = hoveredSlug !== null && !isHovered
+          const baseOpacity = d.isSelected ? 1 : 0.25
+          const pointOpacity = isOtherHovered ? (d.isSelected ? 0.4 : 0.1) : baseOpacity
+          const baseRadius = d.isSelected ? 6 : 4
 
           return (
             <g
               key={d.slug}
               style={{
-                opacity: isOtherHovered ? 0.3 : 1,
+                opacity: pointOpacity,
                 transition: "opacity 0.2s ease",
+                cursor: "pointer",
               }}
               onMouseEnter={(e) => {
                 setHoveredSlug(d.slug)
@@ -349,9 +360,9 @@ export default function D3ScatterChart({
                       {formatPrice(d.outputPrice)}/1M
                     </p>
                     <p className="font-mono text-xs text-txt-secondary inline-flex items-center gap-0.5">
-                      {pricingMode === "average" 
-                        ? t("chart.avgPrice") 
-                        : pricingMode === "input" 
+                      {pricingMode === "average"
+                        ? t("chart.avgPrice")
+                        : pricingMode === "input"
                           ? (locale === "zh" ? "输入价格" : "Input Price")
                           : (locale === "zh" ? "输出价格" : "Output Price")}: {formatPrice(d.x)}/1M
                       {d.pricingSource && (
@@ -379,20 +390,20 @@ export default function D3ScatterChart({
             >
               {d.isReasoning ? (
                 <path
-                  d={getTrianglePath(px, py, isHovered ? 9 : 7)}
+                  d={getTrianglePath(px, py, isHovered ? 9 : baseRadius + 1)}
                   fill={d.color}
-                  stroke={d.isPareto ? "#22C55E" : theme.borderColor}
-                  strokeWidth={d.isPareto ? 2 : 1}
+                  stroke={d.isSelected && d.isPareto ? "#22C55E" : d.isSelected ? theme.borderColor : "none"}
+                  strokeWidth={d.isPareto && d.isSelected ? 2 : 1}
                   style={{ transition: "all 0.15s ease" }}
                 />
               ) : (
                 <circle
                   cx={px}
                   cy={py}
-                  r={isHovered ? 8 : 6}
+                  r={isHovered ? baseRadius + 2 : baseRadius}
                   fill={d.color}
-                  stroke={d.isPareto ? "#22C55E" : theme.borderColor}
-                  strokeWidth={d.isPareto ? 2 : 1}
+                  stroke={d.isSelected && d.isPareto ? "#22C55E" : d.isSelected ? theme.borderColor : "none"}
+                  strokeWidth={d.isPareto && d.isSelected ? 2 : 1}
                   style={{ transition: "all 0.15s ease" }}
                 />
               )}
@@ -400,9 +411,9 @@ export default function D3ScatterChart({
           )
         })}
 
-        {/* Model name labels */}
+        {/* Model name labels — only for selected models */}
         {labels.map((label, i) => {
-          const d = data[i]
+          const d = selectedData[i]
           if (!d) return null
           const isOtherHovered = hoveredSlug !== null && hoveredSlug !== d.slug
           return (

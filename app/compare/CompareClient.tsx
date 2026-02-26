@@ -98,7 +98,7 @@ export default function CompareClient({ allModels, providers, categories, source
                         </span>
                         <button
                           onClick={() => setSelectedSlugs(selectedSlugs.filter((s) => s !== slug))}
-                          className="opacity-0 group-hover:opacity-100 text-txt-muted hover:text-score-low transition-all"
+                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-txt-muted hover:text-score-low transition-all"
                           title={t("selector.remove" as any)}
                         >
                           <ClearIcon size={10} />
