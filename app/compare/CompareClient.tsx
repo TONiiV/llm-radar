@@ -60,7 +60,7 @@ export default function CompareClient({ allModels, providers, categories, source
     <main className="max-w-7xl mx-auto px-4 py-2">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Sidebar - Selected Models + Model Selector */}
-        <aside className="lg:w-72 flex-shrink-0">
+        <aside className="lg:w-72 flex-shrink-0 min-w-0">
           <div className="sticky top-20 space-y-3">
             {/* Selected Models Panel */}
             {selectedSlugs.length > 0 && (
@@ -123,7 +123,7 @@ export default function CompareClient({ allModels, providers, categories, source
         </aside>
 
         {/* Main content */}
-        <div className="flex-1 space-y-6">
+        <div className="flex-1 min-w-0 space-y-6">
           {/* Tab Navigation */}
           <div className="flex gap-1 paper-card-flat p-1">
             {TAB_CONFIG.map(({ key }) => {

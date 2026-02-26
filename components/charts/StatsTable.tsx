@@ -19,7 +19,8 @@ export default function StatsTable({ models, categories, sources, onCategoryClic
   const categoryKeys = Object.keys(categories)
 
   return (
-    <div className="paper-card overflow-x-auto">
+    <div className="paper-card">
+      <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border">
@@ -133,6 +134,7 @@ export default function StatsTable({ models, categories, sources, onCategoryClic
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }
