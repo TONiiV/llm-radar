@@ -89,7 +89,7 @@ function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
         )}
       </button>
       {open && (
-        <div className="absolute left-0 right-0 top-full bg-bg-card border-b border-border shadow-lg z-50 w-full">
+        <div className="absolute left-0 right-0 top-full bg-card border-b border-border shadow-lg z-50 w-full">
           <div className="px-4 py-3 space-y-3">
             {links.map((link) => (
               <Link
