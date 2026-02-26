@@ -67,7 +67,8 @@ export default function HomeClient({ models, categories, providers }: Props) {
     // Secondary: higher score wins within same completeness tier
     return b.compositeScore - a.compositeScore
   }), [models])
-  const { t, getCategoryLabel } = useLocale()
+  const { t, getCategoryLabel, locale } = useLocale()
+  const isZh = locale === "zh"
 
   const categoryKeys = Object.keys(categories)
   const topModels = sorted.slice(0, 3)
@@ -229,8 +230,8 @@ export default function HomeClient({ models, categories, providers }: Props) {
             <div className="font-heading text-xl tracking-[3px]">LLMRadar</div>
             <div className="flex gap-6 font-mono text-sm">
               <a href="https://github.com/TONiiV/llm-radar" target="_blank" rel="noopener noreferrer" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">GitHub</a>
-              <Link href="/models" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">Models</Link>
-              <Link href="/compare" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">Compare</Link>
+              <Link href="/models" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">{isZh ? "模型列表" : "Models"}</Link>
+              <Link href="/compare" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">{isZh ? "对比" : "Compare"}</Link>
             </div>
           </div>
           <div className="mt-6 pt-4 border-t border-white/10 font-mono text-xs opacity-50">
