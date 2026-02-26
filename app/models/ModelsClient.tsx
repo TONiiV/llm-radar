@@ -142,7 +142,7 @@ export default function ModelsClient({ models, categories, providers }: Props) {
         </div>
 
         {/* Filter Tags */}
-        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide">
+        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide -mx-4 px-4">
           {FILTER_TAGS.map((tag) => (
             <button
               key={tag.key}

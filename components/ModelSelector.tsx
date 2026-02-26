@@ -172,7 +172,7 @@ export default function ModelSelector({
       </div>
 
       {/* Category filter tabs */}
-      <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide">
+      <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4">
         {CATEGORY_FILTERS.map((tab) => {
           const Icon = tab.icon
           const isActive = activeFilter === tab.key
@@ -195,7 +195,7 @@ export default function ModelSelector({
       </div>
 
       {/* Provider filter tabs */}
-      <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide">
+      <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4">
         <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-wider text-txt-muted self-center mr-0.5">
           {t("selector.providers")}
         </span>
