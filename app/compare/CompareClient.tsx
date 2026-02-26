@@ -37,7 +37,7 @@ export default function CompareClient({ allModels, providers, categories, source
     drilldownCategory,
     setDrilldownCategory,
   } = useUrlParams(allModels)
-  const { t } = useLocale()
+  const { t, tParams } = useLocale()
 
   const paretoSlugs = useMemo(() => getParetoFrontier(allModels), [allModels])
 
@@ -170,7 +170,7 @@ export default function CompareClient({ allModels, providers, categories, source
                         <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                       </svg>
                       <span>
-                        {`基于 ${comparative.commonCount}/${comparative.totalCount} 个共同指标比较`}
+                        {tParams("compare.commonBenchmarksHint", { commonCount: comparative.commonCount, totalCount: comparative.totalCount })}
                       </span>
                     </div>
                   )}

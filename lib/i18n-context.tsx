@@ -1,12 +1,13 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
-import { type Locale, type TranslationKey, t as translate, getCategoryLabel as getCatLabel } from "./i18n"
+import { type Locale, type TranslationKey, t as translate, tParams as translateParams, getCategoryLabel as getCatLabel } from "./i18n"
 
 interface LocaleContextValue {
   locale: Locale
   setLocale: (l: Locale) => void
   t: (key: TranslationKey) => string
+  tParams: (key: TranslationKey, params: Record<string, string | number>) => string
   getCategoryLabel: (key: string) => string
 }
 
@@ -35,6 +36,11 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     [locale]
   )
 
+  const tParamsFn = useCallback(
+    (key: TranslationKey, params: Record<string, string | number>) => translateParams(locale, key, params),
+    [locale]
+  )
+
   const getCategoryLabelFn = useCallback(
     (key: string) => getCatLabel(locale, key),
     [locale]
@@ -47,7 +53,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   return (
     <LocaleContext.Provider
-      value={{ locale, setLocale, t: tFn, getCategoryLabel: getCategoryLabelFn }}
+      value={{ locale, setLocale, t: tFn, tParams: tParamsFn, getCategoryLabel: getCategoryLabelFn }}
     >
       {children}
     </LocaleContext.Provider>

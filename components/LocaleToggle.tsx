@@ -9,6 +9,7 @@ export default function LocaleToggle() {
     <div className="glass-card-sm flex p-0.5 text-xs font-medium">
       <button
         onClick={() => setLocale("zh")}
+        aria-label="切换到中文"
         className={`px-2 py-1 rounded-md transition-colors ${
           locale === "zh"
             ? "bg-accent-blue/20 text-accent-blue"
@@ -19,6 +20,7 @@ export default function LocaleToggle() {
       </button>
       <button
         onClick={() => setLocale("en")}
+        aria-label="Switch to English"
         className={`px-2 py-1 rounded-md transition-colors ${
           locale === "en"
             ? "bg-accent-blue/20 text-accent-blue"

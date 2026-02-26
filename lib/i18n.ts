@@ -25,6 +25,7 @@ const translations = {
       reasoningModel: "推理模型",
       weight: "权重",
       footer: "LLMRadar — 数据来源: Artificial Analysis, LMArena, OpenRouter",
+      sixDimensions: "六大维度",
     },
     compare: {
       tabRadar: "能力雷达",
@@ -42,6 +43,7 @@ const translations = {
       inputPrice: "输入$/1M",
       outputPrice: "输出$/1M",
       emptyState: "请在左侧选择至少一个模型",
+      commonBenchmarksHint: "基于 {commonCount}/{totalCount} 个共同指标比较",
     },
     drilldown: {
       close: "收起",
@@ -138,6 +140,7 @@ const translations = {
       reasoningModel: "Reasoning Model",
       weight: "Weight",
       footer: "LLMRadar — Data: Artificial Analysis, LMArena, OpenRouter",
+      sixDimensions: "Six Dimensions",
     },
     compare: {
       tabRadar: "Capability Radar",
@@ -155,6 +158,7 @@ const translations = {
       inputPrice: "In $/1M",
       outputPrice: "Out $/1M",
       emptyState: "Select at least one model from the sidebar",
+      commonBenchmarksHint: "Based on {commonCount}/{totalCount} common benchmarks",
     },
     drilldown: {
       close: "Close",
@@ -245,6 +249,14 @@ function getNestedValue(obj: any, path: string): string {
 
 export function t(locale: Locale, key: TranslationKey): string {
   return getNestedValue(translations[locale], key)
+}
+
+export function tParams(locale: Locale, key: TranslationKey, params: Record<string, string | number>): string {
+  let str = getNestedValue(translations[locale], key)
+  Object.entries(params).forEach(([k, v]) => {
+    str = str.replace(new RegExp(`\\{${k}\\}`, "g"), String(v))
+  })
+  return str
 }
 
 export function getCategoryLabel(locale: Locale, categoryKey: string): string {
