@@ -71,7 +71,7 @@ function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
   }, [open])
 
   return (
-    <div className="sm:hidden" ref={containerRef}>
+    <div className="sm:hidden relative" ref={containerRef}>
       <button
         onClick={() => setOpen(!open)}
         className="p-2 text-txt-secondary hover:text-txt-primary transition-colors"
