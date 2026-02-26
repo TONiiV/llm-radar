@@ -14,7 +14,7 @@ const translations = {
       heroDesc:
         "LLM 模型能力对比与价格分析工具。六维雷达图展示推理、代码、数学、对话、Agent、速度能力，散点图分析价格性价比。",
       cta: "开始对比",
-      viewCompare: "查看详细对比",
+      viewCompare: "浏览模型列表",
       overview: "模型总览",
       rank: "#",
       model: "模型",
@@ -127,7 +127,7 @@ const translations = {
       heroDesc:
         "LLM model comparison and pricing analysis tool. Six-axis radar chart for Reasoning, Coding, Math, Chat, Agent, and Speed capabilities, plus price-performance scatter plot.",
       cta: "Start Comparing",
-      viewCompare: "View Detailed Comparison",
+      viewCompare: "Browse All Models",
       overview: "Model Overview",
       rank: "#",
       model: "Model",

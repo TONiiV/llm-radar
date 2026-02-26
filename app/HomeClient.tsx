@@ -149,8 +149,9 @@ export default function HomeClient({ models, categories, providers }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {sorted.map((m) => {
             const provider = providerMap[m.provider]
+            const approx = m.pricing.confirmed ? "" : "~"
             return (
-              <div key={m.slug} className="paper-card p-5">
+              <Link key={m.slug} href={`/models/${m.slug}`} className="paper-card p-5 block hover:ring-1 hover:ring-border transition-shadow">
                 <div className="mb-3">
                   <span className="provider-tag px-2 py-0.5" style={{ color: provider?.color, borderBottom: `2px solid ${provider?.color}` }}>
                     {provider?.name ?? m.provider}
@@ -182,11 +183,11 @@ export default function HomeClient({ models, categories, providers }: Props) {
                   <div className="text-right">
                     <div className="text-xs text-txt-muted mb-0.5">{t("home.price")}</div>
                     <span className="font-mono text-sm text-txt-secondary">
-                      {m.pricing.confirmed ? "" : "~"}${m.pricing.input_per_1m}/{m.pricing.confirmed ? "" : "~"}${m.pricing.output_per_1m}
+                      in {approx}${m.pricing.input_per_1m} / out {approx}${m.pricing.output_per_1m}
                     </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>
