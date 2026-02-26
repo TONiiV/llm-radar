@@ -21,7 +21,7 @@ export default function StatsTable({ models, categories, sources, onCategoryClic
   return (
     <div className="paper-card">
       <div className="overflow-x-auto w-full" style={{ WebkitOverflowScrolling: 'touch' }}>
-      <table className="w-full text-sm">
+      <table className="min-w-full text-sm" style={{ minWidth: '560px' }}>
         <thead>
           <tr className="border-b border-border">
             <th className="text-left px-4 py-3 font-heading italic font-medium text-txt-secondary">
