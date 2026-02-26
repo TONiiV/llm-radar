@@ -219,7 +219,7 @@ export default function BenchmarkRanking({
           {l.noData}
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto w-full" style={{ WebkitOverflowScrolling: 'touch' }}>
           <svg
             key={animatedKey}
             width={containerWidth}

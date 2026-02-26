@@ -20,7 +20,7 @@ export default function StatsTable({ models, categories, sources, onCategoryClic
 
   return (
     <div className="paper-card">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto w-full" style={{ WebkitOverflowScrolling: 'touch' }}>
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border">
