@@ -21,7 +21,7 @@ export default function Navbar({ maxWidth = "max-w-6xl" }: NavbarProps) {
   ]
 
   return (
-    <header className="border-b border-border">
+    <header className="border-b border-border relative">
       <div className={`${maxWidth} mx-auto px-4 py-4 flex items-center justify-between`}>
         <Link href="/" className="font-heading text-2xl tracking-[3px] text-txt-primary">
           LLMRadar
@@ -54,14 +54,14 @@ export default function Navbar({ maxWidth = "max-w-6xl" }: NavbarProps) {
 function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
-  const containerRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
   // Close menu when clicking outside
   useEffect(() => {
     if (!open) return
 
     function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (buttonRef.current && !buttonRef.current.closest("[data-mobile-menu]")?.contains(event.target as Node)) {
         setOpen(false)
       }
     }
@@ -71,8 +71,9 @@ function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
   }, [open])
 
   return (
-    <div className="sm:hidden relative" ref={containerRef}>
+    <div className="sm:hidden" data-mobile-menu>
       <button
+        ref={buttonRef}
         onClick={() => setOpen(!open)}
         className="p-2 text-txt-secondary hover:text-txt-primary transition-colors"
         aria-label="Toggle menu"
@@ -88,14 +89,14 @@ function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
         )}
       </button>
       {open && (
-        <div className="absolute top-full left-0 right-0 bg-bg-card border-b border-border shadow-lg z-50">
+        <div className="absolute left-0 right-0 top-full bg-bg-card border-b border-border shadow-lg z-50 w-full">
           <div className="px-4 py-3 space-y-3">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className={`block font-body text-sm transition-colors ${
+                className={`block w-full font-body text-sm transition-colors py-1 ${
                   pathname === link.href || pathname.startsWith(link.href + "/")
                     ? "text-accent-blue font-medium"
                     : "text-txt-secondary hover:text-txt-primary"
