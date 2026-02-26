@@ -59,6 +59,8 @@ interface Props {
   providers: Provider[]
 }
 
+const PAGE_SIZE = 20
+
 export default function HomeClient({ models, categories, providers }: Props) {
   const sorted = useMemo(() => [...models].sort((a, b) => {
     // Primary: more data available → ranked higher
@@ -67,8 +69,10 @@ export default function HomeClient({ models, categories, providers }: Props) {
     // Secondary: higher score wins within same completeness tier
     return b.compositeScore - a.compositeScore
   }), [models])
-  const { t, getCategoryLabel, locale } = useLocale()
+  const { t, tParams, getCategoryLabel, locale } = useLocale()
   const isZh = locale === "zh"
+
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
   const categoryKeys = Object.keys(categories)
   const topModels = sorted.slice(0, 3)
@@ -148,7 +152,7 @@ export default function HomeClient({ models, categories, providers }: Props) {
           <h2 className="font-heading text-2xl italic text-txt-primary">{t("home.overview")}</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sorted.map((m) => {
+          {sorted.slice(0, visibleCount).map((m) => {
             const provider = providerMap[m.provider]
             const approx = m.pricing.confirmed ? "" : "~"
             return (
@@ -191,6 +195,20 @@ export default function HomeClient({ models, categories, providers }: Props) {
               </Link>
             )
           })}
+        </div>
+        {/* Load More */}
+        <div className="mt-8 flex flex-col items-center gap-3">
+          <p className="font-mono text-xs text-txt-muted">
+            {tParams("home.showingModels", { count: Math.min(visibleCount, sorted.length), total: sorted.length })}
+          </p>
+          {visibleCount < sorted.length && (
+            <button
+              onClick={() => setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, sorted.length))}
+              className="btn-primary px-8 py-3 font-mono text-sm"
+            >
+              {t("home.loadMore")}
+            </button>
+          )}
         </div>
       </section>
 

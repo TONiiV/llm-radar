@@ -237,7 +237,11 @@ export default function ModelsClient({ models, categories, providers }: Props) {
                     )}
                   </div>
                   <div className="flex items-center gap-4 mt-4 pt-3 border-t border-border">
-                    <Link href={`/models/${m.slug}`} className="text-xs font-body text-accent-blue hover:underline transition-colors">
+                    <Link
+                      href={`/models/${m.slug}`}
+                      className="text-xs font-body text-accent-blue hover:underline transition-colors"
+                      aria-label={isZh ? `查看 ${m.name} 详情` : `View details for ${m.name}`}
+                    >
                       {isZh ? "查看详情" : "View Details"} &rarr;
                     </Link>
                     <Link href={`/compare?ids=${m.slug}`} className="text-xs font-body text-txt-muted hover:text-txt-secondary transition-colors">
