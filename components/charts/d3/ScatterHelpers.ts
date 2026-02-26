@@ -10,6 +10,7 @@ export interface ScatterPoint {
   isReasoning: boolean
   confirmed: boolean
   color: string
+  isSelected: boolean
   inputPrice: number
   outputPrice: number
   pricingSource?: string

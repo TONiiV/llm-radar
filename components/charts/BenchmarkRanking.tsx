@@ -98,14 +98,13 @@ export default function BenchmarkRanking({
   const rankedModels: RankedModel[] = useMemo(() => {
     if (!benchmarkDef) return []
 
-    // Filter models that have this benchmark score
+    // Include all models that have this benchmark score, mark selected ones
     const withScores = models
-      .filter((m) => selectedSlugs.includes(m.slug))
       .filter((m) => m.benchmarks[selectedBenchmark] != null)
       .map((m) => ({
         model: m,
         score: m.benchmarks[selectedBenchmark],
-        isSelected: true,
+        isSelected: selectedSlugs.includes(m.slug),
       }))
 
     // Sort
