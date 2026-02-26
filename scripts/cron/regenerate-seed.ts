@@ -68,7 +68,7 @@ async function main() {
   const idToSlug = new Map(models.map(m => [m.id, m.slug]))
 
   // Group scores by model slug — prefer external sources over 'official' (seed-originated)
-  const SOURCE_PRIORITY: Record<string, number> = { artificial_analysis: 4, openrouter: 3, epoch_ai: 3, official: 2, lmarena: 1 }
+  const SOURCE_PRIORITY: Record<string, number> = { artificial_analysis: 5, swe_bench: 4, openrouter: 3, epoch_ai: 3, official: 2, lmarena: 1 }
   const scoresBySlug = new Map<string, Record<string, number>>()
   const sourcePriBySlug = new Map<string, Record<string, number>>()
   for (const s of scores) {
