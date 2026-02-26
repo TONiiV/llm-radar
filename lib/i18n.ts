@@ -26,6 +26,8 @@ const translations = {
       weight: "权重",
       footer: "LLMRadar — 数据来源: Artificial Analysis, LMArena, OpenRouter",
       sixDimensions: "六大维度",
+      loadMore: "加载更多",
+      showingModels: "显示 {count}/{total} 个模型",
     },
     compare: {
       tabRadar: "能力雷达",
@@ -167,6 +169,8 @@ const translations = {
       weight: "Weight",
       footer: "LLMRadar — Data: Artificial Analysis, LMArena, OpenRouter",
       sixDimensions: "Six Dimensions",
+      loadMore: "Load More",
+      showingModels: "Showing {count}/{total} models",
     },
     compare: {
       tabRadar: "Capability Radar",
