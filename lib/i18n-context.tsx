@@ -13,15 +13,15 @@ interface LocaleContextValue {
 const LocaleContext = createContext<LocaleContextValue | null>(null)
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
+  // Default to "zh" — matches server-side default, avoids blank flash
   const [locale, setLocaleState] = useState<Locale>("zh")
-  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // After mount, sync locale from localStorage (client-only)
     const saved = localStorage.getItem("locale") as Locale | null
     if (saved === "zh" || saved === "en") {
       setLocaleState(saved)
     }
-    setMounted(true)
   }, [])
 
   const setLocale = useCallback((l: Locale) => {
@@ -40,11 +40,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     [locale]
   )
 
-  // Prevent hydration mismatch by rendering children only after mount
-  if (!mounted) {
-    return null
-  }
-
+  // Render immediately with default locale — no blank flash
   return (
     <LocaleContext.Provider
       value={{ locale, setLocale, t: tFn, getCategoryLabel: getCategoryLabelFn }}

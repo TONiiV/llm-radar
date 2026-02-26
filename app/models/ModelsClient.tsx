@@ -5,6 +5,7 @@ import { useMemo, useState } from "react"
 import { useLocale } from "@/lib/i18n-context"
 import Navbar from "@/components/Navbar"
 import { getCategoryColor } from "@/lib/colors"
+import { CATEGORY_ICONS } from "@/components/icons/CategoryIcons"
 import type { ModelWithScores, Categories, Provider } from "@/lib/types"
 
 type SortKey = "score" | "name" | "price"
@@ -194,9 +195,16 @@ export default function ModelsClient({ models, categories, providers }: Props) {
                     {categoryKeys.map((key) => {
                       const cat = m.categoryScores[key]
                       if (!cat) return null
+                      const IconComp = CATEGORY_ICONS[key]
                       return (
                         <div key={key} className="flex items-center gap-1.5">
-                          <span className="text-[10px] w-8 text-txt-muted font-mono">{getCategoryLabel(key).slice(0, 2)}</span>
+                          <span className="w-8 flex items-center justify-center" title={getCategoryLabel(key)}>
+                            {IconComp ? (
+                              <IconComp size={12} style={{ color: getCategoryColor(key), opacity: cat.isReliable ? 1 : 0.4 }} />
+                            ) : (
+                              <span className="text-[10px] text-txt-muted font-mono">{getCategoryLabel(key).slice(0, 2)}</span>
+                            )}
+                          </span>
                           <div className="flex-1 h-1.5 bg-border rounded-full overflow-hidden">
                             <div className="h-full rounded-full transition-all duration-300" style={{ width: `${cat.score}%`, backgroundColor: getCategoryColor(key), opacity: cat.isReliable ? 1 : 0.4 }} />
                           </div>
@@ -249,6 +257,7 @@ export default function ModelsClient({ models, categories, providers }: Props) {
             <div className="font-heading text-xl tracking-[3px]">LLMRadar</div>
             <div className="flex gap-6 font-mono text-sm">
               <a href="https://github.com/TONiiV/llm-radar" target="_blank" rel="noopener noreferrer" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">GitHub</a>
+              <Link href="/" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">{isZh ? "主页" : "Home"}</Link>
               <Link href="/compare" className="hover:underline opacity-70 hover:opacity-100 transition-opacity">Compare</Link>
             </div>
           </div>

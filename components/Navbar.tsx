@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useLocale } from "@/lib/i18n-context"
@@ -54,9 +54,24 @@ export default function Navbar({ maxWidth = "max-w-6xl" }: NavbarProps) {
 function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    if (!open) return
+
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [open])
 
   return (
-    <div className="sm:hidden">
+    <div className="sm:hidden" ref={containerRef}>
       <button
         onClick={() => setOpen(!open)}
         className="p-2 text-txt-secondary hover:text-txt-primary transition-colors"
